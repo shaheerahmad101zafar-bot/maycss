@@ -1,0 +1,8 @@
+[
+  { "id": "hdr_home", "label": "Home", "href": "/", "location": "header", "order": 0, "visible": false },
+  { "id": "hdr_shop", "label": "Shop", "href": "/shop", "location": "header", "order": 1, "visible": true },
+  { "id": "hdr_new", "label": "New", "href": "/new", "location": "header", "order": 2, "visible": true },
+  { "id": "hdr_sale", "label": "Sale", "href": "/sale", "location": "header", "order": 3, "visible": true },
+  { "id": "hdr_about", "label": "About", "href": "/about", "location": "header", "order": 4, "visible": true },
+  { "id": "hdr_contact", "label": "Contact", "href": "/contact", "location": "header", "order": 5, "visible": true }
+]

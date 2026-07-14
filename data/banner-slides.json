@@ -1,0 +1,26 @@
+[
+  {
+    "id": "summer-sale",
+    "eyebrow": "Limited Edition",
+    "title": "The Summer Luxe Collection",
+    "subtitle": "Effortless silhouettes in the season's most coveted fabrics — complimentary shipping on orders over $75.",
+    "ctaLabel": "Discover Now",
+    "ctaHref": "#featured"
+  },
+  {
+    "id": "autumn-preview",
+    "eyebrow": "New Arrivals",
+    "title": "The Autumn Preview Has Arrived",
+    "subtitle": "Investment pieces and refined layers, curated for wardrobes that transcend the season.",
+    "ctaLabel": "Shop New In",
+    "ctaHref": "/new"
+  },
+  {
+    "id": "star-rewards",
+    "eyebrow": "Members Only",
+    "title": "Private Access: Early Drops",
+    "subtitle": "Join our inner circle for first looks at new arrivals and exclusive styling appointments.",
+    "ctaLabel": "Join the List",
+    "ctaHref": "/#newsletter"
+  }
+]

@@ -1,0 +1,81 @@
+[
+  {
+    "id": "landing-hero-features",
+    "name": "Landing: Hero + 3-column features",
+    "description": "Big hero followed by three feature columns and a closing CTA.",
+    "category": "landing",
+    "blocks": [
+      {
+        "id": "tpl_hero_1",
+        "type": "hero",
+        "heading": "Introducing the New Collection",
+        "subheading": "Discover pieces designed to last a lifetime.",
+        "ctaLabel": "Shop the drop",
+        "ctaHref": "/new",
+        "height": "large"
+      },
+      {
+        "id": "tpl_cols_1",
+        "type": "columns",
+        "count": 3,
+        "columns": [
+          { "heading": "Ethically sourced", "body": "Every piece is traced from farm to floor." },
+          { "heading": "Made to last", "body": "Timeless design that outlives trends." },
+          { "heading": "Carbon-neutral", "body": "We offset every shipment." }
+        ]
+      },
+      {
+        "id": "tpl_cta_1",
+        "type": "cta",
+        "heading": "See what's new",
+        "body": "Explore this season's arrivals.",
+        "ctaLabel": "Shop New",
+        "ctaHref": "/new",
+        "variant": "dark"
+      }
+    ]
+  },
+  {
+    "id": "content-article",
+    "name": "Content: Article with FAQ",
+    "description": "Two rich-text sections and an FAQ block — perfect for blog posts.",
+    "category": "content",
+    "blocks": [
+      {
+        "id": "tpl_rt_1",
+        "type": "richtext",
+        "heading": "Introduction",
+        "headingLevel": 2,
+        "body": "Set the scene here."
+      },
+      {
+        "id": "tpl_rt_2",
+        "type": "richtext",
+        "heading": "The main story",
+        "headingLevel": 2,
+        "body": "Body of your article."
+      },
+      {
+        "id": "tpl_faq_1",
+        "type": "faq",
+        "items": [
+          { "q": "How does this work?", "a": "Explain here." },
+          { "q": "How much does it cost?", "a": "Explain here." }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "legal-policy",
+    "name": "Legal: Policy page",
+    "description": "Five section headings — good starting scaffold for a legal document.",
+    "category": "legal",
+    "blocks": [
+      { "id": "tpl_lp_1", "type": "richtext", "heading": "What we collect", "headingLevel": 2, "body": "..." },
+      { "id": "tpl_lp_2", "type": "richtext", "heading": "How we use it", "headingLevel": 2, "body": "..." },
+      { "id": "tpl_lp_3", "type": "richtext", "heading": "Your rights", "headingLevel": 2, "body": "..." },
+      { "id": "tpl_lp_4", "type": "richtext", "heading": "Cookies", "headingLevel": 2, "body": "..." },
+      { "id": "tpl_lp_5", "type": "richtext", "heading": "Contact us", "headingLevel": 2, "body": "..." }
+    ]
+  }
+]

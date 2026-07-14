@@ -1,0 +1,114 @@
+/* ================================================================
+   MayCSS — Global Styles
+   Macy's-inspired premium ecommerce theme
+   ================================================================ */
+
+:root {
+  /* Brand palette */
+  --mc-red: #e21a2c;
+  --mc-red-dark: #b8121f;
+  --mc-black: #111111;
+  --mc-white: #ffffff;
+  --mc-cream: #faf7f2;
+  --mc-gold: #c8a75b;
+  --mc-gold-dark: #a5873f;
+  --mc-gray-50: #f7f7f7;
+  --mc-gray-100: #eeeeee;
+  --mc-gray-200: #dcdcdc;
+  --mc-gray-400: #999999;
+  --mc-gray-600: #555555;
+  --mc-gray-800: #222222;
+
+  /* Typography */
+  --mc-font-serif: var(--font-playfair), "Playfair Display", Georgia, "Times New Roman", serif;
+  --mc-font-sans: var(--font-geist-sans), "Helvetica Neue", Helvetica, Arial, sans-serif;
+
+  /* Radii & shadows */
+  --mc-radius-sm: 4px;
+  --mc-radius-md: 8px;
+  --mc-radius-lg: 14px;
+  --mc-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.06);
+  --mc-shadow-md: 0 4px 14px rgba(0, 0, 0, 0.08);
+  --mc-shadow-lg: 0 14px 40px rgba(0, 0, 0, 0.14);
+
+  /* Motion */
+  --mc-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --mc-dur-fast: 180ms;
+  --mc-dur-med: 320ms;
+  --mc-dur-slow: 520ms;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background: var(--mc-cream);
+  color: var(--mc-black);
+  font-family: var(--mc-font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+html { height: 100%; }
+.mc-body {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--mc-font-serif);
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  color: var(--mc-black);
+  margin: 0;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+.mc-container {
+  width: 100%;
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.mc-section {
+  padding: 72px 0;
+}
+
+.mc-section-title {
+  font-size: clamp(1.75rem, 3vw, 2.5rem);
+  text-align: center;
+  margin-bottom: 12px;
+  letter-spacing: -0.02em;
+}
+
+.mc-section-subtitle {
+  text-align: center;
+  color: var(--mc-gray-600);
+  margin-bottom: 48px;
+  font-size: 0.82rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+.mc-main {
+  flex: 1;
+}

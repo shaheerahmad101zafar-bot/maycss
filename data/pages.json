@@ -1,0 +1,661 @@
+[
+  {
+    "id": "about",
+    "slug": "about",
+    "title": "About MayCSS",
+    "eyebrow": "Our Story",
+    "hero": "Timeless design, uncompromising quality — for people who care about the difference between good and exceptional.",
+    "bannerImage": "/uploads/cms/mriw8mec-453494ff009d897f.webp",
+    "pageKind": "standard",
+    "published": true,
+    "showInFooter": true,
+    "footerColumn": "company",
+    "lastUpdated": "2026-07-13",
+    "seo": {
+      "metaTitle": "About MayCSS — Curated Premium Fashion",
+      "metaDescription": "MayCSS curates premium fashion from independent ateliers and heritage maisons. Learn how we source, vet, and deliver investment pieces with integrity.",
+      "keywords": [
+        "about MayCSS",
+        "curated fashion",
+        "luxury boutique",
+        "independent designers",
+        "heritage fashion"
+      ],
+      "ogImage": "https://tse2.mm.bing.net/th/id/OIP.XNlA91gBjte9NrlTSgILoAAAAA?r=0&rs=1&pid=ImgDetMain&o=7&rm=3"
+    },
+    "blocks": [
+      {
+        "id": "blk_a604677a3349",
+        "type": "richtext",
+        "layout": {
+          "alignment": "center",
+          "width": "full",
+          "columnCount": 1,
+          "padding": "md"
+        },
+        "heading": "Curated, not mass-produced",
+        "headingLevel": 2,
+        "body": "MayCSS was founded on a simple idea: the best things are made by people who love making them. We work directly with independent designers and heritage houses across Italy, France, Portugal, and Scotland to bring you pieces that will outlast trends and become part of your story.",
+        "alignment": "left"
+      },
+      {
+        "id": "blk_8b44500f82e7",
+        "type": "richtext",
+        "layout": {
+          "alignment": "center",
+          "width": "full",
+          "columnCount": 1,
+          "padding": "md"
+        },
+        "heading": "How we choose what to sell",
+        "headingLevel": 2,
+        "body": "Every piece on MayCSS is vetted against three questions: Is it made to last? Does it improve the lives of the people who make it? Would we buy it ourselves? If we cannot answer yes to all three, it does not make it onto our floor.",
+        "alignment": "left"
+      },
+      {
+        "id": "blk_about_values",
+        "type": "richtext",
+        "layout": {
+          "alignment": "center",
+          "width": "medium",
+          "columnCount": 1,
+          "padding": "md"
+        },
+        "heading": "Our Promise to You",
+        "headingLevel": 2,
+        "body": "Transparent sourcing. Authenticity on every order. Personal styling when you want it. We built MayCSS for shoppers who value craft over hype — and we intend to keep it that way.",
+        "alignment": "center"
+      },
+      {
+        "id": "blk_about_editorial",
+        "type": "editorial",
+        "layout": {
+          "alignment": "center",
+          "width": "full",
+          "columnCount": 1,
+          "padding": "lg"
+        },
+        "eyebrow": "The Edit",
+        "heading": "Quiet Luxury, Loud Standards",
+        "body": "We do not chase trends. We chase integrity — in fabric, in fit, in the story behind every seam. That is the MayCSS difference, and it is the standard we hold ourselves to with every collection we release.",
+        "ctaLabel": "Shop the collection",
+        "ctaHref": "/shop",
+        "image": "/uploads/cms/mrjjyhqn-87cb93f5c5686601.webp",
+        "imageAlt": "MayCSS curated fashion"
+      },
+      {
+        "id": "blk_about_cta",
+        "type": "cta",
+        "layout": {
+          "alignment": "center",
+          "width": "full",
+          "columnCount": 1,
+          "padding": "lg"
+        },
+        "heading": "Questions? We are here.",
+        "body": "Our concierge team responds within one business day.",
+        "ctaLabel": "Contact us",
+        "ctaHref": "/contact",
+        "variant": "dark"
+      }
+    ]
+  },
+  {
+    "id": "faq",
+    "slug": "faq",
+    "title": "Frequently Asked Questions",
+    "eyebrow": "Help Centre",
+    "hero": "Everything you need to know about shopping at MayCSS.",
+    "pageKind": "standard",
+    "published": true,
+    "showInFooter": true,
+    "footerColumn": "company",
+    "seo": {
+      "metaTitle": "FAQ — MayCSS Customer Support",
+      "metaDescription": "Shipping, returns, sizing, and more. Answers to the most common questions about shopping at MayCSS.",
+      "ogImage": ""
+    },
+    "blocks": [
+      {
+        "id": "blk_9ab7038ff659",
+        "type": "faq",
+        "layout": {
+          "alignment": "center",
+          "width": "full",
+          "columnCount": 1,
+          "padding": "md"
+        },
+        "items": [
+          {
+            "q": "How long does shipping take?",
+            "a": "Standard shipping arrives in 3–5 business days. Express shipping is 1–2 business days. Orders over $75 ship free."
+          },
+          {
+            "q": "What is your return policy?",
+            "a": "Unworn items can be returned within 30 days of delivery for a full refund. Sale items are final unless faulty."
+          },
+          {
+            "q": "Do you ship internationally?",
+            "a": "Yes — we ship to over 40 countries. International orders may be subject to customs duties in the destination country."
+          },
+          {
+            "q": "How do I know what size to order?",
+            "a": "Every product page includes a size guide. If you're between sizes, size up for outerwear and down for knitwear."
+          },
+          {
+            "q": "Are the products authentic?",
+            "a": "Every MayCSS product is sourced directly from the brand or an authorised distributor. Authenticity guaranteed."
+          },
+          {
+            "q": "How can I track my order?",
+            "a": "Once your order ships, we email you a tracking link. You can also view all your orders under 'My Account'."
+          },
+          {
+            "q": "Do you offer gift wrapping?",
+            "a": "Yes — you can add complimentary gift wrapping at checkout. Include a personal note if you like."
+          }
+        ]
+      },
+      {
+        "id": "blk_1da23bc16714",
+        "type": "cta",
+        "layout": {
+          "alignment": "center",
+          "width": "full",
+          "columnCount": 1,
+          "padding": "md"
+        },
+        "heading": "Still need help?",
+        "body": "Our customer care team is available Monday to Friday, 9am–6pm ET.",
+        "ctaLabel": "Contact us",
+        "ctaHref": "mailto:hello@maycss.example",
+        "variant": "dark"
+      }
+    ]
+  },
+  {
+    "id": "privacy-policy",
+    "slug": "privacy-policy",
+    "title": "Privacy Policy",
+    "eyebrow": "Legal",
+    "hero": "How we collect, use, and protect your personal information.",
+    "pageKind": "standard",
+    "published": true,
+    "showInFooter": true,
+    "footerColumn": "legal",
+    "lastUpdated": "2026-01-01",
+    "seo": {
+      "metaTitle": "Privacy Policy — MayCSS",
+      "metaDescription": "How MayCSS collects, uses, and protects your personal information.",
+      "ogImage": ""
+    },
+    "blocks": [
+      {
+        "id": "blk_cea9c874c53b",
+        "type": "richtext",
+        "layout": {
+          "alignment": "center",
+          "width": "full",
+          "columnCount": 1,
+          "padding": "md"
+        },
+        "heading": "What we collect",
+        "headingLevel": 2,
+        "body": "When you shop with MayCSS, we collect the information you give us directly (name, email, shipping address, payment details) and information about how you use the site (pages visited, items viewed, cart activity). We do not sell your data to third parties.",
+        "alignment": "left"
+      },
+      {
+        "id": "blk_2d9a5c2db7d9",
+        "type": "richtext",
+        "layout": {
+          "alignment": "center",
+          "width": "full",
+          "columnCount": 1,
+          "padding": "md"
+        },
+        "heading": "How we use it",
+        "headingLevel": 2,
+        "body": "We use your information to process orders, send order updates, personalise your experience, and (if you've opted in) to send you occasional emails about new arrivals and members-only offers.",
+        "alignment": "left"
+      },
+      {
+        "id": "blk_7d8ec7aafaf0",
+        "type": "richtext",
+        "layout": {
+          "alignment": "center",
+          "width": "full",
+          "columnCount": 1,
+          "padding": "md"
+        },
+        "heading": "Cookies",
+        "headingLevel": 2,
+        "body": "We use essential cookies to keep your bag and preferences between visits, and analytics cookies to understand what's working. You can control cookies through your browser settings.",
+        "alignment": "left"
+      },
+      {
+        "id": "blk_e47cddbe1146",
+        "type": "richtext",
+        "layout": {
+          "alignment": "center",
+          "width": "full",
+          "columnCount": 1,
+          "padding": "md"
+        },
+        "heading": "Your rights",
+        "headingLevel": 2,
+        "body": "You can request a copy of everything we hold about you, ask us to correct anything, or ask us to delete your account entirely. Email privacy@maycss.example.",
+        "alignment": "left"
+      },
+      {
+        "id": "blk_46441afabbec",
+        "type": "richtext",
+        "layout": {
+          "alignment": "center",
+          "width": "full",
+          "columnCount": 1,
+          "padding": "md"
+        },
+        "heading": "Payment security",
+        "headingLevel": 2,
+        "body": "We never store your full card number. Payments are processed by our PCI-DSS compliant payment providers over a TLS-encrypted connection.",
+        "alignment": "left"
+      }
+    ]
+  },
+  {
+    "id": "refund-policy",
+    "slug": "refund-policy",
+    "title": "Refund & Returns Policy",
+    "eyebrow": "Legal",
+    "hero": "Simple, fair returns — because you should love what you bought.",
+    "pageKind": "standard",
+    "published": true,
+    "showInFooter": true,
+    "footerColumn": "legal",
+    "lastUpdated": "2026-01-01",
+    "seo": {
+      "metaTitle": "Refund & Returns — MayCSS",
+      "metaDescription": "30-day returns, easy exchanges, and how refunds work at MayCSS.",
+      "ogImage": ""
+    },
+    "blocks": [
+      {
+        "id": "blk_09d2ca00d81f",
+        "type": "richtext",
+        "layout": {
+          "alignment": "center",
+          "width": "full",
+          "columnCount": 1,
+          "padding": "md"
+        },
+        "heading": "30-day returns",
+        "headingLevel": 2,
+        "body": "You have 30 days from the day your order arrives to request a return. Items must be unworn, unwashed, and returned with all original tags and packaging.",
+        "alignment": "left"
+      },
+      {
+        "id": "blk_8b6d54731dd8",
+        "type": "richtext",
+        "layout": {
+          "alignment": "center",
+          "width": "full",
+          "columnCount": 1,
+          "padding": "md"
+        },
+        "heading": "How to return",
+        "headingLevel": 2,
+        "body": "Sign in to your account, find your order under My Orders, and click Return. We'll email you a prepaid return label. Drop the package at any carrier location; your refund is processed the day we receive it.",
+        "alignment": "left"
+      },
+      {
+        "id": "blk_c5dfde37efb4",
+        "type": "richtext",
+        "layout": {
+          "alignment": "center",
+          "width": "full",
+          "columnCount": 1,
+          "padding": "md"
+        },
+        "heading": "How refunds are issued",
+        "headingLevel": 2,
+        "body": "Refunds go back to your original payment method within 5–10 business days after we receive your return. Shipping charges are non-refundable unless the item was faulty.",
+        "alignment": "left"
+      },
+      {
+        "id": "blk_2869e14b63d5",
+        "type": "faq",
+        "layout": {
+          "alignment": "center",
+          "width": "full",
+          "columnCount": 1,
+          "padding": "md"
+        },
+        "items": [
+          {
+            "q": "Can I exchange instead of return?",
+            "a": "Yes — start a return and place a new order for the size or colour you want."
+          },
+          {
+            "q": "What about sale items?",
+            "a": "Sale items are final sale unless the item is faulty."
+          },
+          {
+            "q": "What if my item arrived damaged?",
+            "a": "Email hello@maycss.example within 7 days with a photo. We'll replace it at no cost."
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "home",
+    "slug": "home",
+    "title": "Home",
+    "pageKind": "standard",
+    "published": true,
+    "showInFooter": false,
+    "lastUpdated": "2026-07-14",
+    "seo": {
+      "metaTitle": "MayCSS — Curated Luxury Fashion Online",
+      "metaDescription": "Discover independent designers and heritage maisons at MayCSS. Premium clothing, timeless silhouettes, complimentary shipping over $75, and authenticity guaranteed.",
+      "ogImage": "/uploads/cms/mrjo0pkj-b303b84ea3634104.webp",
+      "keywords": [
+        "luxury fashion",
+        "curated clothing",
+        "designer fashion online",
+        "premium womenswear",
+        "premium menswear",
+        "MayCSS"
+      ]
+    },
+    "blocks": [
+      {
+        "id": "blk_home_hero",
+        "type": "hero",
+        "layout": {
+          "alignment": "center",
+          "width": "full",
+          "columnCount": 1,
+          "padding": "none"
+        },
+        "eyebrow": "Spring / Summer 2026",
+        "heading": "Choose Your Signature Style",
+        "subheading": "",
+        "backgroundImage": "/uploads/cms/mrkwp1c3-69538bb97150baf8.webp",
+        "imageFocus": { "x": 50, "y": 28, "fit": "cover" },
+        "overlayStrength": 42,
+        "ctaLabel": "Shop the Collection",
+        "ctaHref": "/shop",
+        "secondaryCtaLabel": "New Arrivals",
+        "secondaryCtaHref": "/new",
+        "height": "large"
+      },
+      {
+        "id": "blk_home_features",
+        "type": "features",
+        "layout": {
+          "alignment": "center",
+          "width": "full",
+          "columnCount": 1,
+          "padding": "none"
+        },
+        "items": [
+          {
+            "title": "Complimentary Shipping",
+            "body": "On all orders over $75, delivered with care."
+          },
+          {
+            "title": "Authenticity Guaranteed",
+            "body": "Every piece sourced from verified partners."
+          },
+          {
+            "title": "Personal Styling",
+            "body": "Book a complimentary consultation with our team."
+          },
+          {
+            "title": "Easy Returns",
+            "body": "30-day returns on unworn items, hassle-free."
+          }
+        ]
+      },
+      {
+        "id": "blk_home_grid",
+        "type": "productgrid",
+        "layout": {
+          "alignment": "center",
+          "width": "full",
+          "columnCount": 4,
+          "padding": "lg"
+        },
+        "heading": "The Featured Edit",
+        "productIds": [],
+        "filterTag": "all",
+        "limit": 4
+      },
+      {
+        "id": "blk_home_split",
+        "type": "splitbanner",
+        "layout": {
+          "alignment": "center",
+          "width": "full",
+          "columnCount": 1,
+          "padding": "none"
+        },
+        "image": "/uploads/cms/mrjjx6ir-cc868794b5f4e226.webp",
+        "imagePosition": "left",
+        "eyebrow": "The Edit",
+        "heading": "Simple Is More",
+        "body": "Investment pieces need not shout. We favour clean lines, exceptional fabrics, and a palette that works harder — so your wardrobe does too.",
+        "ctaLabel": "Explore the look",
+        "ctaHref": "/shop",
+        "variant": "cream"
+      },
+      {
+        "id": "blk_home_countdown",
+        "type": "countdown",
+        "layout": {
+          "alignment": "center",
+          "width": "full",
+          "columnCount": 1,
+          "padding": "none"
+        },
+        "heading": "Seasonal Offer — Ends Soon",
+        "body": "Extra 15% off selected pieces. One week only.",
+        "ctaLabel": "Shop the sale",
+        "ctaHref": "/sale",
+        "targetDate": "2026-09-14T00:00:00.000Z",
+        "variant": "accent"
+      },
+      {
+        "id": "blk_home_categories",
+        "type": "categorygrid",
+        "layout": {
+          "alignment": "center",
+          "width": "full",
+          "columnCount": 1,
+          "padding": "lg"
+        },
+        "eyebrow": "Browse",
+        "heading": "Shop by Category",
+        "subheading": "Every piece, organised the way we shop — from outerwear to finishing touches.",
+        "limit": 5,
+        "categoryIds": []
+      },
+      {
+        "id": "blk_home_editorial",
+        "type": "editorial",
+        "layout": {
+          "alignment": "center",
+          "width": "full",
+          "columnCount": 1,
+          "padding": "lg"
+        },
+        "eyebrow": "Conscious Luxury",
+        "heading": "Fashion That Respects the Craft",
+        "body": "We partner with makers who share our values — fair wages, responsible sourcing, and techniques passed down through generations. Every MayCSS edit is chosen for quality, provenance, and the kind of quiet luxury that never needs to announce itself.",
+        "ctaLabel": "Read our story",
+        "ctaHref": "/about",
+        "image": "/uploads/cms/mrjjvu9f-a7927dcf34fe5e25.webp",
+        "imageAlt": "Editorial fashion photography"
+      },
+      {
+        "id": "blk_home_banner",
+        "type": "banner",
+        "layout": {
+          "alignment": "center",
+          "width": "full",
+          "columnCount": 1,
+          "padding": "md"
+        },
+        "image": "/uploads/cms/mrjjwq5w-36fe848ffd416220.webp",
+        "eyebrow": "Just Arrived",
+        "heading": "The Autumn Preview",
+        "body": "Refined layers and sculptural tailoring — selected by our style curators for wardrobes that transcend seasons.",
+        "ctaLabel": "Browse new",
+        "ctaHref": "/new",
+        "overlay": "dark"
+      },
+      {
+        "id": "blk_home_cta",
+        "type": "cta",
+        "layout": {
+          "alignment": "center",
+          "width": "full",
+          "columnCount": 1,
+          "padding": "lg"
+        },
+        "heading": "Join the MayCSS List",
+        "body": "First looks at new arrivals, private sales, and styling notes from our curators — delivered to your inbox.",
+        "ctaLabel": "Subscribe",
+        "ctaHref": "/#newsletter",
+        "variant": "dark"
+      }
+    ]
+  },
+  {
+    "id": "contact",
+    "slug": "contact",
+    "title": "We're Here to Help",
+    "eyebrow": "Concierge",
+    "hero": "Whether you need styling guidance, order support, or a personal shopping appointment — our team responds within one business day.",
+    "pageKind": "contact",
+    "mapEmbed": "<iframe src=\"https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3022.215!2d-73.974!3d40.761!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNDDCsDQ1JzM5LjYiTiA3M8KwNTgnMjAuNCJX!5e0!3m2!1sen!2sus!4v1\" width=\"600\" height=\"450\" style=\"border:0;\" allowfullscreen=\"\" loading=\"lazy\" referrerpolicy=\"no-referrer-when-downgrade\"></iframe>",
+    "published": true,
+    "showInFooter": true,
+    "footerColumn": "company",
+    "lastUpdated": "2026-07-14",
+    "seo": {
+      "metaTitle": "Contact Us · MayCSS",
+      "metaDescription": "Reach our concierge team for styling advice, order support, and personal shopping appointments.",
+      "keywords": [
+        "contact",
+        "concierge",
+        "customer service"
+      ]
+    },
+    "blocks": [
+      {
+        "id": "blk_contact_form",
+        "type": "contactform",
+        "layout": {
+          "alignment": "center",
+          "width": "full",
+          "columnCount": 1,
+          "padding": "md"
+        },
+        "heading": "Send a Message",
+        "subheading": "Share your enquiry and a member of our team will follow up personally."
+      }
+    ]
+  },
+  {
+    "id": "shop",
+    "slug": "shop",
+    "title": "Shop the Collection",
+    "eyebrow": "The Edit",
+    "hero": "Every piece, organised the way we shop — from investment outerwear to fine accessories, each selected for craft and longevity.",
+    "bannerImage": "/uploads/cms/mrjjx6ir-cc868794b5f4e226.webp",
+    "pageKind": "shop",
+    "published": true,
+    "showInFooter": false,
+    "lastUpdated": "2026-07-14",
+    "seo": {
+      "metaTitle": "Shop All · MayCSS",
+      "metaDescription": "Browse the full MayCSS collection — women's, men's, outerwear, dresses, and accessories curated for craftsmanship and longevity.",
+      "keywords": [
+        "shop luxury fashion",
+        "designer clothing online",
+        "MayCSS collection",
+        "premium fashion store"
+      ]
+    },
+    "blocks": [
+      {
+        "id": "blk_shop_intro",
+        "type": "richtext",
+        "layout": {
+          "alignment": "center",
+          "width": "medium",
+          "columnCount": 1,
+          "padding": "md"
+        },
+        "heading": "Curated for the Modern Wardrobe",
+        "headingLevel": 2,
+        "body": "Explore our full catalog of premium pieces — each selected for craftsmanship, provenance, and timeless appeal. Use the categories below to find exactly what your wardrobe needs.",
+        "alignment": "center"
+      },
+      {
+        "id": "blk_shop_categories",
+        "type": "categorygrid",
+        "layout": {
+          "alignment": "center",
+          "width": "full",
+          "columnCount": 1,
+          "padding": "lg"
+        },
+        "eyebrow": "Categories",
+        "heading": "Find Your Edit",
+        "subheading": "Start with the category that speaks to you.",
+        "limit": 5,
+        "categoryIds": []
+      }
+    ]
+  },
+  {
+    "id": "sale",
+    "slug": "sale",
+    "title": "The Sale Edit",
+    "eyebrow": "Limited Time",
+    "hero": "Investment pieces at investment-friendly prices — while they last.",
+    "bannerImage": "/uploads/cms/mrjjwq5w-36fe848ffd416220.webp",
+    "pageKind": "sale",
+    "published": true,
+    "showInFooter": false,
+    "lastUpdated": "2026-07-14",
+    "seo": {
+      "metaTitle": "Sale · MayCSS",
+      "metaDescription": "Limited-time markdowns on curated MayCSS pieces.",
+      "keywords": [
+        "sale",
+        "markdowns",
+        "luxury fashion"
+      ]
+    },
+    "blocks": [
+      {
+        "id": "blk_sale_grid",
+        "type": "productgrid",
+        "layout": {
+          "alignment": "center",
+          "width": "full",
+          "columnCount": 4,
+          "padding": "lg"
+        },
+        "heading": "On Sale Now",
+        "productIds": [],
+        "filterTag": "sale",
+        "limit": 12
+      }
+    ]
+  }
+]

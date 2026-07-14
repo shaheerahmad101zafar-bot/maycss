@@ -1,0 +1,67 @@
+[
+  {
+    "id": "mri1a5civqsg",
+    "email": "fame101gaming@gmail.com",
+    "name": "sohaib",
+    "createdAt": "2026-07-12T16:54:37.458Z",
+    "lastMessageAt": "2026-07-13T12:22:57.664Z",
+    "unreadForAdmin": 4,
+    "unreadForCustomer": 2,
+    "messages": [
+      {
+        "id": "mri1a5cijwuj",
+        "threadId": "mri1a5civqsg",
+        "from": "customer",
+        "body": "ff",
+        "createdAt": "2026-07-12T16:54:37.458Z",
+        "readByAdmin": false,
+        "readByCustomer": true
+      },
+      {
+        "id": "mri1j4w4y0rs",
+        "threadId": "mri1a5civqsg",
+        "from": "customer",
+        "body": "order q hold ha",
+        "createdAt": "2026-07-12T17:01:36.773Z",
+        "readByAdmin": false,
+        "readByCustomer": true
+      },
+      {
+        "id": "mri1jdmhmv5g",
+        "threadId": "mri1a5civqsg",
+        "from": "admin",
+        "body": "bs dil kiya",
+        "createdAt": "2026-07-12T17:01:48.089Z",
+        "readByAdmin": true,
+        "readByCustomer": false
+      },
+      {
+        "id": "mritbstwum5c",
+        "threadId": "mri1a5civqsg",
+        "from": "customer",
+        "body": "liveee",
+        "createdAt": "2026-07-13T05:59:43.796Z",
+        "readByAdmin": false,
+        "readByCustomer": true
+      },
+      {
+        "id": "mritc17n52ap",
+        "threadId": "mri1a5civqsg",
+        "from": "admin",
+        "body": "gg",
+        "createdAt": "2026-07-13T05:59:54.660Z",
+        "readByAdmin": true,
+        "readByCustomer": false
+      },
+      {
+        "id": "mrj70n0g0f3a",
+        "threadId": "mri1a5civqsg",
+        "from": "customer",
+        "body": "hi",
+        "createdAt": "2026-07-13T12:22:57.664Z",
+        "readByAdmin": false,
+        "readByCustomer": true
+      }
+    ]
+  }
+]

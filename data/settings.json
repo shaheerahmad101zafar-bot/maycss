@@ -1,0 +1,21 @@
+{
+  "payments": {
+    "merchantName": "stripe",
+    "apiKey": "7t2khaGXH6V6Fc+WDYBf/cl1u7APsRePWYQCL4IY80EV8fDIuSXB66iJx7px9kgn",
+    "secretKey": "544535643656546543",
+    "merchantId": "merch-12345",
+    "environment": "live",
+    "apiBaseUrl": "",
+    "enabled": true,
+    "manualMethods": [
+      {
+        "id": "mri38js7f7ls",
+        "name": "zelle",
+        "qrCode": "/uploads/qr/mri39ppm-9f7fce8c51a3ca59.jpg",
+        "discountPercent": 25,
+        "instructions": "hghgjkffh@gmail.com",
+        "enabled": false
+      }
+    ]
+  }
+}

@@ -1,0 +1,74 @@
+[
+  {
+    "id": "cat_women",
+    "slug": "women",
+    "name": "Women",
+    "parentId": null,
+    "order": 0,
+    "description": "Tailoring, knitwear, and investment pieces for the modern wardrobe.",
+    "image": "/uploads/categories/mriu1xji-fdc5cdfb1a199330.webp",
+    "seo": {
+      "metaTitle": "Women's Luxury Fashion · MayCSS",
+      "metaDescription": "Shop curated women's clothing — outerwear, dresses, knitwear, and accessories selected for craftsmanship and longevity.",
+      "focusKeyword": "women luxury fashion",
+      "keywords": ["women", "dresses", "outerwear", "designer clothing"]
+    }
+  },
+  {
+    "id": "cat_men",
+    "slug": "men",
+    "name": "Men",
+    "parentId": null,
+    "order": 1,
+    "description": "Refined essentials and statement pieces for every season.",
+    "image": "/uploads/categories/mriu2gj3-892876186c6c0f15.webp",
+    "seo": {
+      "metaTitle": "Men's Premium Fashion · MayCSS",
+      "metaDescription": "Discover men's curated fashion — blazers, shirting, knitwear, and accessories from independent ateliers.",
+      "focusKeyword": "men premium fashion",
+      "keywords": ["men", "blazers", "shirts", "menswear"]
+    }
+  },
+  {
+    "id": "cat_dresses",
+    "slug": "dresses",
+    "name": "Dresses",
+    "parentId": null,
+    "order": 2,
+    "description": "From day dresses to evening silhouettes.",
+    "image": "/uploads/cms/mrjjx6ir-cc868794b5f4e226.webp",
+    "seo": {
+      "metaTitle": "Designer Dresses · MayCSS",
+      "metaDescription": "Shop curated designer dresses — midi, maxi, and occasion wear with timeless appeal.",
+      "keywords": ["dresses", "designer dresses", "evening wear"]
+    }
+  },
+  {
+    "id": "cat_outerwear",
+    "slug": "outerwear",
+    "name": "Outerwear",
+    "parentId": null,
+    "order": 3,
+    "description": "Coats, blazers, and layers built to last.",
+    "image": "/uploads/cms/mrjjwq5w-36fe848ffd416220.webp",
+    "seo": {
+      "metaTitle": "Luxury Outerwear · MayCSS",
+      "metaDescription": "Investment coats and blazers — tailored layers for transitional seasons and beyond.",
+      "keywords": ["outerwear", "coats", "blazers", "jackets"]
+    }
+  },
+  {
+    "id": "cat_accessories",
+    "slug": "accessories",
+    "name": "Accessories",
+    "parentId": null,
+    "order": 4,
+    "description": "Fine leather, jewelry, and finishing touches.",
+    "image": "/uploads/cms/mrjjvu9f-a7927dcf34fe5e25.webp",
+    "seo": {
+      "metaTitle": "Luxury Accessories · MayCSS",
+      "metaDescription": "Complete the look with curated accessories — bags, jewelry, and leather goods.",
+      "keywords": ["accessories", "bags", "jewelry", "leather"]
+    }
+  }
+]

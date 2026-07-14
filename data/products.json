@@ -1,0 +1,658 @@
+[
+  {
+    "id": 2,
+    "name": "Silk Wrap Midi Dress",
+    "brand": "Aurora Rose",
+    "image": "https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=800&q=80",
+    "gallery": [
+      "https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=1200&q=85",
+      "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=1200&q=85",
+      "https://images.unsplash.com/photo-1566174053879-31528523f8ae?w=1200&q=85"
+    ],
+    "price": 129,
+    "originalPrice": 189,
+    "rating": 4.8,
+    "reviews": 342,
+    "isNew": true,
+    "description": "A flowing silk midi cut on the bias for effortless drape. The adjustable wrap silhouette flatters every figure, and a hidden waist tie keeps everything in place from brunch to black-tie.",
+    "specs": [
+      {
+        "label": "Material",
+        "value": "100% Mulberry Silk"
+      },
+      {
+        "label": "Length",
+        "value": "Midi (48 in.)"
+      },
+      {
+        "label": "Care",
+        "value": "Hand wash or dry clean"
+      },
+      {
+        "label": "Origin",
+        "value": "Woven in France"
+      }
+    ],
+    "sizes": [
+      "XS",
+      "S",
+      "M",
+      "L"
+    ],
+    "colors": [
+      {
+        "name": "Blush",
+        "hex": "#E8B4B8"
+      },
+      {
+        "name": "Emerald",
+        "hex": "#046307"
+      },
+      {
+        "name": "Ivory",
+        "hex": "#F1EADA"
+      }
+    ]
+  },
+  {
+    "id": 3,
+    "name": "Italian Leather Loafers",
+    "brand": "Marconi",
+    "image": "https://images.unsplash.com/photo-1533867617858-e7b97e060509?w=800&q=80",
+    "gallery": [
+      "https://images.unsplash.com/photo-1533867617858-e7b97e060509?w=1200&q=85",
+      "https://images.unsplash.com/photo-1614252235316-8c857d38b5f4?w=1200&q=85",
+      "https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?w=1200&q=85"
+    ],
+    "price": 179.5,
+    "rating": 4.5,
+    "reviews": 98,
+    "badge": "New",
+    "isNew": true,
+    "description": "Hand-crafted in Tuscany from full-grain calfskin, these penny loafers are stitched to a leather sole and burnished by hand for a rich patina that only improves with wear.",
+    "specs": [
+      {
+        "label": "Upper",
+        "value": "Full-grain Italian calfskin"
+      },
+      {
+        "label": "Sole",
+        "value": "Blake-stitched leather"
+      },
+      {
+        "label": "Care",
+        "value": "Condition monthly"
+      },
+      {
+        "label": "Origin",
+        "value": "Handmade in Italy"
+      }
+    ],
+    "sizes": [
+      "7",
+      "8",
+      "9",
+      "10",
+      "11",
+      "12"
+    ],
+    "colors": [
+      {
+        "name": "Cognac",
+        "hex": "#8B4513"
+      },
+      {
+        "name": "Black",
+        "hex": "#111111"
+      },
+      {
+        "name": "Oxblood",
+        "hex": "#4A0E0E"
+      }
+    ]
+  },
+  {
+    "id": 4,
+    "name": "Diamond Halo Pendant Necklace",
+    "brand": "Lumiere Fine Jewelry",
+    "image": "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=800&q=80",
+    "gallery": [
+      "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=1200&q=85",
+      "https://images.unsplash.com/photo-1599643477877-530eb83abc8e?w=1200&q=85",
+      "https://images.unsplash.com/photo-1611591437281-460bfbe1220a?w=1200&q=85"
+    ],
+    "price": 899,
+    "originalPrice": 1299,
+    "rating": 4.9,
+    "reviews": 76,
+    "isNew": false,
+    "description": "A brilliant-cut center stone framed by a delicate halo of pave diamonds, set in solid 14k gold. Suspended from an adjustable link chain that layers beautifully with your favorite pieces.",
+    "specs": [
+      {
+        "label": "Metal",
+        "value": "14k Solid Gold"
+      },
+      {
+        "label": "Center Stone",
+        "value": "0.25ct Lab-Grown Diamond"
+      },
+      {
+        "label": "Chain",
+        "value": "16-18 in. adjustable"
+      },
+      {
+        "label": "Certification",
+        "value": "IGI Certified"
+      }
+    ],
+    "sizes": [
+      "One Size"
+    ],
+    "colors": [
+      {
+        "name": "Yellow Gold",
+        "hex": "#D4AF37"
+      },
+      {
+        "name": "White Gold",
+        "hex": "#E5E5E5"
+      },
+      {
+        "name": "Rose Gold",
+        "hex": "#B76E79"
+      }
+    ]
+  },
+  {
+    "id": 5,
+    "name": "Structured Leather Tote",
+    "brand": "Vittori",
+    "image": "https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=800&q=80",
+    "gallery": [
+      "https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=1200&q=85",
+      "https://images.unsplash.com/photo-1591561954557-26941169b49e?w=1200&q=85",
+      "https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=1200&q=85"
+    ],
+    "price": 349,
+    "rating": 4.7,
+    "reviews": 186,
+    "badge": "Exclusive",
+    "isNew": false,
+    "description": "Sculpted from vegetable-tanned leather with a hand-painted edge finish. Roomy enough for a 15-inch laptop yet refined enough for the boardroom, this tote is built to be your everyday companion.",
+    "specs": [
+      {
+        "label": "Material",
+        "value": "Vegetable-tanned leather"
+      },
+      {
+        "label": "Dimensions",
+        "value": "15 x 12 x 5 in."
+      },
+      {
+        "label": "Hardware",
+        "value": "Brushed brass"
+      },
+      {
+        "label": "Origin",
+        "value": "Crafted in Florence"
+      }
+    ],
+    "sizes": [
+      "One Size"
+    ],
+    "colors": [
+      {
+        "name": "Tan",
+        "hex": "#C39A6B"
+      },
+      {
+        "name": "Black",
+        "hex": "#111111"
+      },
+      {
+        "name": "Bordeaux",
+        "hex": "#5C1A1B"
+      }
+    ]
+  },
+  {
+    "id": 6,
+    "name": "Tailored Wool Blazer",
+    "brand": "Nolan & Co.",
+    "image": "https://images.unsplash.com/photo-1594938298603-c8148c4dae35?w=800&q=80",
+    "gallery": [
+      "https://images.unsplash.com/photo-1594938298603-c8148c4dae35?w=1200&q=85",
+      "https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=1200&q=85",
+      "https://images.unsplash.com/photo-1580657018950-c7f7d6a6d990?w=1200&q=85"
+    ],
+    "price": 219,
+    "originalPrice": 329,
+    "rating": 4.4,
+    "reviews": 152,
+    "isNew": false,
+    "description": "A modern take on the classic single-breasted blazer. Half-canvas construction gives it structure while natural stretch keeps it comfortable through long days at the office and after-hours dinners.",
+    "specs": [
+      {
+        "label": "Material",
+        "value": "Super 120s Wool"
+      },
+      {
+        "label": "Construction",
+        "value": "Half-canvas"
+      },
+      {
+        "label": "Care",
+        "value": "Dry clean"
+      },
+      {
+        "label": "Origin",
+        "value": "Tailored in Portugal"
+      }
+    ],
+    "sizes": [
+      "36",
+      "38",
+      "40",
+      "42",
+      "44",
+      "46"
+    ],
+    "colors": [
+      {
+        "name": "Navy",
+        "hex": "#1F2E4A"
+      },
+      {
+        "name": "Charcoal",
+        "hex": "#3A3A3A"
+      },
+      {
+        "name": "Beige",
+        "hex": "#C9B58C"
+      }
+    ]
+  },
+  {
+    "id": 7,
+    "name": "Automatic Skeleton Watch",
+    "brand": "Chrono Verdant",
+    "image": "https://images.unsplash.com/photo-1524592094714-0f0654e20314?w=800&q=80",
+    "gallery": [
+      "https://images.unsplash.com/photo-1524592094714-0f0654e20314?w=1200&q=85",
+      "https://images.unsplash.com/photo-1523170335258-f5ed11844a49?w=1200&q=85",
+      "https://images.unsplash.com/photo-1587836374828-4dbafa94cf0e?w=1200&q=85"
+    ],
+    "price": 429,
+    "originalPrice": 599,
+    "rating": 4.7,
+    "reviews": 61,
+    "badge": "Limited",
+    "isNew": true,
+    "description": "Reveal the mechanical heart of horology. A 21-jewel automatic movement, visible through both dial and caseback, keeps time on a scratch-resistant sapphire crystal. Numbered edition of 500.",
+    "specs": [
+      {
+        "label": "Movement",
+        "value": "Automatic, 21 jewels"
+      },
+      {
+        "label": "Case",
+        "value": "42mm Stainless Steel"
+      },
+      {
+        "label": "Crystal",
+        "value": "Sapphire, AR-coated"
+      },
+      {
+        "label": "Water Resist",
+        "value": "5 ATM (50m)"
+      }
+    ],
+    "sizes": [
+      "42mm"
+    ],
+    "colors": [
+      {
+        "name": "Silver / Black",
+        "hex": "#2A2A2A"
+      },
+      {
+        "name": "Gold / Blue",
+        "hex": "#1E3A5F"
+      },
+      {
+        "name": "Rose / White",
+        "hex": "#F1EADA"
+      }
+    ]
+  },
+  {
+    "id": 8,
+    "name": "Cashmere Ribbed Sweater",
+    "brand": "Bianca Knit",
+    "image": "https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=800&q=80",
+    "gallery": [
+      "https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=1200&q=85",
+      "https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?w=1200&q=85",
+      "https://images.unsplash.com/photo-1564859228273-274232fdb516?w=1200&q=85"
+    ],
+    "price": 149,
+    "rating": 4.5,
+    "reviews": 273,
+    "isNew": true,
+    "description": "Spun from Grade-A Mongolian cashmere and knit on vintage machines for that unmistakable hand-feel. The relaxed fit and generous ribbing make this the sweater you'll reach for all season.",
+    "specs": [
+      {
+        "label": "Material",
+        "value": "100% Grade-A Cashmere"
+      },
+      {
+        "label": "Gauge",
+        "value": "5-gauge rib knit"
+      },
+      {
+        "label": "Care",
+        "value": "Hand wash cold"
+      },
+      {
+        "label": "Origin",
+        "value": "Knit in Scotland"
+      }
+    ],
+    "sizes": [
+      "XS",
+      "S",
+      "M",
+      "L",
+      "XL"
+    ],
+    "colors": [
+      {
+        "name": "Oatmeal",
+        "hex": "#D4C4A0"
+      },
+      {
+        "name": "Forest",
+        "hex": "#2C4A2C"
+      },
+      {
+        "name": "Rust",
+        "hex": "#B7410E"
+      }
+    ]
+  },
+  {
+    "id": 9,
+    "name": "Men’s Burgundy Maroon Wine 2 Button Blazer, Classic Business Casual Wedding Sport Coat Jacket",
+    "brand": "Men&#39;sUSA",
+    "image": "https://www.mensusa.com/cdn/shop/files/Head_to_waist_model_pose_202605292145_1200x2150.jpg?v=1780073244",
+    "price": 45200,
+    "rating": 4.6,
+    "reviews": 24,
+    "isNew": true,
+    "description": "Upgrade your formal and smart casual wardrobe with this Men’s Burgundy Maroon Wine 2 Button Blazer, designed for business events, office wear, weddings, church, dinner parties, parties, evening outings, and special occasions. This classic blazer features a rich burgundy maroon wine color with a c...",
+    "status": "published",
+    "sourceUrl": "https://www.mensusa.com/collections/maroon-blazers/products/mens-2-button-burgundy-maroon-wine-color-blazer-sport-coat",
+    "contentBlocks": [
+      {
+        "id": "blk_22567cd8e633",
+        "type": "richtext",
+        "heading": "About the Men’s Burgundy Maroon Wine 2 Button Blazer, Classic Business Casual Wedding Sport Coat Jacket",
+        "headingLevel": 2,
+        "body": "Upgrade your formal and smart casual wardrobe with this Men’s Burgundy Maroon Wine 2 Button Blazer, designed for business events, office wear, weddings, church, dinner parties, parties, evening outings, and special occasions. This classic blazer features a rich burgundy maroon wine color with a c. We picked this piece because it delivers on the details that matter — crafted materials, a considered fit, and a design that will earn its place in your rotation. If you have been searching for the right shirt, this is a strong pick. Learn more about mycs.",
+        "alignment": "left"
+      },
+      {
+        "id": "blk_5e785e7866e3",
+        "type": "richtext",
+        "heading": "Why this shirt works",
+        "headingLevel": 2,
+        "body": "Every shirt we stock has to earn its shelf space. Here is what stood out with Men’s Burgundy Maroon Wine 2 Button Blazer, Classic Business Casual Wedding Sport Coat Jacket. Quality of materials shows in how the piece hangs, wears, and ages. Construction details — from the stitching to the finish — signal that this was made by people who care about their craft. The result: a shirt you'll reach for again and again. Learn more about mycs.",
+        "alignment": "left"
+      },
+      {
+        "id": "blk_bffc0c91b253",
+        "type": "richtext",
+        "heading": "How to style your Men’s Burgundy Maroon Wine 2 Button Blazer, Classic Business Casual Wedding Sport Coat Jacket",
+        "headingLevel": 2,
+        "body": "Style Men’s Burgundy Maroon Wine 2 Button Blazer, Classic Business Casual Wedding Sport Coat Jacket but you love. Dressed down, pair it with your favourite denim and a clean sneaker. Dressed up, layer it under a blazer or over a slip dress. The versatility is part of what makes this such a strong shirt. Once you have it in your wardrobe, you'll find yourself styling it three, maybe four different ways in a single week. Learn more about mycs.",
+        "alignment": "left"
+      },
+      {
+        "id": "blk_dcf74a5dad37",
+        "type": "richtext",
+        "heading": "Sizing & fit",
+        "headingLevel": 3,
+        "body": "Available in a range of sizes. Consult the size guide on the product page for the best fit. Learn more about shirt, mycs.",
+        "alignment": "left"
+      },
+      {
+        "id": "blk_59161f12bd95",
+        "type": "richtext",
+        "heading": "Care instructions",
+        "headingLevel": 3,
+        "body": "To keep your shirt looking its best, follow the care label. In general: wash cold when possible, air-dry over a hanger or flat, and store folded rather than hung to preserve the shape. Well-cared-for pieces reward you with years of wear. Learn more about mycs.",
+        "alignment": "left"
+      },
+      {
+        "id": "blk_0a7500f17502",
+        "type": "richtext",
+        "heading": "Why we chose it",
+        "headingLevel": 2,
+        "body": "Choosing Men’s Burgundy Maroon Wine 2 Button Blazer, Classic Business Casual Wedding Sport Coat Jacket means investing in a shirt that's designed to last. From the moment you unbox it, the difference is obvious — the weight, the finish, the way it feels in your hands. When you love the piece, you'll care for it. When you care for it, it keeps its shape and its story. That is the Men&#39;sUSA promise. Learn more about mycs.",
+        "alignment": "left"
+      },
+      {
+        "id": "blk_423561be83ff",
+        "type": "faq",
+        "items": [
+          {
+            "q": "Is Men’s Burgundy Maroon Wine 2 Button Blazer, Classic Business Casual Wedding Sport Coat Jacket true to size?",
+            "a": "Men’s Burgundy Maroon Wine 2 Button Blazer, Classic Business Casual Wedding Sport Coat Jacket is available in a single fit. See the size guide for measurements."
+          },
+          {
+            "q": "What is Men’s Burgundy Maroon Wine 2 Button Blazer, Classic Business Casual Wedding Sport Coat Jacket made of?",
+            "a": "Upgrade your formal and smart casual wardrobe with this Men’s Burgundy Maroon Wine 2 Button Blazer, designed for business events, office wear, weddings, church, dinner parties, parties, evening outings, and special occasions. This classic blazer features a rich burgundy maroon wine color with a c..."
+          },
+          {
+            "q": "How should I care for my shirt?",
+            "a": "Follow the care label included with your order. In general, wash cold and air-dry to preserve the fit and finish."
+          },
+          {
+            "q": "Do you offer returns on shirt?",
+            "a": "Yes. Unworn items can be returned within 30 days for a full refund. See our full refund policy for details."
+          }
+        ]
+      }
+    ],
+    "seo": {
+      "metaTitle": "Men’s Burgundy Maroon Wine 2 Button Blazer, Classic Business Casual Wedding Sport Coat Jacket · MayCSS",
+      "metaDescription": "Upgrade your formal and smart casual wardrobe with this Men’s Burgundy Maroon Wine 2 Button Blazer, designed for business events, office wear, weddings, ch",
+      "focusKeyword": "shirt",
+      "keywords": [
+        "mycs"
+      ]
+    }
+  },
+  {
+    "id": 10,
+    "name": "Mens Double Breasted Blazer - Wool Burgundy Sport Coat With Gold Buttons",
+    "image": "https://www.mensusa.com/cdn/shop/files/th-4_1200x2160.jpg?v=1762454995",
+    "price": 210,
+    "isNew": true,
+    "description": "N SHOP WITH CONFIDENCE SHOPPING ON MensUSA.COM IS SAFE AND SECURE. GUARANTEED! All information is encrypted and transmitted without risk using a Secure Sockets Layer (SSL) protocol. Group Orders: Receive a free Shirt &amp; TIE &amp; HANKIE (Any Color) 6 Button Peak Lapel Double Breasted One Chest Pocket Two Flap Front",
+    "status": "published",
+    "sourceUrl": "https://www.mensusa.com/collections/maroon-blazers/products/mens-double-breasted-blazer-wool-burgundy-sport-coat-with-gold-buttons",
+    "contentBlocks": [
+      {
+        "id": "blk_3355246a76e5",
+        "type": "richtext",
+        "heading": "About the Mens Double Breasted Blazer - Wool Burgundy Sport Coat With Gold Buttons",
+        "headingLevel": 2,
+        "body": "N SHOP WITH CONFIDENCE SHOPPING ON MensUSA.COM IS SAFE AND SECURE. GUARANTEED! All information is encrypted and transmitted without risk using a Secure Sockets Layer (SSL) protocol. Group Orders: Receive a free Shirt &amp; TIE &amp; HANKIE (Any Color) 6 Button Peak Lapel Double Breasted One Chest Pocket Two Flap Front We picked this piece because it delivers on the details that matter — crafted materials, a considered fit, and a design that will earn its place in your rotation. If you have been searching for the right coat, this is a strong pick. Learn more about dress coat premimum.",
+        "alignment": "left"
+      },
+      {
+        "id": "blk_acf4d177d432",
+        "type": "richtext",
+        "heading": "Why this coat works",
+        "headingLevel": 2,
+        "body": "Every coat we stock has to earn its shelf space. Here is what stood out with Mens Double Breasted Blazer - Wool Burgundy Sport Coat With Gold Buttons. Quality of materials shows in how the piece hangs, wears, and ages. Construction details — from the stitching to the finish — signal that this was made by people who care about their craft. The result: a coat you'll reach for again and again. Learn more about dress coat premimum.",
+        "alignment": "left"
+      },
+      {
+        "id": "blk_192b20e97831",
+        "type": "richtext",
+        "heading": "How to style your Mens Double Breasted Blazer - Wool Burgundy Sport Coat With Gold Buttons",
+        "headingLevel": 2,
+        "body": "Style Mens Double Breasted Blazer - Wool Burgundy Sport Coat With Gold Buttons but you love. Dressed down, pair it with your favourite denim and a clean sneaker. Dressed up, layer it under a blazer or over a slip dress. The versatility is part of what makes this such a strong coat. Once you have it in your wardrobe, you'll find yourself styling it three, maybe four different ways in a single week. Learn more about dress coat premimum.",
+        "alignment": "left"
+      },
+      {
+        "id": "blk_482cf3e5d32d",
+        "type": "richtext",
+        "heading": "Sizing & fit",
+        "headingLevel": 3,
+        "body": "Available in a range of sizes. Consult the size guide on the product page for the best fit. Learn more about coat, dress coat premimum.",
+        "alignment": "left"
+      },
+      {
+        "id": "blk_eb405b6af4f8",
+        "type": "richtext",
+        "heading": "Care instructions",
+        "headingLevel": 3,
+        "body": "To keep your coat looking its best, follow the care label. In general: wash cold when possible, air-dry over a hanger or flat, and store folded rather than hung to preserve the shape. Well-cared-for pieces reward you with years of wear. Learn more about dress coat premimum.",
+        "alignment": "left"
+      },
+      {
+        "id": "blk_2b9636f10002",
+        "type": "richtext",
+        "heading": "Why we chose it",
+        "headingLevel": 2,
+        "body": "Choosing Mens Double Breasted Blazer - Wool Burgundy Sport Coat With Gold Buttons means investing in a coat that's designed to last. From the moment you unbox it, the difference is obvious — the weight, the finish, the way it feels in your hands. When you love the piece, you'll care for it. When you care for it, it keeps its shape and its story. That is the our featured brand promise. Learn more about dress coat premimum.",
+        "alignment": "left"
+      },
+      {
+        "id": "blk_5643322f2074",
+        "type": "faq",
+        "items": [
+          {
+            "q": "Is Mens Double Breasted Blazer - Wool Burgundy Sport Coat With Gold Buttons true to size?",
+            "a": "Mens Double Breasted Blazer - Wool Burgundy Sport Coat With Gold Buttons is available in a single fit. See the size guide for measurements."
+          },
+          {
+            "q": "What is Mens Double Breasted Blazer - Wool Burgundy Sport Coat With Gold Buttons made of?",
+            "a": "N SHOP WITH CONFIDENCE SHOPPING ON MensUSA.COM IS SAFE AND SECURE. GUARANTEED! All information is encrypted and transmitted without risk using a Secure Sockets Layer (SSL) protocol. Group Orders: Receive a free Shirt &amp; TIE &amp; HANKIE (Any Color) 6 Button Peak Lapel Double Breasted One Chest Pocket Two Flap Front"
+          },
+          {
+            "q": "How should I care for my coat?",
+            "a": "Follow the care label included with your order. In general, wash cold and air-dry to preserve the fit and finish."
+          },
+          {
+            "q": "Do you offer returns on coat?",
+            "a": "Yes. Unworn items can be returned within 30 days for a full refund. See our full refund policy for details."
+          }
+        ]
+      }
+    ],
+    "seo": {
+      "metaTitle": "Mens Double Breasted Blazer - Wool Burgundy Sport Coat With Gold Buttons · MayCSS",
+      "metaDescription": "N SHOP WITH CONFIDENCE SHOPPING ON MensUSA.COM IS SAFE AND SECURE. GUARANTEED! All information is encrypted and transmitted without risk using a Secure Soc",
+      "focusKeyword": "coat",
+      "keywords": [
+        "dress coat premimum"
+      ]
+    }
+  },
+  {
+    "id": 11,
+    "name": "Fashion Sale Black Shiny Silky Satin Men'S Dress Shirt Online Sale",
+    "image": "http://www.mensusa.com/cdn/shop/files/Black_Shirt.png?v=1760508590",
+    "price": 175,
+    "isNew": true,
+    "description": "Men’s Black Shiny Satin Dress Shirt – Affordable Silky Formal Shirt on Sale Step out in sleek sophistication with the Men’s Black Shiny Satin Dress Shirt, a bold and stylish option for men who want to make a statement without breaking the bank. Designed with a silky satin finish that shines under the light, this shirt",
+    "status": "published",
+    "sourceUrl": "https://www.mensusa.com/products/fashion-sale-black-shiny-silky-satin-mens-dress-cheap-priced-shirt-online-sale",
+    "contentBlocks": [
+      {
+        "id": "blk_1f9e0469db8c",
+        "type": "richtext",
+        "heading": "About the Fashion Sale Black Shiny Silky Satin Men'S Dress Shirt Online Sale",
+        "headingLevel": 2,
+        "body": "Men’s Black Shiny Satin Dress Shirt – Affordable Silky Formal Shirt on Sale Step out in sleek sophistication with the Men’s Black Shiny Satin Dress Shirt, a bold and stylish option for men who want to make a statement without breaking the bank. Designed with a silky satin finish that shines under the light, this shirt We picked this piece because it delivers on the details that matter — crafted materials, a considered fit, and a design that will earn its place in your rotation. If you have been searching for the right dress shirt, this is a strong pick.",
+        "alignment": "left"
+      },
+      {
+        "id": "blk_612169bdfbd8",
+        "type": "richtext",
+        "heading": "Why this dress shirt works",
+        "headingLevel": 2,
+        "body": "Every dress shirt we stock has to earn its shelf space. Here is what stood out with Fashion Sale Black Shiny Silky Satin Men'S Dress Shirt Online Sale. Quality of materials shows in how the piece hangs, wears, and ages. Construction details — from the stitching to the finish — signal that this was made by people who care about their craft. The result: a dress shirt you'll reach for again and again.",
+        "alignment": "left"
+      },
+      {
+        "id": "blk_e0641fc2eecb",
+        "type": "richtext",
+        "heading": "How to style your Fashion Sale Black Shiny Silky Satin Men'S Dress Shirt Online Sale",
+        "headingLevel": 2,
+        "body": "Style Fashion Sale Black Shiny Silky Satin Men'S Dress Shirt Online Sale but you love. Dressed down, pair it with your favourite denim and a clean sneaker. Dressed up, layer it under a blazer or over a slip dress. The versatility is part of what makes this such a strong dress shirt. Once you have it in your wardrobe, you'll find yourself styling it three, maybe four different ways in a single week.",
+        "alignment": "left"
+      },
+      {
+        "id": "blk_8b94869ecaa3",
+        "type": "richtext",
+        "heading": "Sizing & fit",
+        "headingLevel": 3,
+        "body": "Available in a range of sizes. Consult the size guide on the product page for the best fit. Learn more about dress shirt, dress shirt.",
+        "alignment": "left"
+      },
+      {
+        "id": "blk_13e49cf5c6cc",
+        "type": "richtext",
+        "heading": "Care instructions",
+        "headingLevel": 3,
+        "body": "To keep your dress shirt looking its best, follow the care label. In general: wash cold when possible, air-dry over a hanger or flat, and store folded rather than hung to preserve the shape. Well-cared-for pieces reward you with years of wear.",
+        "alignment": "left"
+      },
+      {
+        "id": "blk_87b3c5468e3a",
+        "type": "richtext",
+        "heading": "Why we chose it",
+        "headingLevel": 2,
+        "body": "Choosing Fashion Sale Black Shiny Silky Satin Men'S Dress Shirt Online Sale means investing in a dress shirt that's designed to last. From the moment you unbox it, the difference is obvious — the weight, the finish, the way it feels in your hands. When you love the piece, you'll care for it. When you care for it, it keeps its shape and its story. That is the our featured brand promise.",
+        "alignment": "left"
+      },
+      {
+        "id": "blk_455a8fdd95ca",
+        "type": "faq",
+        "items": [
+          {
+            "q": "Is Fashion Sale Black Shiny Silky Satin Men'S Dress Shirt Online Sale true to size?",
+            "a": "Fashion Sale Black Shiny Silky Satin Men'S Dress Shirt Online Sale is available in a single fit. See the size guide for measurements."
+          },
+          {
+            "q": "What is Fashion Sale Black Shiny Silky Satin Men'S Dress Shirt Online Sale made of?",
+            "a": "Men’s Black Shiny Satin Dress Shirt – Affordable Silky Formal Shirt on Sale Step out in sleek sophistication with the Men’s Black Shiny Satin Dress Shirt, a bold and stylish option for men who want to make a statement without breaking the bank. Designed with a silky satin finish that shines under the light, this shirt"
+          },
+          {
+            "q": "How should I care for my dress shirt?",
+            "a": "Follow the care label included with your order. In general, wash cold and air-dry to preserve the fit and finish."
+          },
+          {
+            "q": "Do you offer returns on dress shirt?",
+            "a": "Yes. Unworn items can be returned within 30 days for a full refund. See our full refund policy for details."
+          }
+        ]
+      }
+    ],
+    "seo": {
+      "metaTitle": "Fashion Sale Black Shiny Silky Satin Men'S Dress Shirt Online Sale · MayCSS",
+      "metaDescription": "Men’s Black Shiny Satin Dress Shirt – Affordable Silky Formal Shirt on Sale Step out in sleek sophistication with the Men’s Black Shiny Satin Dress Shirt,",
+      "focusKeyword": "dress shirt",
+      "keywords": [
+        "dress shirt",
+        "dress shirts",
+        "affordable dress shirt"
+      ]
+    }
+  }
+]

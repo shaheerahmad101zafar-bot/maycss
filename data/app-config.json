@@ -1,0 +1,30 @@
+{
+  "siteName": "MayCSS",
+  "tagline": "Curated luxury fashion",
+  "logoUrl": "/uploads/logos/mrkbm2c9-730b4a4cd651c0e5.webp",
+  "logoHeight": 90,
+  "logoWidth": 87,
+  "logoBgColor": "#ffffff",
+  "useTextLogo": true,
+  "contactEmail": "",
+  "supportPhone": "",
+  "currency": "usd",
+  "menuAlignment": "justify-center",
+  "activeLinkStyle": {
+    "showUnderline": true,
+    "activeColor": "#df2b0c"
+  },
+  "socials": {
+    "facebook": "",
+    "instagram": "",
+    "twitter": "",
+    "tiktok": "",
+    "youtube": "",
+    "linkedin": ""
+  },
+  "analytics": {
+    "googleAnalyticsId": "",
+    "metaPixelId": "",
+    "plausibleDomain": ""
+  }
+}

@@ -104,9 +104,6 @@ export default async function Footer() {
                 {p.title}
               </Link>
             ))}
-            <Link href="/admin" className="mc-footer__admin">
-              Admin
-            </Link>
           </div>
         </div>
       </div>

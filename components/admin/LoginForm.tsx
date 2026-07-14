@@ -35,9 +35,6 @@ export default function LoginForm({ from }: { from?: string }) {
       >
         {pending ? "Signing in…" : "Sign In"}
       </button>
-      <p className="mc-admin-login__hint">
-        Default dev password: <code>maycss-admin</code>
-      </p>
     </form>
   );
 }

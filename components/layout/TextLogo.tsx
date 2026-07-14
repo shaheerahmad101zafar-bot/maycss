@@ -12,14 +12,24 @@ export default function TextLogo({
   variant = "navbar",
 }: TextLogoProps) {
   const fallbackTagline = tagline || "Curated luxury fashion";
+  const isMyacss = siteName.trim().toLowerCase() === "myacss";
 
   return (
     <Link
       href="/"
-      className={`mc-text-logo mc-text-logo--${variant}`}
+      className={`mc-text-logo mc-text-logo--${variant}${isMyacss ? " mc-text-logo--myacss" : ""}`}
       aria-label={`${siteName} home`}
     >
-      <span className="mc-text-logo__name">{siteName}</span>
+      <span className="mc-text-logo__name">
+        {isMyacss ? (
+          <>
+            <span className="mc-text-logo__my">my</span>
+            <span className="mc-text-logo__acss">acss</span>
+          </>
+        ) : (
+          siteName
+        )}
+      </span>
       {variant === "navbar" && (
         <span className="mc-text-logo__tagline mc-navbar__brand-text">
           {fallbackTagline}

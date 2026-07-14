@@ -19,8 +19,9 @@ const LINKS: NavLink[] = [
   { href: "/admin/settings", label: "Settings" },
 ];
 
-export default function AdminNav() {
+export default function AdminNav({ siteName = "myacss" }: { siteName?: string }) {
   const pathname = usePathname();
+  const brandMark = siteName.charAt(0).toLowerCase();
   const isActive = (l: NavLink) =>
     l.exact
       ? pathname === l.href
@@ -29,9 +30,9 @@ export default function AdminNav() {
   return (
     <aside className="mc-admin__nav" aria-label="Admin navigation">
       <div className="mc-admin__brand">
-        <span className="mc-navbar__brand-mark">M</span>
+        <span className="mc-navbar__brand-mark">{brandMark}</span>
         <div>
-          <p className="mc-admin__brand-name">MayCSS</p>
+          <p className="mc-admin__brand-name">{siteName}</p>
           <p className="mc-admin__brand-sub">Admin</p>
         </div>
       </div>

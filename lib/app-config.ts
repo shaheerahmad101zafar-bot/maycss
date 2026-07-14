@@ -31,7 +31,7 @@ export type AppConfig = {
 };
 
 const DEFAULT: AppConfig = {
-  siteName: "MayCSS",
+  siteName: "myacss",
   tagline: "Premium fashion & lifestyle, curated.",
   logoUrl: "",
   logoHeight: 64,

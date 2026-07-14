@@ -8,7 +8,7 @@ import { PageFactory } from "@/lib/pages";
 import type { Metadata } from "next";
 
 const FALLBACK_META: Metadata = {
-  title: "MayCSS — Premium fashion & lifestyle, curated",
+  title: "myacss — Premium fashion & lifestyle, curated",
   description:
     "Independent designers and heritage houses, sourced with integrity.",
 };

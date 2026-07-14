@@ -215,7 +215,7 @@ export const PageFactory = {
 
   toMetadata(page: Page): Metadata {
     const seo = page.seo ?? {};
-    const title = seo.metaTitle || `${page.title} · MayCSS`;
+    const title = seo.metaTitle || `${page.title} · myacss`;
     const description = seo.metaDescription || page.hero || page.title;
     return {
       title,

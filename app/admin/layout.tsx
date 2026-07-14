@@ -1,10 +1,13 @@
 import type { ReactNode } from "react";
 import AdminShell from "@/components/admin/AdminShell";
+import { getAppConfig } from "@/lib/app-config";
 
-export const metadata = {
-  title: "Admin · MayCSS",
-};
+export async function generateMetadata() {
+  const cfg = await getAppConfig();
+  return { title: `Admin · ${cfg.siteName}` };
+}
 
-export default function AdminLayout({ children }: { children: ReactNode }) {
-  return <AdminShell>{children}</AdminShell>;
+export default async function AdminLayout({ children }: { children: ReactNode }) {
+  const cfg = await getAppConfig();
+  return <AdminShell siteName={cfg.siteName}>{children}</AdminShell>;
 }

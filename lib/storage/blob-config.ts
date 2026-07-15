@@ -17,7 +17,8 @@ export type BlobAuth = {
 export function getBlobAccess(): BlobAccessType {
   const raw = process.env.BLOB_STORE_ACCESS?.trim().toLowerCase();
   if (raw === "public" || raw === "private") return raw;
-  return "private";
+  // Default public — matches Vercel Blob stores created with --access public.
+  return "public";
 }
 
 export function usesBlobStorage(): boolean {

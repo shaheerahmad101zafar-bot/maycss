@@ -44,6 +44,8 @@ import { makeBlockId, normalizeBlock, type ContentBlock } from "@/lib/blocks/typ
 import { scrapeProductUrl } from "@/lib/scraper";
 import { generateProductContent } from "@/lib/ai/product-content-writer";
 import { MenuFactory, type MenuLink } from "@/lib/menus";
+import { rethrowIfNavigationError } from "@/lib/navigation-errors";
+import { StoreWriteError } from "@/lib/storage/json-store";
 
 /* -------------------------------------------------------------------------- */
 /*  Auth                                                                      */
@@ -290,7 +292,18 @@ export async function upsertProductAction(
   const next = existing
     ? products.map((p) => (p.id === existing.id ? newProduct : p))
     : [...products, newProduct];
-  await saveProducts(next);
+  try {
+    await saveProducts(next);
+  } catch (err) {
+    rethrowIfNavigationError(err);
+    const message =
+      err instanceof StoreWriteError
+        ? err.message
+        : err instanceof Error
+          ? err.message
+          : "Could not save product.";
+    return { ok: false, errors: { _form: message } };
+  }
   revalidatePath("/", "layout");
   redirect("/admin/products");
 }
@@ -380,11 +393,17 @@ export async function importProductFromUrlAction(
 export async function deleteProductAction(formData: FormData): Promise<void> {
   const id = String(formData.get("id") ?? "").trim();
   if (!id) return;
-  const products = await getProducts();
-  const next = products.filter((p) => String(p.id) !== id);
-  await saveProducts(next);
-  revalidatePath("/", "layout");
-  redirect("/admin/products");
+  try {
+    const products = await getProducts();
+    const next = products.filter((p) => String(p.id) !== id);
+    await saveProducts(next);
+    revalidatePath("/", "layout");
+    redirect("/admin/products");
+  } catch (err) {
+    rethrowIfNavigationError(err);
+    console.error("[deleteProductAction]", err);
+    redirect("/admin/products?error=delete-failed");
+  }
 }
 
 /* -------------------------------------------------------------------------- */
@@ -406,13 +425,16 @@ export async function upsertCategoryAction(
   try {
     return await upsertCategoryCore(formData);
   } catch (err) {
+    rethrowIfNavigationError(err);
     return {
       ok: false,
       errors: {
         _form:
-          err instanceof Error
+          err instanceof StoreWriteError
             ? err.message
-            : "Could not save category. Check Vercel Blob storage is connected.",
+            : err instanceof Error
+              ? err.message
+              : "Could not save category. Check Vercel Blob storage is connected.",
       },
     };
   }

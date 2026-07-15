@@ -3,7 +3,7 @@ import "server-only";
 import { promises as fs } from "node:fs";
 import path from "node:path";
 import { put } from "@vercel/blob";
-import { usesBlobStorage } from "./json-store";
+import { getBlobAuth, usesBlobStorage } from "./blob-config";
 
 export async function saveUploadFile(
   subdir: string,
@@ -15,10 +15,11 @@ export async function saveUploadFile(
   const pathname = `uploads/${safeSubdir}/${filename}`;
 
   if (usesBlobStorage()) {
-    const token = process.env.BLOB_READ_WRITE_TOKEN!.trim();
+    const auth = getBlobAuth();
     const blob = await put(pathname, buffer, {
-      access: "public",
-      token,
+      access: auth.access,
+      token: auth.token,
+      storeId: auth.storeId,
       addRandomSuffix: false,
       allowOverwrite: true,
       contentType,

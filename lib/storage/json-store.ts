@@ -2,19 +2,13 @@ import "server-only";
 
 import { promises as fs } from "node:fs";
 import path from "node:path";
-import { head, put } from "@vercel/blob";
+import { get, put } from "@vercel/blob";
+import { getBlobAuth, usesBlobStorage } from "./blob-config";
 
 /** Relative path from project root, e.g. `data/products.json`. */
 export type StorePath = string;
 
-function blobToken(): string | undefined {
-  const token = process.env.BLOB_READ_WRITE_TOKEN?.trim();
-  return token || undefined;
-}
-
-export function usesBlobStorage(): boolean {
-  return Boolean(blobToken());
-}
+export { usesBlobStorage };
 
 function resolveLocal(relativePath: StorePath): string {
   return path.join(process.cwd(), relativePath);
@@ -34,14 +28,18 @@ async function readLocalJson<T>(
 }
 
 async function readBlobJson<T>(relativePath: StorePath): Promise<T | null> {
-  const token = blobToken();
-  if (!token) return null;
+  const auth = getBlobAuth();
+  if (!auth.enabled) return null;
 
   try {
-    const meta = await head(relativePath, { token });
-    const res = await fetch(meta.url, { cache: "no-store" });
-    if (!res.ok) return null;
-    return (await res.json()) as T;
+    const result = await get(relativePath, {
+      access: auth.access,
+      token: auth.token,
+      storeId: auth.storeId,
+    });
+    if (!result || result.statusCode !== 200 || !result.stream) return null;
+    const text = await new Response(result.stream).text();
+    return JSON.parse(text) as T;
   } catch {
     return null;
   }
@@ -71,14 +69,17 @@ async function writeBlobJson(
   relativePath: StorePath,
   data: unknown,
 ): Promise<void> {
-  const token = blobToken();
-  if (!token) {
-    throw new Error("BLOB_READ_WRITE_TOKEN is not configured.");
+  const auth = getBlobAuth();
+  if (!auth.enabled) {
+    throw new Error(
+      "Blob storage is not configured. Set BLOB_READ_WRITE_TOKEN and/or BLOB_STORE_ID on Vercel.",
+    );
   }
 
   await put(relativePath, JSON.stringify(data, null, 2) + "\n", {
-    access: "public",
-    token,
+    access: auth.access,
+    token: auth.token,
+    storeId: auth.storeId,
     addRandomSuffix: false,
     allowOverwrite: true,
     contentType: "application/json",
@@ -103,7 +104,7 @@ export async function writeStoreJson(
 
   if (process.env.VERCEL) {
     throw new StoreWriteError(
-      "Live admin saves need Vercel Blob storage. In Vercel: Storage → Blob → Create → connect to this project, then redeploy.",
+      "Live admin saves need Vercel Blob. Connect a Blob store and set BLOB_READ_WRITE_TOKEN / BLOB_STORE_ID, then redeploy.",
     );
   }
 

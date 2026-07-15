@@ -2,7 +2,7 @@ import ProductForm from "@/components/admin/ProductForm";
 import { getCategories } from "@/lib/data";
 import { getBlockTemplates } from "@/lib/blocks/templates";
 
-export const metadata = { title: "New Product · Admin · MayCSS" };
+export const metadata = { title: "New Product · Admin · myacss" };
 
 export default async function NewProductPage() {
   const [categories, templates] = await Promise.all([
@@ -15,8 +15,9 @@ export default async function NewProductPage() {
         <div>
           <h1>New Product</h1>
           <p>
-            Add a new item to your catalog. Use the <strong>Dynamic content</strong> section
-            at the bottom to add rich blocks that render below the standard PDP.
+            Paste a product URL in <strong>Auto-scrape</strong> to fill name,
+            price, description, sizes, and colors — or enter details manually.
+            Use <strong>Dynamic content</strong> below for rich PDP blocks.
           </p>
         </div>
       </header>

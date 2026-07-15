@@ -76,9 +76,23 @@ export default function ProductForm({ product, categories, templates }: Props) {
 
   // Fields that feed the live SEO audit — controlled state.
   const [name, setName] = useState<string>(product?.name ?? "");
+  const [brand, setBrand] = useState<string>(product?.brand ?? "");
+  const [price, setPrice] = useState<string>(
+    product?.price != null ? String(product.price) : "",
+  );
+  const [originalPrice, setOriginalPrice] = useState<string>(
+    product?.originalPrice != null ? String(product.originalPrice) : "",
+  );
+  const [image, setImage] = useState<string>(product?.image ?? "");
+  const [sizes, setSizes] = useState<string>(toSizesString(product));
+  const [colors, setColors] = useState<string>(toColorsString(product));
+  const [gallery, setGallery] = useState<string>(toGalleryString(product));
   const [description, setDescription] = useState<string>(
     product?.description ?? "",
   );
+  const [scrapeUrl, setScrapeUrl] = useState("");
+  const [scrapeError, setScrapeError] = useState("");
+  const [scraping, setScraping] = useState(false);
   const [contentBlocks, setContentBlocks] = useState<ContentBlock[]>(
     product?.contentBlocks ?? [],
   );
@@ -170,6 +184,66 @@ export default function ProductForm({ product, categories, templates }: Props) {
     }
   };
 
+  const handleScrape = async () => {
+    const url = scrapeUrl.trim();
+    if (!url) {
+      setScrapeError("Paste a product URL first.");
+      return;
+    }
+    setScraping(true);
+    setScrapeError("");
+    try {
+      const res = await fetch("/api/admin/scrape", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ url }),
+      });
+      const data = (await res.json()) as {
+        ok: boolean;
+        product?: {
+          name?: string;
+          brand?: string;
+          description?: string;
+          price?: number;
+          originalPrice?: number;
+          images?: string[];
+          sizes?: string[];
+          colors?: string[];
+        };
+        error?: string;
+      };
+      if (!res.ok || !data.ok || !data.product) {
+        setScrapeError(data.error ?? "Could not scrape that URL.");
+        return;
+      }
+      const p = data.product;
+      if (p.name) setName(p.name);
+      if (p.brand) setBrand(p.brand);
+      if (p.description) setDescription(p.description);
+      if (typeof p.price === "number" && p.price > 0) setPrice(String(p.price));
+      if (typeof p.originalPrice === "number" && p.originalPrice > 0) {
+        setOriginalPrice(String(p.originalPrice));
+      }
+      if (p.images?.[0]) setImage(p.images[0]);
+      if (p.images && p.images.length > 1) {
+        setGallery(p.images.slice(1).join("\n"));
+      }
+      if (p.sizes?.length) setSizes(p.sizes.join(", "));
+      if (p.colors?.length) {
+        setColors(p.colors.map((c) => `${c}: #cccccc`).join("\n"));
+      }
+      if (p.name && !metaTitle) setMetaTitle(`${p.name} · myacss`);
+      if (p.description && !metaDescription) {
+        setMetaDescription(p.description.slice(0, 155));
+      }
+      if (p.images?.[0] && !ogImage) setOgImage(p.images[0]);
+    } catch {
+      setScrapeError("Network error while scraping. Try again.");
+    } finally {
+      setScraping(false);
+    }
+  };
+
   return (
     <form
       action={formAction}
@@ -178,6 +252,44 @@ export default function ProductForm({ product, categories, templates }: Props) {
       noValidate
     >
       {product && <input type="hidden" name="id" value={String(product.id)} />}
+
+      {serverErrors._form && (
+        <p className="mc-admin__banner is-error" role="alert">
+          {serverErrors._form}
+        </p>
+      )}
+
+      {!product && (
+        <fieldset className="mc-fieldset mc-admin__scrape">
+          <legend>Auto-scrape from URL</legend>
+          <p className="mc-admin__hint">
+            Paste any fashion product link — we fetch name, price, description,
+            sizes, colors, and images server-side, then fill the form below.
+          </p>
+          <div className="mc-admin__scrape-row">
+            <input
+              type="url"
+              value={scrapeUrl}
+              onChange={(e) => setScrapeUrl(e.target.value)}
+              placeholder="https://www.example.com/product/…"
+              aria-label="Product URL to scrape"
+            />
+            <button
+              type="button"
+              className={cx("mc-btn mc-btn--ghost", scraping && "is-loading")}
+              disabled={scraping}
+              onClick={handleScrape}
+            >
+              {scraping ? "Scraping…" : "Auto-fill"}
+            </button>
+          </div>
+          {scrapeError && (
+            <p className="mc-admin__banner is-error" role="alert">
+              {scrapeError}
+            </p>
+          )}
+        </fieldset>
+      )}
 
       <fieldset className="mc-fieldset">
         <legend>Product basics</legend>
@@ -196,7 +308,12 @@ export default function ProductForm({ product, categories, templates }: Props) {
 
           <div className="mc-field">
             <label htmlFor="brand">Brand</label>
-            <input id="brand" name="brand" defaultValue={product?.brand ?? ""} />
+            <input
+              id="brand"
+              name="brand"
+              value={brand}
+              onChange={(e) => setBrand(e.target.value)}
+            />
           </div>
 
           <div className="mc-field">
@@ -207,7 +324,8 @@ export default function ProductForm({ product, categories, templates }: Props) {
               type="number"
               step="0.01"
               min="0"
-              defaultValue={product?.price ?? ""}
+              value={price}
+              onChange={(e) => setPrice(e.target.value)}
               required
             />
             {errFor("price")}
@@ -221,7 +339,8 @@ export default function ProductForm({ product, categories, templates }: Props) {
               type="number"
               step="0.01"
               min="0"
-              defaultValue={product?.originalPrice ?? ""}
+              value={originalPrice}
+              onChange={(e) => setOriginalPrice(e.target.value)}
             />
             {errFor("originalPrice")}
           </div>
@@ -232,7 +351,8 @@ export default function ProductForm({ product, categories, templates }: Props) {
               id="image"
               name="image"
               type="url"
-              defaultValue={product?.image ?? ""}
+              value={image}
+              onChange={(e) => setImage(e.target.value)}
               required
               placeholder="https://…"
             />
@@ -298,7 +418,8 @@ export default function ProductForm({ product, categories, templates }: Props) {
               id="gallery"
               name="gallery"
               rows={4}
-              defaultValue={toGalleryString(product)}
+              value={gallery}
+              onChange={(e) => setGallery(e.target.value)}
               placeholder="https://…"
             />
           </div>
@@ -308,7 +429,8 @@ export default function ProductForm({ product, categories, templates }: Props) {
             <input
               id="sizes"
               name="sizes"
-              defaultValue={toSizesString(product)}
+              value={sizes}
+              onChange={(e) => setSizes(e.target.value)}
               placeholder="XS, S, M, L, XL"
             />
           </div>
@@ -321,7 +443,8 @@ export default function ProductForm({ product, categories, templates }: Props) {
               id="colors"
               name="colors"
               rows={4}
-              defaultValue={toColorsString(product)}
+              value={colors}
+              onChange={(e) => setColors(e.target.value)}
               placeholder="Camel: #B4885A"
             />
           </div>

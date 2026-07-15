@@ -1,4 +1,5 @@
 import { NextResponse, type NextRequest } from "next/server";
+import { getSessionToken } from "@/lib/auth-config";
 import { scrapeProductUrl } from "@/lib/scraper";
 
 /**
@@ -10,8 +11,7 @@ import { scrapeProductUrl } from "@/lib/scraper";
  */
 export async function POST(request: NextRequest) {
   const cookie = request.cookies.get("mc-admin")?.value;
-  const token = process.env.ADMIN_SESSION_TOKEN || "mc-session-v1";
-  if (cookie !== token) {
+  if (cookie !== getSessionToken()) {
     return NextResponse.json(
       { ok: false, error: "Unauthorised." },
       { status: 401 },

@@ -1533,6 +1533,18 @@ a.mc-admin__stat:hover {
   font-size: 0.85em;
 }
 
+.mc-admin__scrape-row {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 10px;
+}
+
+.mc-admin__scrape-row input[type="url"] {
+  flex: 1 1 280px;
+  min-width: 0;
+}
+
 .mc-admin__form-actions {
   display: flex;
   gap: 10px;

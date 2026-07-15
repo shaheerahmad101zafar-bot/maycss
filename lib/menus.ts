@@ -1,7 +1,6 @@
 import "server-only";
 
-import { promises as fs } from "node:fs";
-import path from "node:path";
+import { readStoreJson, writeStoreJson } from "./storage/json-store";
 
 /**
  * MenuFactory — dynamic navigation.
@@ -31,7 +30,7 @@ export type MenuSnapshot = {
   footer: MenuLink[];
 };
 
-const file = path.join(process.cwd(), "data", "menus.json");
+const file = "data/menus.json";
 
 const DEFAULT: MenuLink[] = [
   { id: "hdr_home", label: "Home", href: "/", location: "header", order: 0, visible: false },
@@ -47,21 +46,18 @@ const rid = () =>
 
 async function readAll(): Promise<MenuLink[]> {
   try {
-    const raw = await fs.readFile(file, "utf8");
-    const parsed = JSON.parse(raw) as unknown;
+    const parsed = await readStoreJson<unknown>(file, DEFAULT);
     if (!Array.isArray(parsed)) return DEFAULT;
     return parsed
       .map((l) => normalizeLink(l))
       .filter((l): l is MenuLink => l !== null);
-  } catch (err) {
-    if ((err as NodeJS.ErrnoException).code === "ENOENT") return DEFAULT;
-    throw err;
+  } catch {
+    return DEFAULT;
   }
 }
 
 async function writeAll(list: MenuLink[]): Promise<void> {
-  await fs.mkdir(path.dirname(file), { recursive: true });
-  await fs.writeFile(file, JSON.stringify(list, null, 2) + "\n", "utf8");
+  await writeStoreJson(file, list);
 }
 
 function normalizeLink(raw: unknown): MenuLink | null {

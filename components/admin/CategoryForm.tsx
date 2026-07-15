@@ -98,6 +98,12 @@ export default function CategoryForm({ category, allCategories }: Props) {
       {category && <input type="hidden" name="id" value={category.id} />}
       <input type="hidden" name="image" value={image} />
 
+      {serverErrors._form && (
+        <p className="mc-admin__banner is-error" role="alert">
+          {serverErrors._form}
+        </p>
+      )}
+
       <fieldset className="mc-fieldset">
         <legend>Basics</legend>
         <div className="mc-admin__form-grid">

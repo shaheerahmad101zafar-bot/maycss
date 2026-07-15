@@ -1,4 +1,5 @@
 import { NextResponse, type NextRequest } from "next/server";
+import { getSessionToken } from "@/lib/auth-config";
 
 /**
  * Two guards in one middleware:
@@ -12,7 +13,6 @@ import { NextResponse, type NextRequest } from "next/server";
  */
 
 const ADMIN_COOKIE = "mc-admin";
-const SESSION_TOKEN = process.env.ADMIN_SESSION_TOKEN || "mc-session-v1";
 
 // Auth.js session-cookie names (secure prefix used in production).
 const AUTH_COOKIES = [
@@ -32,7 +32,7 @@ export function middleware(request: NextRequest) {
   // Admin gate
   if (pathname.startsWith("/admin") && pathname !== "/admin/login") {
     const cookie = request.cookies.get(ADMIN_COOKIE)?.value;
-    if (cookie !== SESSION_TOKEN) {
+    if (cookie !== getSessionToken()) {
       const url = request.nextUrl.clone();
       url.pathname = "/admin/login";
       if (pathname !== "/admin") url.searchParams.set("from", pathname);

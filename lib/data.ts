@@ -1,27 +1,18 @@
 import "server-only";
 
-import { promises as fs } from "node:fs";
-import path from "node:path";
 import type { BannerSlide, Category, Product } from "./utils";
+import { readStoreJson, writeStoreJson } from "./storage/json-store";
 
-const dataDir = path.join(process.cwd(), "data");
-const productsFile = path.join(dataDir, "products.json");
-const slidesFile = path.join(dataDir, "banner-slides.json");
-const categoriesFile = path.join(dataDir, "categories.json");
+const productsFile = "data/products.json";
+const slidesFile = "data/banner-slides.json";
+const categoriesFile = "data/categories.json";
 
-async function readJson<T>(file: string, fallback: T): Promise<T> {
-  try {
-    const raw = await fs.readFile(file, "utf8");
-    return JSON.parse(raw) as T;
-  } catch (err) {
-    if ((err as NodeJS.ErrnoException).code === "ENOENT") return fallback;
-    throw err;
-  }
+async function readJson<T>(relativePath: string, fallback: T): Promise<T> {
+  return readStoreJson(relativePath, fallback);
 }
 
-async function writeJson(file: string, data: unknown): Promise<void> {
-  await fs.mkdir(path.dirname(file), { recursive: true });
-  await fs.writeFile(file, JSON.stringify(data, null, 2) + "\n", "utf8");
+async function writeJson(relativePath: string, data: unknown): Promise<void> {
+  await writeStoreJson(relativePath, data);
 }
 
 /* -------------------------------------------------------------------------- */

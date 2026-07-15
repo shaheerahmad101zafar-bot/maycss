@@ -1,13 +1,14 @@
 import "server-only";
 
 import type { Metadata } from "next";
-import { promises as fs } from "node:fs";
-import path from "node:path";
 import {
   normalizeBlock,
   type ContentBlock,
   type BlockTemplate,
 } from "./blocks/types";
+import { readStoreJson, writeStoreJson } from "./storage/json-store";
+
+const file = "data/pages.json";
 
 export type PageSeo = {
   metaTitle?: string;
@@ -43,8 +44,6 @@ export type Page = {
 
 export type { ContentBlock } from "./blocks/types";
 
-const file = path.join(process.cwd(), "data", "pages.json");
-
 const PAGE_KINDS: PageKind[] = ["standard", "contact", "shop", "sale"];
 
 function normalizePage(raw: Partial<Page>): Page {
@@ -76,18 +75,15 @@ function normalizePage(raw: Partial<Page>): Page {
 
 async function readAll(): Promise<Page[]> {
   try {
-    const raw = await fs.readFile(file, "utf8");
-    const parsed = JSON.parse(raw) as Partial<Page>[];
+    const parsed = await readStoreJson<Partial<Page>[]>(file, []);
     return parsed.map(normalizePage);
-  } catch (err) {
-    if ((err as NodeJS.ErrnoException).code === "ENOENT") return [];
-    throw err;
+  } catch {
+    return [];
   }
 }
 
 async function writeAll(list: Page[]): Promise<void> {
-  await fs.mkdir(path.dirname(file), { recursive: true });
-  await fs.writeFile(file, JSON.stringify(list, null, 2) + "\n", "utf8");
+  await writeStoreJson(file, list);
 }
 
 /**

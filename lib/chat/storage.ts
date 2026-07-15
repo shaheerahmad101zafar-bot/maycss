@@ -1,7 +1,5 @@
 import "server-only";
 
-import { promises as fs } from "node:fs";
-import path from "node:path";
 import type {
   Author,
   ChatMessage,
@@ -14,22 +12,16 @@ import {
   PollingTransport,
   type ChatTransport,
 } from "./transport";
+import { readStoreJson, writeStoreJson } from "../storage/json-store";
 
-const file = path.join(process.cwd(), "data", "chat.json");
+const file = "data/chat.json";
 
 async function readAll(): Promise<ChatThread[]> {
-  try {
-    const raw = await fs.readFile(file, "utf8");
-    return JSON.parse(raw) as ChatThread[];
-  } catch (err) {
-    if ((err as NodeJS.ErrnoException).code === "ENOENT") return [];
-    throw err;
-  }
+  return readStoreJson<ChatThread[]>(file, []);
 }
 
 async function writeAll(list: ChatThread[]): Promise<void> {
-  await fs.mkdir(path.dirname(file), { recursive: true });
-  await fs.writeFile(file, JSON.stringify(list, null, 2) + "\n", "utf8");
+  await writeStoreJson(file, list);
 }
 
 const rid = () =>

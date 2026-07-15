@@ -1,32 +1,24 @@
 import "server-only";
 
-import { promises as fs } from "node:fs";
-import path from "node:path";
 import {
   normalizeStatus,
   type Order,
   type OrderStatusEvent,
 } from "./orders-types";
+import { readStoreJson, writeStoreJson } from "./storage/json-store";
 
 // Re-export everything from orders-types so server callers can keep using
 // `import { ... } from "@/lib/orders"` unchanged.
 export * from "./orders-types";
 
-const ordersFile = path.join(process.cwd(), "data", "orders.json");
+const ordersFile = "data/orders.json";
 
-async function readJson<T>(file: string, fallback: T): Promise<T> {
-  try {
-    const raw = await fs.readFile(file, "utf8");
-    return JSON.parse(raw) as T;
-  } catch (err) {
-    if ((err as NodeJS.ErrnoException).code === "ENOENT") return fallback;
-    throw err;
-  }
+async function readJson<T>(relativePath: string, fallback: T): Promise<T> {
+  return readStoreJson(relativePath, fallback);
 }
 
-async function writeJson(file: string, data: unknown): Promise<void> {
-  await fs.mkdir(path.dirname(file), { recursive: true });
-  await fs.writeFile(file, JSON.stringify(data, null, 2) + "\n", "utf8");
+async function writeJson(relativePath: string, data: unknown): Promise<void> {
+  await writeStoreJson(relativePath, data);
 }
 
 function migrateOrder(

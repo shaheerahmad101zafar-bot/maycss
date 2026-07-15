@@ -1,7 +1,6 @@
 import "server-only";
-import { promises as fs } from "node:fs";
-import path from "node:path";
 import type { CurrencyCode } from "./currency";
+import { readStoreJson, writeStoreJson } from "./storage/json-store";
 
 export type MenuAlignment = "justify-start" | "justify-center" | "justify-end";
 
@@ -78,12 +77,11 @@ function normalizeActiveLinkStyle(
   };
 }
 
-const file = path.join(process.cwd(), "data", "app-config.json");
+const file = "data/app-config.json";
 
 export async function getAppConfig(): Promise<AppConfig> {
   try {
-    const raw = await fs.readFile(file, "utf8");
-    const parsed = JSON.parse(raw) as Partial<AppConfig>;
+    const parsed = await readStoreJson<Partial<AppConfig>>(file, DEFAULT);
     return {
       ...DEFAULT,
       ...parsed,
@@ -91,12 +89,11 @@ export async function getAppConfig(): Promise<AppConfig> {
       menuAlignment: normalizeMenuAlignment(parsed.menuAlignment),
       activeLinkStyle: normalizeActiveLinkStyle(parsed.activeLinkStyle),
     };
-  } catch (err) {
+  } catch {
     return DEFAULT;
   }
 }
 
 export async function saveAppConfig(cfg: AppConfig): Promise<void> {
-  await fs.mkdir(path.dirname(file), { recursive: true });
-  await fs.writeFile(file, JSON.stringify(cfg, null, 2) + "\n", "utf8");
+  await writeStoreJson(file, cfg);
 }

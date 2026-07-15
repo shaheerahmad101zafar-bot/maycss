@@ -1,8 +1,7 @@
 import "server-only";
 
-import { promises as fs } from "node:fs";
-import path from "node:path";
 import type { DynamicPaymentConfig } from "./payments/dynamic";
+import { readStoreJson, writeStoreJson } from "./storage/json-store";
 
 /**
  * Manual (offline) payment method — Zelle / Venmo / CashApp etc.
@@ -49,12 +48,14 @@ const DEFAULT_SETTINGS: Settings = {
   },
 };
 
-const settingsFile = path.join(process.cwd(), "data", "settings.json");
+const settingsFile = "data/settings.json";
 
 export async function getSettings(): Promise<Settings> {
   try {
-    const raw = await fs.readFile(settingsFile, "utf8");
-    const parsed = JSON.parse(raw) as { payments?: Partial<PaymentSettings> };
+    const parsed = await readStoreJson<{ payments?: Partial<PaymentSettings> }>(
+      settingsFile,
+      {},
+    );
     const p = parsed.payments ?? {};
     return {
       payments: {
@@ -63,20 +64,13 @@ export async function getSettings(): Promise<Settings> {
         manualMethods: Array.isArray(p.manualMethods) ? p.manualMethods : [],
       },
     };
-  } catch (err) {
-    if ((err as NodeJS.ErrnoException).code === "ENOENT")
-      return DEFAULT_SETTINGS;
-    throw err;
+  } catch {
+    return DEFAULT_SETTINGS;
   }
 }
 
 export async function saveSettings(settings: Settings): Promise<void> {
-  await fs.mkdir(path.dirname(settingsFile), { recursive: true });
-  await fs.writeFile(
-    settingsFile,
-    JSON.stringify(settings, null, 2) + "\n",
-    "utf8",
-  );
+  await writeStoreJson(settingsFile, settings);
 }
 
 /** Enabled manual methods, safe to expose to checkout. */

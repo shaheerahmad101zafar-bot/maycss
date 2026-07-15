@@ -327,7 +327,7 @@ export async function importProductFromUrlAction(
   if (!scraped.ok) return { ok: false, error: scraped.error };
 
   const p = scraped.product;
-  const products = await getProducts();
+  const [products, cfg] = await Promise.all([getProducts(), getAppConfig()]);
   const additionalKeywords = additionalKeywordsRaw
     .split(",")
     .map((k) => k.trim())
@@ -367,7 +367,7 @@ export async function importProductFromUrlAction(
     seo: {
       focusKeyword,
       keywords: additionalKeywords.length ? additionalKeywords : undefined,
-      metaTitle: `${p.name} · MayCSS`,
+      metaTitle: `${p.name} · ${cfg.siteName}`,
       metaDescription: (p.description ?? "").slice(0, 155),
     },
   };
@@ -401,6 +401,24 @@ function slugify(input: string): string {
 
 export async function upsertCategoryAction(
   _prev: CategoryFormState,
+  formData: FormData,
+): Promise<CategoryFormState> {
+  try {
+    return await upsertCategoryCore(formData);
+  } catch (err) {
+    return {
+      ok: false,
+      errors: {
+        _form:
+          err instanceof Error
+            ? err.message
+            : "Could not save category. Check Vercel Blob storage is connected.",
+      },
+    };
+  }
+}
+
+async function upsertCategoryCore(
   formData: FormData,
 ): Promise<CategoryFormState> {
   const idField = String(formData.get("id") ?? "").trim();

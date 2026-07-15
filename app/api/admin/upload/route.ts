@@ -1,8 +1,8 @@
 import { NextResponse, type NextRequest } from "next/server";
-import { promises as fs } from "node:fs";
-import path from "node:path";
 import crypto from "node:crypto";
+import { getSessionToken } from "@/lib/auth-config";
 import { optimizeImage } from "@/lib/images/optimizer";
+import { saveUploadFile } from "@/lib/storage/upload-store";
 
 const MAX_BYTES = 8 * 1024 * 1024; // 8 MB pre-optimization
 
@@ -24,6 +24,14 @@ const EXT_BY_TYPE: Record<string, string> = {
   "image/svg+xml": "svg",
 };
 
+const CONTENT_BY_EXT: Record<string, string> = {
+  png: "image/png",
+  jpg: "image/jpeg",
+  webp: "image/webp",
+  gif: "image/gif",
+  svg: "image/svg+xml",
+};
+
 /**
  * POST /api/admin/upload
  * multipart/form-data with `file` and optional `subdir` (default "qr").
@@ -34,8 +42,7 @@ const EXT_BY_TYPE: Record<string, string> = {
  */
 export async function POST(request: NextRequest) {
   const cookie = request.cookies.get("mc-admin")?.value;
-  const token = process.env.ADMIN_SESSION_TOKEN || "mc-session-v1";
-  if (cookie !== token) {
+  if (cookie !== getSessionToken()) {
     return NextResponse.json(
       { ok: false, error: "Unauthorised." },
       { status: 401 },
@@ -73,7 +80,6 @@ export async function POST(request: NextRequest) {
 
     const original = Buffer.from(await file.arrayBuffer());
     const fallbackExt = EXT_BY_TYPE[file.type] ?? "bin";
-    // Skip Sharp for SVG — keep vector.
     const optimized =
       file.type === "image/svg+xml"
         ? { buffer: original, ext: "svg", optimized: false }
@@ -81,11 +87,15 @@ export async function POST(request: NextRequest) {
 
     const hash = crypto.randomBytes(8).toString("hex");
     const filename = `${Date.now().toString(36)}-${hash}.${optimized.ext}`;
-    const dir = path.join(process.cwd(), "public", "uploads", subdir);
-    await fs.mkdir(dir, { recursive: true });
-    await fs.writeFile(path.join(dir, filename), optimized.buffer);
+    const contentType =
+      CONTENT_BY_EXT[optimized.ext] ?? file.type ?? "application/octet-stream";
+    const url = await saveUploadFile(
+      subdir,
+      filename,
+      optimized.buffer,
+      contentType,
+    );
 
-    const url = `/uploads/${subdir}/${filename}`;
     return NextResponse.json({
       ok: true,
       url,

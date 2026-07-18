@@ -4,22 +4,21 @@
     "slug": "about",
     "title": "About MayCSS",
     "eyebrow": "Our Story",
-    "hero": "Timeless design, uncompromising quality — for people who care about the difference between good and exceptional.",
+    "hero": "Shop MayCSS Online Store to experience our mission: timeless design, uncompromising quality, and fashion for people who care about the difference between good and exceptional.",
     "bannerImage": "/uploads/cms/mriw8mec-453494ff009d897f.webp",
     "pageKind": "standard",
     "published": true,
     "showInFooter": true,
     "footerColumn": "company",
-    "lastUpdated": "2026-07-13",
+    "lastUpdated": "2026-07-19",
     "seo": {
-      "metaTitle": "About MayCSS — Curated Premium Fashion",
-      "metaDescription": "MayCSS curates premium fashion from independent ateliers and heritage maisons. Learn how we source, vet, and deliver investment pieces with integrity.",
+      "metaTitle": "Shop MayCSS Online Store | About Us",
+      "metaDescription": "Shop MayCSS Online Store and discover our story: curated premium fashion, quality assurance, and a brand built on craft, integrity, and trust.",
       "keywords": [
+        "Shop MayCSS Online Store",
         "about MayCSS",
         "curated fashion",
-        "luxury boutique",
-        "independent designers",
-        "heritage fashion"
+        "luxury boutique"
       ],
       "ogImage": "https://tse2.mm.bing.net/th/id/OIP.XNlA91gBjte9NrlTSgILoAAAAA?r=0&rs=1&pid=ImgDetMain&o=7&rm=3"
     },
@@ -35,7 +34,7 @@
         },
         "heading": "Curated, not mass-produced",
         "headingLevel": 2,
-        "body": "MayCSS was founded on a simple idea: the best things are made by people who love making them. We work directly with independent designers and heritage houses across Italy, France, Portugal, and Scotland to bring you pieces that will outlast trends and become part of your story.",
+        "body": "MayCSS was founded so shoppers could Shop MayCSS Online Store with trust — curated premium fashion from independent ateliers and heritage maisons, never mass-produced noise. We work directly with makers across Italy, France, Portugal, and Scotland to bring pieces that outlast trends and become part of your story. Our brand story begins with a simple standard: if we would not wear it ourselves, it does not belong in our edit.",
         "alignment": "left"
       },
       {
@@ -49,7 +48,7 @@
         },
         "heading": "How we choose what to sell",
         "headingLevel": 2,
-        "body": "Every piece on MayCSS is vetted against three questions: Is it made to last? Does it improve the lives of the people who make it? Would we buy it ourselves? If we cannot answer yes to all three, it does not make it onto our floor.",
+        "body": "Every piece you find when you Shop MayCSS Online Store is vetted against three questions: Is it made to last? Does it improve the lives of the people who make it? Would we buy it ourselves? If we cannot answer yes to all three, it does not make it onto our floor. That quality assurance process protects your wardrobe and our reputation.",
         "alignment": "left"
       },
       {
@@ -63,7 +62,7 @@
         },
         "heading": "Our Promise to You",
         "headingLevel": 2,
-        "body": "Transparent sourcing. Authenticity on every order. Personal styling when you want it. We built MayCSS for shoppers who value craft over hype — and we intend to keep it that way.",
+        "body": "Transparent sourcing. Authenticity on every order. Personal styling when you want it. Customers trust MayCSS because we built Shop MayCSS Online Store for people who value craft over hype — and we intend to keep it that way with every collection we release.",
         "alignment": "center"
       },
       {
@@ -77,7 +76,7 @@
         },
         "eyebrow": "The Edit",
         "heading": "Quiet Luxury, Loud Standards",
-        "body": "We do not chase trends. We chase integrity — in fabric, in fit, in the story behind every seam. That is the MayCSS difference, and it is the standard we hold ourselves to with every collection we release.",
+        "body": "We do not chase trends. We chase integrity — in fabric, in fit, in the story behind every seam. That is the MayCSS difference you feel when you Shop MayCSS Online Store: quiet luxury, loud standards, and a commitment to pieces worthy of a lasting wardrobe.",
         "ctaLabel": "Shop the collection",
         "ctaHref": "/shop",
         "image": "/uploads/cms/mrjjyhqn-87cb93f5c5686601.webp",
@@ -105,17 +104,52 @@
     "slug": "faq",
     "title": "Frequently Asked Questions",
     "eyebrow": "Help Centre",
-    "hero": "Everything you need to know about shopping at MayCSS.",
+    "hero": "Everything you need to know before you Shop MayCSS Online Store — shipping, returns, sizing, authenticity, and product quality answers in one place.",
     "pageKind": "standard",
     "published": true,
     "showInFooter": true,
     "footerColumn": "company",
     "seo": {
-      "metaTitle": "FAQ — MayCSS Customer Support",
-      "metaDescription": "Shipping, returns, sizing, and more. Answers to the most common questions about shopping at MayCSS.",
-      "ogImage": ""
+      "metaTitle": "Shop MayCSS Online Store | FAQ Help",
+      "metaDescription": "Shop MayCSS Online Store with confidence. Find clear answers on shipping, returns, sizing, authenticity, and product quality from our help centre.",
+      "ogImage": "",
+      "keywords": [
+        "Shop MayCSS Online Store",
+        "FAQ",
+        "shipping",
+        "returns",
+        "MayCSS help"
+      ]
     },
     "blocks": [
+      {
+        "id": "blk_faq_intro",
+        "type": "richtext",
+        "layout": {
+          "alignment": "center",
+          "width": "medium",
+          "columnCount": 1,
+          "padding": "md"
+        },
+        "heading": "Shopping Guidance from MayCSS",
+        "headingLevel": 2,
+        "body": "Our help centre is designed to make it simple to Shop MayCSS Online Store with clarity and confidence. Below you will find professional guidance on delivery times, international shipping, returns, exchanges, payment methods, and how we guarantee product quality. If your question is not listed, our concierge team is ready to help within one business day.",
+        "alignment": "center"
+      },
+      {
+        "id": "blk_faq_image_slot",
+        "type": "image",
+        "layout": {
+          "alignment": "center",
+          "width": "full",
+          "columnCount": 1,
+          "padding": "md"
+        },
+        "src": "",
+        "alt": "MayCSS customer help",
+        "caption": "Upload a help-centre image in admin — Replace anytime.",
+        "width": "wide"
+      },
       {
         "id": "blk_9ab7038ff659",
         "type": "faq",
@@ -127,32 +161,36 @@
         },
         "items": [
           {
-            "q": "How long does shipping take?",
-            "a": "Standard shipping arrives in 3–5 business days. Express shipping is 1–2 business days. Orders over $75 ship free."
+            "q": "How long does shipping take when I Shop MayCSS Online Store?",
+            "a": "Standard shipping typically arrives in 3–5 business days. Express shipping is 1–2 business days. Orders over $75 usually ship free. Tracking is emailed once your parcel leaves our studio."
           },
           {
             "q": "What is your return policy?",
-            "a": "Unworn items can be returned within 30 days of delivery for a full refund. Sale items are final unless faulty."
+            "a": "Unworn items with original tags can be returned within 30 days of delivery for a full refund to your original payment method. Sale items are final unless faulty. See our Refund & Returns Policy for full details."
           },
           {
             "q": "Do you ship internationally?",
-            "a": "Yes — we ship to over 40 countries. International orders may be subject to customs duties in the destination country."
+            "a": "Yes — we ship to over 40 countries when you Shop MayCSS Online Store. International orders may be subject to customs duties in the destination country, which are the customer’s responsibility."
           },
           {
             "q": "How do I know what size to order?",
-            "a": "Every product page includes a size guide. If you're between sizes, size up for outerwear and down for knitwear."
+            "a": "Every product page includes a size guide. If you are between sizes, size up for outerwear and down for knitwear. Our support team can also advise on fit before you order."
           },
           {
-            "q": "Are the products authentic?",
-            "a": "Every MayCSS product is sourced directly from the brand or an authorised distributor. Authenticity guaranteed."
+            "q": "How do you ensure product quality and authenticity?",
+            "a": "Every MayCSS product is sourced directly from the brand or an authorised distributor. Authenticity is guaranteed, and we vet materials, construction, and finish before pieces appear in Shop MayCSS Online Store."
           },
           {
             "q": "How can I track my order?",
-            "a": "Once your order ships, we email you a tracking link. You can also view all your orders under 'My Account'."
+            "a": "Once your order ships, we email a tracking link. You can also view orders under My Account. Contact support if tracking has not updated within two business days of dispatch."
+          },
+          {
+            "q": "What payment methods do you accept?",
+            "a": "We accept major cards and other secure checkout methods shown at payment. We never store your full card number; payments are processed by PCI-compliant providers."
           },
           {
             "q": "Do you offer gift wrapping?",
-            "a": "Yes — you can add complimentary gift wrapping at checkout. Include a personal note if you like."
+            "a": "Yes — you can add complimentary gift wrapping at checkout and include a personal note when available."
           }
         ]
       },
@@ -171,25 +209,47 @@
         "ctaHref": "mailto:hello@maycss.example",
         "variant": "dark"
       }
-    ]
+    ],
+    "bannerImage": "",
+    "lastUpdated": "2026-07-19"
   },
   {
     "id": "privacy-policy",
     "slug": "privacy-policy",
     "title": "Privacy Policy",
     "eyebrow": "Legal",
-    "hero": "How we collect, use, and protect your personal information.",
+    "hero": "How we collect, use, and protect your personal information when you Shop MayCSS Online Store — clear policies written for trust and transparency.",
     "pageKind": "standard",
     "published": true,
     "showInFooter": true,
     "footerColumn": "legal",
-    "lastUpdated": "2026-01-01",
+    "lastUpdated": "2026-07-19",
     "seo": {
-      "metaTitle": "Privacy Policy — MayCSS",
-      "metaDescription": "How MayCSS collects, uses, and protects your personal information.",
-      "ogImage": ""
+      "metaTitle": "Shop MayCSS Online Store | Privacy",
+      "metaDescription": "Shop MayCSS Online Store with peace of mind. Read how we collect, use, and protect your personal information with clear, trustworthy privacy practices.",
+      "ogImage": "",
+      "keywords": [
+        "Shop MayCSS Online Store",
+        "privacy policy",
+        "data protection",
+        "MayCSS privacy"
+      ]
     },
     "blocks": [
+      {
+        "id": "blk_privacy_intro",
+        "type": "richtext",
+        "layout": {
+          "alignment": "center",
+          "width": "full",
+          "columnCount": 1,
+          "padding": "md"
+        },
+        "heading": "Your Privacy at MayCSS",
+        "headingLevel": 2,
+        "body": "Your privacy matters at Shop MayCSS Online Store. This Privacy Policy explains what information we collect, why we use it, and the choices you have. We designed these practices to be legal-friendly, easy to understand, and aligned with responsible e-commerce standards so you can shop luxury fashion online with confidence.",
+        "alignment": "left"
+      },
       {
         "id": "blk_cea9c874c53b",
         "type": "richtext",
@@ -201,7 +261,7 @@
         },
         "heading": "What we collect",
         "headingLevel": 2,
-        "body": "When you shop with MayCSS, we collect the information you give us directly (name, email, shipping address, payment details) and information about how you use the site (pages visited, items viewed, cart activity). We do not sell your data to third parties.",
+        "body": "When you Shop MayCSS Online Store, we collect the information you give us directly (name, email, shipping address, payment details) and information about how you use the site (pages visited, items viewed, cart activity). We do not sell your data to third parties. This information helps us fulfil orders, improve the shopping experience, and communicate with you about purchases you have made.",
         "alignment": "left"
       },
       {
@@ -215,7 +275,7 @@
         },
         "heading": "How we use it",
         "headingLevel": 2,
-        "body": "We use your information to process orders, send order updates, personalise your experience, and (if you've opted in) to send you occasional emails about new arrivals and members-only offers.",
+        "body": "We use your information to process orders, send order updates, personalise your experience on Shop MayCSS Online Store, and — if you have opted in — to send occasional emails about new arrivals and members-only offers. You can unsubscribe from marketing messages at any time using the link in our emails.",
         "alignment": "left"
       },
       {
@@ -229,7 +289,7 @@
         },
         "heading": "Cookies",
         "headingLevel": 2,
-        "body": "We use essential cookies to keep your bag and preferences between visits, and analytics cookies to understand what's working. You can control cookies through your browser settings.",
+        "body": "We use essential cookies to keep your bag and preferences between visits, and analytics cookies to understand what is working on Shop MayCSS Online Store. You can control cookies through your browser settings. Disabling some cookies may affect checkout or saved preferences.",
         "alignment": "left"
       },
       {
@@ -243,7 +303,7 @@
         },
         "heading": "Your rights",
         "headingLevel": 2,
-        "body": "You can request a copy of everything we hold about you, ask us to correct anything, or ask us to delete your account entirely. Email privacy@maycss.example.",
+        "body": "You can request a copy of everything we hold about you, ask us to correct anything inaccurate, or ask us to delete your account entirely. Email privacy@maycss.example and we will respond within a reasonable timeframe. These rights help you stay in control while you Shop MayCSS Online Store.",
         "alignment": "left"
       },
       {
@@ -257,28 +317,49 @@
         },
         "heading": "Payment security",
         "headingLevel": 2,
-        "body": "We never store your full card number. Payments are processed by our PCI-DSS compliant payment providers over a TLS-encrypted connection.",
+        "body": "We never store your full card number. Payments on Shop MayCSS Online Store are processed by our PCI-DSS compliant payment providers over a TLS-encrypted connection. If you believe there has been unauthorised activity on your account, contact us immediately so we can secure your information.",
         "alignment": "left"
       }
-    ]
+    ],
+    "bannerImage": ""
   },
   {
     "id": "refund-policy",
     "slug": "refund-policy",
     "title": "Refund & Returns Policy",
     "eyebrow": "Legal",
-    "hero": "Simple, fair returns — because you should love what you bought.",
+    "hero": "Simple, fair returns when you Shop MayCSS Online Store — because you should love what you bought, and trust how we handle refunds and exchanges.",
     "pageKind": "standard",
     "published": true,
     "showInFooter": true,
     "footerColumn": "legal",
-    "lastUpdated": "2026-01-01",
+    "lastUpdated": "2026-07-19",
     "seo": {
-      "metaTitle": "Refund & Returns — MayCSS",
-      "metaDescription": "30-day returns, easy exchanges, and how refunds work at MayCSS.",
-      "ogImage": ""
+      "metaTitle": "Shop MayCSS Online Store | Returns",
+      "metaDescription": "Shop MayCSS Online Store with a fair 30-day returns policy. Learn how refunds, exchanges, and damaged-item replacements work for every order.",
+      "ogImage": "",
+      "keywords": [
+        "Shop MayCSS Online Store",
+        "refund policy",
+        "returns",
+        "exchanges"
+      ]
     },
     "blocks": [
+      {
+        "id": "blk_refund_intro",
+        "type": "richtext",
+        "layout": {
+          "alignment": "center",
+          "width": "full",
+          "columnCount": 1,
+          "padding": "md"
+        },
+        "heading": "Fair Returns You Can Trust",
+        "headingLevel": 2,
+        "body": "This Refund & Returns Policy explains how returns, exchanges, and refunds work at Shop MayCSS Online Store. We aim for clarity and fairness: unworn items may be returned within 30 days, sale conditions are disclosed upfront, and damaged goods are handled promptly with care.",
+        "alignment": "left"
+      },
       {
         "id": "blk_09d2ca00d81f",
         "type": "richtext",
@@ -290,7 +371,7 @@
         },
         "heading": "30-day returns",
         "headingLevel": 2,
-        "body": "You have 30 days from the day your order arrives to request a return. Items must be unworn, unwashed, and returned with all original tags and packaging.",
+        "body": "You have 30 days from the day your order arrives to request a return when you Shop MayCSS Online Store. Items must be unworn, unwashed, and returned with all original tags and packaging. Please keep proof of delivery and your order confirmation to make the process smoother.",
         "alignment": "left"
       },
       {
@@ -304,7 +385,7 @@
         },
         "heading": "How to return",
         "headingLevel": 2,
-        "body": "Sign in to your account, find your order under My Orders, and click Return. We'll email you a prepaid return label. Drop the package at any carrier location; your refund is processed the day we receive it.",
+        "body": "Sign in to your account, find your order under My Orders, and click Return. We will email a prepaid return label for eligible orders. Drop the package at any carrier location; your refund is processed the day we receive and inspect the return at Shop MayCSS Online Store.",
         "alignment": "left"
       },
       {
@@ -318,7 +399,7 @@
         },
         "heading": "How refunds are issued",
         "headingLevel": 2,
-        "body": "Refunds go back to your original payment method within 5–10 business days after we receive your return. Shipping charges are non-refundable unless the item was faulty.",
+        "body": "Refunds go back to your original payment method within 5–10 business days after we receive your return. Shipping charges are non-refundable unless the item was faulty. Exchanges are available by starting a return and placing a new order for the size or colour you want at Shop MayCSS Online Store.",
         "alignment": "left"
       },
       {
@@ -333,19 +414,20 @@
         "items": [
           {
             "q": "Can I exchange instead of return?",
-            "a": "Yes — start a return and place a new order for the size or colour you want."
+            "a": "Yes — start a return and place a new order for the size or colour you want at Shop MayCSS Online Store so you do not miss popular sizes."
           },
           {
             "q": "What about sale items?",
-            "a": "Sale items are final sale unless the item is faulty."
+            "a": "Sale items are final sale unless the item is faulty. Please review sale terms carefully before you complete checkout."
           },
           {
             "q": "What if my item arrived damaged?",
-            "a": "Email hello@maycss.example within 7 days with a photo. We'll replace it at no cost."
+            "a": "Email hello@maycss.example within 7 days with a clear photo. We will replace it at no cost when you Shop MayCSS Online Store and the item is confirmed damaged in transit or on arrival."
           }
         ]
       }
-    ]
+    ],
+    "bannerImage": ""
   },
   {
     "id": "home",
@@ -354,18 +436,17 @@
     "pageKind": "standard",
     "published": true,
     "showInFooter": false,
-    "lastUpdated": "2026-07-14",
+    "lastUpdated": "2026-07-19",
     "seo": {
-      "metaTitle": "MayCSS — Curated Luxury Fashion Online",
-      "metaDescription": "Discover independent designers and heritage maisons at MayCSS. Premium clothing, timeless silhouettes, complimentary shipping over $75, and authenticity guaranteed.",
+      "metaTitle": "Shop MayCSS Online Store | Luxury Fashion",
+      "metaDescription": "Shop MayCSS Online Store for curated luxury fashion. Discover premium apparel, timeless design, free shipping over $75, and authenticity you can trust.",
       "ogImage": "/uploads/cms/mrjo0pkj-b303b84ea3634104.webp",
       "keywords": [
+        "Shop MayCSS Online Store",
         "luxury fashion",
         "curated clothing",
         "designer fashion online",
-        "premium womenswear",
-        "premium menswear",
-        "MayCSS"
+        "premium womenswear"
       ]
     },
     "blocks": [
@@ -380,9 +461,13 @@
         },
         "eyebrow": "Spring / Summer 2026",
         "heading": "Choose Your Signature Style",
-        "subheading": "",
+        "subheading": "Welcome to Shop MayCSS Online Store — where curated luxury fashion meets timeless design. Explore premium apparel selected for craft, fit, and quiet confidence.",
         "backgroundImage": "/uploads/cms/mrkwp1c3-69538bb97150baf8.webp",
-        "imageFocus": { "x": 50, "y": 28, "fit": "cover" },
+        "imageFocus": {
+          "x": 50,
+          "y": 28,
+          "fit": "cover"
+        },
         "overlayStrength": 42,
         "ctaLabel": "Shop the Collection",
         "ctaHref": "/shop",
@@ -419,6 +504,20 @@
         ]
       },
       {
+        "id": "blk_home_seo_copy",
+        "type": "richtext",
+        "layout": {
+          "alignment": "center",
+          "width": "medium",
+          "columnCount": 1,
+          "padding": "md"
+        },
+        "heading": "Curated Luxury, Delivered Online",
+        "headingLevel": 2,
+        "body": "Discover why discerning shoppers choose Shop MayCSS Online Store for premium fashion online. We curate independent designers and heritage maisons with a focus on fabric integrity, considered silhouettes, and lasting wear. Complimentary shipping is available on qualifying orders, authenticity is guaranteed on every piece, and our team offers personal styling when you want a second eye. Whether you are building a capsule wardrobe or searching for a signature statement, MayCSS is your destination for minimalist luxury that feels effortless, elevated, and entirely your own. Explore the collection, save favourites, and shop with confidence knowing every detail has been vetted for quality and provenance.",
+        "alignment": "center"
+      },
+      {
         "id": "blk_home_grid",
         "type": "productgrid",
         "layout": {
@@ -445,7 +544,7 @@
         "imagePosition": "left",
         "eyebrow": "The Edit",
         "heading": "Simple Is More",
-        "body": "Investment pieces need not shout. We favour clean lines, exceptional fabrics, and a palette that works harder — so your wardrobe does too.",
+        "body": "Investment pieces need not shout. At Shop MayCSS Online Store we favour clean lines, exceptional fabrics, and a palette that works harder — so your wardrobe does too. Explore looks that feel modern today and essential tomorrow.",
         "ctaLabel": "Explore the look",
         "ctaHref": "/shop",
         "variant": "cream"
@@ -492,7 +591,7 @@
         },
         "eyebrow": "Conscious Luxury",
         "heading": "Fashion That Respects the Craft",
-        "body": "We partner with makers who share our values — fair wages, responsible sourcing, and techniques passed down through generations. Every MayCSS edit is chosen for quality, provenance, and the kind of quiet luxury that never needs to announce itself.",
+        "body": "At Shop MayCSS Online Store, we partner with makers who share our values — fair wages, responsible sourcing, and techniques passed down through generations. Every MayCSS edit is chosen for quality, provenance, and the kind of quiet luxury that never needs to announce itself. From sculptural outerwear to refined finishing pieces, our collection is built for wardrobes that last beyond a single season. Browse new arrivals, discover heritage houses, and find investment clothing designed to elevate everyday dressing with intention and ease.",
         "ctaLabel": "Read our story",
         "ctaHref": "/about",
         "image": "/uploads/cms/mrjjvu9f-a7927dcf34fe5e25.webp",
@@ -510,7 +609,7 @@
         "image": "/uploads/cms/mrjjwq5w-36fe848ffd416220.webp",
         "eyebrow": "Just Arrived",
         "heading": "The Autumn Preview",
-        "body": "Refined layers and sculptural tailoring — selected by our style curators for wardrobes that transcend seasons.",
+        "body": "Refined layers and sculptural tailoring — selected by our style curators at Shop MayCSS Online Store for wardrobes that transcend seasons and trends.",
         "ctaLabel": "Browse new",
         "ctaHref": "/new",
         "overlay": "dark"
@@ -525,7 +624,7 @@
           "padding": "lg"
         },
         "heading": "Join the MayCSS List",
-        "body": "First looks at new arrivals, private sales, and styling notes from our curators — delivered to your inbox.",
+        "body": "First looks at new arrivals, private sales, and styling notes from our curators at Shop MayCSS Online Store — delivered to your inbox.",
         "ctaLabel": "Subscribe",
         "ctaHref": "/#newsletter",
         "variant": "dark"
@@ -537,23 +636,53 @@
     "slug": "contact",
     "title": "We're Here to Help",
     "eyebrow": "Concierge",
-    "hero": "Whether you need styling guidance, order support, or a personal shopping appointment — our team responds within one business day.",
+    "hero": "Whether you need styling guidance, order support, or a personal shopping appointment — Shop MayCSS Online Store with a team that responds within one business day.",
     "pageKind": "contact",
     "mapEmbed": "<iframe src=\"https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3022.215!2d-73.974!3d40.761!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNDDCsDQ1JzM5LjYiTiA3M8KwNTgnMjAuNCJX!5e0!3m2!1sen!2sus!4v1\" width=\"600\" height=\"450\" style=\"border:0;\" allowfullscreen=\"\" loading=\"lazy\" referrerpolicy=\"no-referrer-when-downgrade\"></iframe>",
     "published": true,
     "showInFooter": true,
     "footerColumn": "company",
-    "lastUpdated": "2026-07-14",
+    "lastUpdated": "2026-07-19",
     "seo": {
-      "metaTitle": "Contact Us · MayCSS",
-      "metaDescription": "Reach our concierge team for styling advice, order support, and personal shopping appointments.",
+      "metaTitle": "Shop MayCSS Online Store | Support",
+      "metaDescription": "Shop MayCSS Online Store with dedicated customer support. Our concierge team helps with orders, styling, and satisfaction — usually within one business day.",
       "keywords": [
+        "Shop MayCSS Online Store",
+        "customer support",
         "contact",
-        "concierge",
-        "customer service"
-      ]
+        "concierge"
+      ],
+      "ogImage": ""
     },
     "blocks": [
+      {
+        "id": "blk_contact_intro",
+        "type": "richtext",
+        "layout": {
+          "alignment": "center",
+          "width": "medium",
+          "columnCount": 1,
+          "padding": "md"
+        },
+        "heading": "Dedicated Customer Support",
+        "headingLevel": 2,
+        "body": "Customer satisfaction is central to how we Shop MayCSS Online Store experiences. Our concierge team helps with order tracking, sizing questions, product details, returns guidance, and styling recommendations for your wardrobe. Send a message through the form, and a real person will follow up personally — usually within one business day during business hours. We believe luxury fashion deserves luxury service: clear answers, warm support, and solutions that respect your time. Whether you are placing a first order or refining a long-term edit, we are here to help you shop with confidence. Explore our FAQ for quick answers, or contact us for personalised assistance. At MayCSS, support is not an afterthought — it is part of the promise behind every piece you purchase when you Shop MayCSS Online Store.",
+        "alignment": "left"
+      },
+      {
+        "id": "blk_contact_image_slot",
+        "type": "image",
+        "layout": {
+          "alignment": "center",
+          "width": "full",
+          "columnCount": 1,
+          "padding": "md"
+        },
+        "src": "",
+        "alt": "MayCSS concierge support",
+        "caption": "Upload a support or studio image in admin — Edit or Replace anytime.",
+        "width": "wide"
+      },
       {
         "id": "blk_contact_form",
         "type": "contactform",
@@ -564,7 +693,7 @@
           "padding": "md"
         },
         "heading": "Send a Message",
-        "subheading": "Share your enquiry and a member of our team will follow up personally."
+        "subheading": "Share your enquiry and a member of our team will follow up personally. We are here to help you Shop MayCSS Online Store with confidence."
       }
     ]
   },
@@ -573,21 +702,22 @@
     "slug": "shop",
     "title": "Shop the Collection",
     "eyebrow": "The Edit",
-    "hero": "Every piece, organised the way we shop — from investment outerwear to fine accessories, each selected for craft and longevity.",
+    "hero": "Welcome to Shop MayCSS Online Store — explore our curated premium fashion range of minimalist luxury and high-quality apparel, organised the way we shop.",
     "bannerImage": "/uploads/cms/mrjjx6ir-cc868794b5f4e226.webp",
     "pageKind": "shop",
     "published": true,
     "showInFooter": false,
-    "lastUpdated": "2026-07-14",
+    "lastUpdated": "2026-07-19",
     "seo": {
-      "metaTitle": "Shop All · MayCSS",
-      "metaDescription": "Browse the full MayCSS collection — women's, men's, outerwear, dresses, and accessories curated for craftsmanship and longevity.",
+      "metaTitle": "Shop MayCSS Online Store | Premium Edit",
+      "metaDescription": "Shop MayCSS Online Store to explore curated premium fashion, minimalist luxury apparel, and high-quality pieces chosen for craft, fit, and lasting style.",
       "keywords": [
+        "Shop MayCSS Online Store",
         "shop luxury fashion",
         "designer clothing online",
-        "MayCSS collection",
-        "premium fashion store"
-      ]
+        "MayCSS collection"
+      ],
+      "ogImage": "/uploads/cms/mrjjx6ir-cc868794b5f4e226.webp"
     },
     "blocks": [
       {
@@ -599,10 +729,24 @@
           "columnCount": 1,
           "padding": "md"
         },
-        "heading": "Curated for the Modern Wardrobe",
+        "heading": "Curated Premium Fashion for the Modern Wardrobe",
         "headingLevel": 2,
-        "body": "Explore our full catalog of premium pieces — each selected for craftsmanship, provenance, and timeless appeal. Use the categories below to find exactly what your wardrobe needs.",
+        "body": "At Shop MayCSS Online Store, every piece is selected for craftsmanship, provenance, and timeless appeal. Browse women’s and men’s edits, outerwear, dresses, knitwear, and refined accessories designed to elevate a modern wardrobe without noise. We favour clean lines, exceptional textiles, and silhouettes that move from day to evening with ease. Use categories below to find investment outerwear, elevated basics, and finishing pieces that complete a look. Quality is non-negotiable: we partner with independent ateliers and heritage houses so you can shop premium fashion online with confidence. Complimentary shipping applies on qualifying orders, and authenticity is guaranteed on every purchase. Whether you are refining a capsule or discovering a new signature style, Shop MayCSS Online Store is built for shoppers who value quiet luxury, precise fit, and clothing that lasts beyond a single season. Explore the full collection and build a wardrobe that feels intentional, polished, and enduring.",
         "alignment": "center"
+      },
+      {
+        "id": "blk_shop_image_slot",
+        "type": "image",
+        "layout": {
+          "alignment": "center",
+          "width": "full",
+          "columnCount": 1,
+          "padding": "md"
+        },
+        "src": "",
+        "alt": "MayCSS collection lookbook",
+        "caption": "Upload a collection image in admin — Replace anytime.",
+        "width": "wide"
       },
       {
         "id": "blk_shop_categories",
@@ -626,22 +770,52 @@
     "slug": "sale",
     "title": "The Sale Edit",
     "eyebrow": "Limited Time",
-    "hero": "Investment pieces at investment-friendly prices — while they last.",
+    "hero": "Shop MayCSS Online Store for exclusive discounts on luxury fashion — investment pieces at investment-friendly prices, available for a limited time only.",
     "bannerImage": "/uploads/cms/mrjjwq5w-36fe848ffd416220.webp",
     "pageKind": "sale",
     "published": true,
     "showInFooter": false,
-    "lastUpdated": "2026-07-14",
+    "lastUpdated": "2026-07-19",
     "seo": {
-      "metaTitle": "Sale · MayCSS",
-      "metaDescription": "Limited-time markdowns on curated MayCSS pieces.",
+      "metaTitle": "Shop MayCSS Online Store | Sale Edit",
+      "metaDescription": "Shop MayCSS Online Store for exclusive sale discounts on luxury fashion. Limited-time markdowns on curated pieces — refined style at investment-friendly prices.",
       "keywords": [
+        "Shop MayCSS Online Store",
         "sale",
-        "markdowns",
-        "luxury fashion"
-      ]
+        "luxury fashion sale",
+        "markdowns"
+      ],
+      "ogImage": "/uploads/cms/mrjjwq5w-36fe848ffd416220.webp"
     },
     "blocks": [
+      {
+        "id": "blk_sale_intro",
+        "type": "richtext",
+        "layout": {
+          "alignment": "center",
+          "width": "medium",
+          "columnCount": 1,
+          "padding": "md"
+        },
+        "heading": "Exclusive Discounts on Luxury Fashion",
+        "headingLevel": 2,
+        "body": "The Sale Edit at Shop MayCSS Online Store brings curated markdowns on premium apparel without compromising craft or design. Discover limited-time savings on elevated outerwear, refined dresses, tailored layers, and accessories selected for quality and longevity. These are not fleeting trend pieces — they are considered wardrobe investments offered at a moment that rewards decisive shoppers. Quantities are limited and popular sizes move quickly, so if a piece has been on your list, now is the time to act. Enjoy the same authenticity guarantee, careful packaging, and thoughtful service you expect when you Shop MayCSS Online Store year-round. Review sale items carefully, check size guides, and complete your order while the edit lasts. Exclusive discounts on luxury fashion are temporary; the confidence of wearing MayCSS is not. Explore the sale, secure your favourites, and elevate your wardrobe with pieces priced for this season only.",
+        "alignment": "center"
+      },
+      {
+        "id": "blk_sale_image_slot",
+        "type": "image",
+        "layout": {
+          "alignment": "center",
+          "width": "full",
+          "columnCount": 1,
+          "padding": "md"
+        },
+        "src": "",
+        "alt": "MayCSS sale edit campaign",
+        "caption": "Upload a sale campaign image in admin — Edit or Replace anytime.",
+        "width": "wide"
+      },
       {
         "id": "blk_sale_grid",
         "type": "productgrid",

@@ -1171,6 +1171,115 @@ a.mc-admin__stat:hover {
   margin-bottom: 4px;
 }
 
+/* ─────── Contact details editor ─────── */
+.mc-contact-details-editor__rows {
+  margin-top: 14px;
+}
+.mc-contact-details-editor__row {
+  border: 1px solid var(--mc-gray-100);
+  border-radius: var(--mc-radius-sm);
+  padding: 12px 14px;
+  margin-bottom: 10px;
+  background: var(--mc-cream);
+}
+.mc-contact-details-editor__row-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  font-size: 0.78rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--mc-gray-600);
+}
+
+/* ─────── Keyword chips (Enter-to-add) ─────── */
+.mc-kw-chips {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  min-height: 42px;
+  padding: 6px 8px;
+  border: 1px solid var(--mc-gray-100);
+  border-radius: var(--mc-radius-sm);
+  background: var(--mc-white);
+  cursor: text;
+  transition: border-color var(--mc-dur-fast);
+}
+.mc-kw-chips:focus-within {
+  border-color: var(--mc-black);
+}
+.mc-kw-chips.is-disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+.mc-kw-chips__chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  max-width: 100%;
+  padding: 4px 6px 4px 10px;
+  border: 1px solid var(--mc-gray-100);
+  border-radius: var(--mc-radius-sm);
+  background: var(--mc-cream);
+  font-size: 0.82rem;
+  color: var(--mc-black);
+  line-height: 1.3;
+}
+.mc-kw-chips__chip.is-primary {
+  border-color: var(--mc-black);
+  background: var(--mc-white);
+}
+.mc-kw-chips__primary-tag {
+  font-size: 0.62rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--mc-gray-600);
+  margin-right: 2px;
+}
+.mc-kw-chips__text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.mc-kw-chips__remove {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  border: 0;
+  border-radius: 4px;
+  background: transparent;
+  color: var(--mc-gray-600);
+  font-size: 1rem;
+  line-height: 1;
+  cursor: pointer;
+  font-family: inherit;
+}
+.mc-kw-chips__remove:hover {
+  background: var(--mc-black);
+  color: var(--mc-white);
+}
+.mc-kw-chips__input {
+  flex: 1 1 140px;
+  min-width: 140px;
+  border: 0 !important;
+  outline: none;
+  box-shadow: none !important;
+  background: transparent;
+  padding: 4px 6px;
+  font: inherit;
+  font-size: 0.9rem;
+  color: var(--mc-black);
+}
+.mc-kw-chips__input::placeholder {
+  color: var(--mc-gray-400);
+}
+
 /* ─────── SEO panel ─────── */
 .mc-seo-panel__suggestions {
   margin-top: 8px;

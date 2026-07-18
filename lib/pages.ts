@@ -22,6 +22,20 @@ export type PageSeo = {
 /** Controls optional route-specific storefront behaviour. */
 export type PageKind = "standard" | "contact" | "shop" | "sale";
 
+/** One label/body pair in the Contact page sidebar. */
+export type ContactDetailRow = {
+  id: string;
+  label: string;
+  body: string;
+};
+
+/** Editable Contact page sidebar (Visit & Connect, address, hours, etc.). */
+export type ContactDetails = {
+  heading: string;
+  lead: string;
+  rows: ContactDetailRow[];
+};
+
 export type Page = {
   id: string;
   slug: string;
@@ -34,6 +48,8 @@ export type Page = {
   pageKind?: PageKind;
   /** Google Maps iframe embed HTML — used when pageKind is contact. */
   mapEmbed?: string;
+  /** Contact sidebar copy — used when pageKind is contact. */
+  contactDetails?: ContactDetails;
   published: boolean;
   showInFooter?: boolean;
   footerColumn?: "company" | "legal" | "shop";
@@ -45,6 +61,34 @@ export type Page = {
 export type { ContentBlock } from "./blocks/types";
 
 const PAGE_KINDS: PageKind[] = ["standard", "contact", "shop", "sale"];
+
+function normalizeContactDetails(raw: unknown): ContactDetails | undefined {
+  if (!raw || typeof raw !== "object") return undefined;
+  const obj = raw as Partial<ContactDetails>;
+  const rows = Array.isArray(obj.rows)
+    ? obj.rows
+        .map((r, i) => {
+          if (!r || typeof r !== "object") return null;
+          const row = r as Partial<ContactDetailRow>;
+          const label = String(row.label ?? "").trim();
+          const body = String(row.body ?? "");
+          if (!label && !body.trim()) return null;
+          return {
+            id:
+              typeof row.id === "string" && row.id
+                ? row.id
+                : `cdr_${i}_${Math.random().toString(36).slice(2, 7)}`,
+            label,
+            body,
+          };
+        })
+        .filter((r): r is ContactDetailRow => r !== null)
+    : [];
+  const heading = String(obj.heading ?? "").trim();
+  const lead = String(obj.lead ?? "").trim();
+  if (!heading && !lead && rows.length === 0) return undefined;
+  return { heading, lead, rows };
+}
 
 function normalizePage(raw: Partial<Page>): Page {
   const pageKind = PAGE_KINDS.includes(raw.pageKind as PageKind)
@@ -60,6 +104,7 @@ function normalizePage(raw: Partial<Page>): Page {
       typeof raw.bannerImage === "string" ? raw.bannerImage : undefined,
     pageKind,
     mapEmbed: typeof raw.mapEmbed === "string" ? raw.mapEmbed : undefined,
+    contactDetails: normalizeContactDetails(raw.contactDetails),
     published: raw.published ?? true,
     showInFooter: raw.showInFooter,
     footerColumn: raw.footerColumn,

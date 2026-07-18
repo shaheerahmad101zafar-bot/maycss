@@ -3,13 +3,20 @@
 import { useState, type FormEvent } from "react";
 import Link from "next/link";
 import { upsertPageAction, type PageFormState } from "@/app/admin/actions";
-import type { Page, PageKind } from "@/lib/pages";
+import type { ContactDetails, Page, PageKind } from "@/lib/pages";
 import type { BlockTemplate, ContentBlock } from "@/lib/blocks/types";
 import { cx } from "@/lib/utils";
 import BlockEditor from "./BlockEditor";
+import ContactDetailsEditor from "./ContactDetailsEditor";
 import SeoPanel from "./SeoPanel";
 import HybridImagePicker from "./HybridImagePicker";
 import HomePageEditGuide from "./HomePageEditGuide";
+
+const EMPTY_CONTACT_DETAILS: ContactDetails = {
+  heading: "Visit & Connect",
+  lead: "",
+  rows: [],
+};
 
 const initial: PageFormState = { ok: true };
 
@@ -33,6 +40,9 @@ export default function PageForm({ page, templates }: Props) {
   const [bannerImage, setBannerImage] = useState(page?.bannerImage ?? "");
   const [pageKind, setPageKind] = useState<PageKind>(page?.pageKind ?? "standard");
   const [mapEmbed, setMapEmbed] = useState(page?.mapEmbed ?? "");
+  const [contactDetails, setContactDetails] = useState<ContactDetails>(
+    page?.contactDetails ?? EMPTY_CONTACT_DETAILS,
+  );
 
   const [clientErrors, setClientErrors] = useState<Record<string, string>>({});
   const [pending, setPending] = useState(false);
@@ -178,6 +188,21 @@ export default function PageForm({ page, templates }: Props) {
           )}
         </div>
       </fieldset>
+
+      {pageKind === "contact" && (
+        <fieldset className="mc-fieldset">
+          <legend>Contact sidebar (Visit &amp; Connect)</legend>
+          <p className="mc-admin__hint" style={{ marginTop: 0 }}>
+            This is the right-hand panel on the Contact Us page — address, hours,
+            email, phone, or any other detail you want customers to see. Edit
+            freely; Save Page publishes it live.
+          </p>
+          <ContactDetailsEditor
+            value={contactDetails}
+            onChange={setContactDetails}
+          />
+        </fieldset>
+      )}
 
       <fieldset className="mc-fieldset">
         <legend>Content blocks</legend>

@@ -8,6 +8,7 @@ import {
 } from "@/app/admin/actions";
 import type { Category } from "@/lib/utils";
 import { cx } from "@/lib/utils";
+import KeywordChipsInput from "./KeywordChipsInput";
 
 const initial: ImportProductState | null = null;
 
@@ -30,6 +31,7 @@ export default function ProductImportForm({ categories }: Props) {
   );
   const [url, setUrl] = useState("");
   const [focusKeyword, setFocusKeyword] = useState("");
+  const [additionalKeywords, setAdditionalKeywords] = useState<string[]>([]);
 
   return (
     <div className="mc-import">
@@ -70,14 +72,19 @@ export default function ProductImportForm({ categories }: Props) {
               </p>
             </div>
 
-            <div className="mc-field">
-              <label htmlFor="additionalKeywords">Additional keywords</label>
-              <input
-                id="additionalKeywords"
-                name="additionalKeywords"
-                placeholder="secondary, long-tail, related"
-              />
-            </div>
+            <KeywordChipsInput
+              id="additionalKeywords"
+              label="Additional keywords"
+              keywords={additionalKeywords}
+              onChange={setAdditionalKeywords}
+              placeholder="secondary, long-tail, related"
+              hint="Type a keyword and press Enter to add. Click × to remove."
+            />
+            <input
+              type="hidden"
+              name="additionalKeywords"
+              value={additionalKeywords.join(", ")}
+            />
 
             <div className="mc-field">
               <label htmlFor="categoryId">Category (optional)</label>

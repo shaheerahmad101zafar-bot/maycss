@@ -97,6 +97,7 @@ export default async function AdminPagesList() {
                   <td>
                     <p className="mc-admin__row-name" style={{ margin: 0 }}>
                       {p.title}
+                      {p.pageKind === "contact" ? " (Contact Us)" : ""}
                     </p>
                     <p className="mc-admin__row-id">ID {p.id}</p>
                   </td>

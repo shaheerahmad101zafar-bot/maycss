@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import { SeoAuditor, type EntityForAudit } from "@/lib/seo/auditor";
 import { KeywordChecker } from "@/lib/seo/keywords";
 import { cx } from "@/lib/utils";
+import KeywordChipsInput from "./KeywordChipsInput";
 import SeoBodyGuide from "./SeoBodyGuide";
 import type { BodySource } from "@/lib/seo/body-content";
 import { countWords } from "@/lib/seo/body-content";
@@ -39,7 +40,7 @@ interface Props {
  *   - Meta Title (with char counter 30–60)
  *   - Meta Description (with char counter 120–160)
  *   - OG Image (URL)
- *   - Additional keywords (comma-separated) + local suggest button
+ *   - Additional keywords (Enter-to-add chips) + local suggest button
  *   - Live audit score + checks + keyword density
  *
  * All fields sync to hidden <input>s (metaTitle, metaDescription, ogImage,
@@ -63,7 +64,6 @@ export default function MetaSeoPanel({
   onOgImageChange,
   onAdditionalKeywordsChange,
 }: Props) {
-  const [addKwInput, setAddKwInput] = useState(additionalKeywords.join(", "));
   const [suggestSeed, setSuggestSeed] = useState("");
   const [suggestions, setSuggestions] = useState<string[]>([]);
 
@@ -97,14 +97,6 @@ export default function MetaSeoPanel({
     ],
   );
 
-  const commitAdditional = (raw: string) => {
-    const parsed = raw
-      .split(",")
-      .map((k) => k.trim())
-      .filter(Boolean);
-    onAdditionalKeywordsChange(parsed);
-  };
-
   const runSuggest = () => {
     setSuggestions(KeywordChecker.suggest(suggestSeed || focusKeyword));
   };
@@ -114,10 +106,13 @@ export default function MetaSeoPanel({
       onFocusKeywordChange(kw);
       return;
     }
-    if (additionalKeywords.includes(kw) || kw === focusKeyword) return;
-    const next = [...additionalKeywords, kw];
-    setAddKwInput(next.join(", "));
-    onAdditionalKeywordsChange(next);
+    if (
+      kw.toLowerCase() === focusKeyword.toLowerCase() ||
+      additionalKeywords.some((k) => k.toLowerCase() === kw.toLowerCase())
+    ) {
+      return;
+    }
+    onAdditionalKeywordsChange([...additionalKeywords, kw]);
   };
 
   return (
@@ -186,18 +181,14 @@ export default function MetaSeoPanel({
           </p>
         </div>
 
-        <div className="mc-field mc-field--full">
-          <label htmlFor="addKeywords">
-            Additional keywords (comma-separated)
-          </label>
-          <input
-            id="addKeywords"
-            value={addKwInput}
-            onChange={(e) => setAddKwInput(e.target.value)}
-            onBlur={(e) => commitAdditional(e.target.value)}
-            placeholder="related, secondary, long-tail keywords"
-          />
-        </div>
+        <KeywordChipsInput
+          id="addKeywords"
+          label="Additional keywords"
+          keywords={additionalKeywords}
+          onChange={onAdditionalKeywordsChange}
+          placeholder="e.g. luxury midi dress"
+          hint="Type a keyword and press Enter to add. Click × to remove. Focus keyword stays separate above."
+        />
 
         <div className="mc-field mc-field--full">
           <label htmlFor="kwSeed">Get keyword suggestions</label>

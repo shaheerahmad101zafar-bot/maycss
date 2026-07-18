@@ -1,4 +1,5 @@
 import BlockRenderer from "@/components/cms/BlockRenderer";
+import ContactDetailsAside from "@/components/cms/ContactDetailsAside";
 import type { Page } from "@/lib/pages";
 import type { Category, Product } from "@/lib/utils";
 import { cx } from "@/lib/utils";
@@ -16,6 +17,10 @@ type Props = {
  */
 export default function CmsPageView({ page, products, categories, children }: Props) {
   const showHeader = Boolean(page.eyebrow || page.hero || page.title);
+  const contactAside =
+    page.pageKind === "contact" && page.contactDetails ? (
+      <ContactDetailsAside details={page.contactDetails} />
+    ) : null;
 
   return (
     <article className={cx("mc-page", page.pageKind && `mc-page--${page.pageKind}`)}>
@@ -69,6 +74,7 @@ export default function CmsPageView({ page, products, categories, children }: Pr
             </section>
           )}
         </div>
+        {contactAside}
         {children}
       </div>
     </article>

@@ -5,6 +5,7 @@ import type { ContentBlock } from "@/lib/blocks/types";
 import { SeoAuditor } from "@/lib/seo/auditor";
 import { KeywordChecker } from "@/lib/seo/keywords";
 import { cx } from "@/lib/utils";
+import KeywordChipsInput from "./KeywordChipsInput";
 import SeoBodyGuide from "./SeoBodyGuide";
 
 interface Props {
@@ -25,7 +26,7 @@ interface Props {
 /**
  * SEO panel with:
  *   - meta title / description / OG image fields
- *   - target keywords (comma-separated) with local suggestion helper
+ *   - target keywords (Enter-to-add chips) with local suggestion helper
  *   - live SEO audit checklist (score + issues + hints)
  *   - keyword density readout
  */
@@ -45,7 +46,6 @@ export default function SeoPanel(props: Props) {
     onKeywordsChange,
   } = props;
 
-  const [kwInput, setKwInput] = useState(keywords.join(", "));
   const [suggestSeed, setSuggestSeed] = useState("");
   const [suggestions, setSuggestions] = useState<string[]>([]);
 
@@ -61,23 +61,13 @@ export default function SeoPanel(props: Props) {
     [title, slug, hero, metaTitle, metaDescription, ogImage, keywords, blocks],
   );
 
-  const commitKeywords = (raw: string) => {
-    const parsed = raw
-      .split(",")
-      .map((k) => k.trim())
-      .filter(Boolean);
-    onKeywordsChange(parsed);
-  };
-
   const runSuggest = () => {
     setSuggestions(KeywordChecker.suggest(suggestSeed));
   };
 
   const addSuggestion = (kw: string) => {
-    if (keywords.includes(kw)) return;
-    const next = [...keywords, kw];
-    setKwInput(next.join(", "));
-    onKeywordsChange(next);
+    if (keywords.some((k) => k.toLowerCase() === kw.toLowerCase())) return;
+    onKeywordsChange([...keywords, kw]);
   };
 
   return (
@@ -128,16 +118,15 @@ export default function SeoPanel(props: Props) {
             {metaDescription.length} / 160 characters
           </p>
         </div>
-        <div className="mc-field mc-field--full">
-          <label htmlFor="seoKeywords">Target keywords (comma-separated)</label>
-          <input
-            id="seoKeywords"
-            value={kwInput}
-            onChange={(e) => setKwInput(e.target.value)}
-            onBlur={(e) => commitKeywords(e.target.value)}
-            placeholder="silk wrap dress, evening dresses, formal wear"
-          />
-        </div>
+        <KeywordChipsInput
+          id="seoKeywords"
+          label="Target keywords"
+          keywords={keywords}
+          onChange={onKeywordsChange}
+          markFirstAsPrimary
+          placeholder="e.g. Shop MayCSS Online Store"
+          hint="Type a keyword and press Enter to add. First chip is the primary keyword for SEO checks. Click × to remove."
+        />
 
         <div className="mc-field mc-field--full">
           <label htmlFor="kwSeed">Get keyword suggestions</label>

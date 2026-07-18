@@ -1055,6 +1055,44 @@ function parseKeywordsJson(raw: string): string[] {
   }
 }
 
+function parseContactDetailsJson(raw: string): Page["contactDetails"] | undefined {
+  if (!raw) return undefined;
+  try {
+    const parsed = JSON.parse(raw) as unknown;
+    if (!parsed || typeof parsed !== "object") return undefined;
+    const obj = parsed as {
+      heading?: unknown;
+      lead?: unknown;
+      rows?: unknown;
+    };
+    const rows = Array.isArray(obj.rows)
+      ? obj.rows
+          .map((r, i) => {
+            if (!r || typeof r !== "object") return null;
+            const row = r as { id?: unknown; label?: unknown; body?: unknown };
+            const label = String(row.label ?? "").trim();
+            const body = String(row.body ?? "");
+            if (!label && !body.trim()) return null;
+            return {
+              id:
+                typeof row.id === "string" && row.id
+                  ? row.id
+                  : `cdr_${i}`,
+              label,
+              body,
+            };
+          })
+          .filter((r): r is NonNullable<typeof r> => r !== null)
+      : [];
+    const heading = String(obj.heading ?? "").trim();
+    const lead = String(obj.lead ?? "").trim();
+    if (!heading && !lead && rows.length === 0) return undefined;
+    return { heading, lead, rows };
+  } catch {
+    return undefined;
+  }
+}
+
 export async function upsertPageAction(
   _prev: PageFormState,
   formData: FormData,
@@ -1078,6 +1116,9 @@ export async function upsertPageAction(
   const bannerImage = String(formData.get("bannerImage") ?? "").trim();
   const pageKind = String(formData.get("pageKind") ?? "standard").trim() as Page["pageKind"];
   const mapEmbed = String(formData.get("mapEmbed") ?? "").trim();
+  const contactDetails = parseContactDetailsJson(
+    String(formData.get("contactDetailsJson") ?? ""),
+  );
 
   const errors: Record<string, string> = {};
   if (!title) errors.title = "Title is required.";
@@ -1123,6 +1164,10 @@ export async function upsertPageAction(
     bannerImage: bannerImage || undefined,
     pageKind: pageKind || "standard",
     mapEmbed: mapEmbed || undefined,
+    contactDetails:
+      (pageKind || "standard") === "contact"
+        ? contactDetails ?? existing?.contactDetails
+        : undefined,
     published,
     showInFooter,
     footerColumn: showInFooter ? footerColumn : undefined,

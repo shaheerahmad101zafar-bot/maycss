@@ -3,6 +3,7 @@
 import { useMemo, useRef, useState } from "react";
 import type { ManualPaymentMethod } from "@/lib/settings";
 import { cx } from "@/lib/utils";
+import { postAdminUpload } from "@/lib/uploads/client";
 
 const rid = () =>
   `${Date.now().toString(36)}${Math.random().toString(36).slice(2, 6)}`;
@@ -42,49 +43,15 @@ export default function ManualMethodsEditor({ initial }: Props) {
   };
 
   const uploadFile = async (id: string, file: File) => {
-    if (!file.type.startsWith("image/")) {
+    setUploadStates((s) => ({ ...s, [id]: { uploading: true, error: undefined } }));
+    const result = await postAdminUpload(file, "qr");
+    if (result.ok) {
+      update(id, { qrCode: result.url });
+      setUploadStates((s) => ({ ...s, [id]: {} }));
+    } else {
       setUploadStates((s) => ({
         ...s,
-        [id]: { error: "Please choose an image file." },
-      }));
-      return;
-    }
-    if (file.size > 5 * 1024 * 1024) {
-      setUploadStates((s) => ({
-        ...s,
-        [id]: { error: "File is larger than 5MB." },
-      }));
-      return;
-    }
-    setUploadStates((s) => ({ ...s, [id]: { uploading: true } }));
-    try {
-      const fd = new FormData();
-      fd.append("file", file);
-      fd.append("subdir", "qr");
-      const res = await fetch("/api/admin/upload", {
-        method: "POST",
-        body: fd,
-      });
-      const data = (await res.json()) as {
-        ok: boolean;
-        url?: string;
-        error?: string;
-      };
-      if (data.ok && data.url) {
-        update(id, { qrCode: data.url });
-        setUploadStates((s) => ({ ...s, [id]: {} }));
-      } else {
-        setUploadStates((s) => ({
-          ...s,
-          [id]: { error: data.error || "Upload failed." },
-        }));
-      }
-    } catch (err) {
-      setUploadStates((s) => ({
-        ...s,
-        [id]: {
-          error: err instanceof Error ? err.message : "Upload failed.",
-        },
+        [id]: { error: result.error },
       }));
     }
   };
@@ -169,7 +136,7 @@ export default function ManualMethodsEditor({ initial }: Props) {
                       />
                       <button
                         type="button"
-                        className="mc-btn mc-btn--ghost"
+                        className="mc-btn mc-btn--primary mc-upload-btn"
                         onClick={() => fileInputs.current[m.id]?.click()}
                         disabled={state.uploading}
                       >

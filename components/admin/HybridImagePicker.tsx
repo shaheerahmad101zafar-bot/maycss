@@ -2,6 +2,10 @@
 
 import { useMemo, useRef, useState } from "react";
 import { cx } from "@/lib/utils";
+import {
+  isStoredUploadUrl,
+  postAdminUpload,
+} from "@/lib/uploads/client";
 
 interface Props {
   value: string;
@@ -13,12 +17,6 @@ interface Props {
 
 type Source = "upload" | "url";
 
-/**
- * Hybrid image picker — lets the admin either upload a local file or paste
- * an external URL. The two modes are mutually exclusive: while one is in use,
- * the other is disabled + visually dimmed. Auto-detects the current source
- * from the incoming value (uploaded files live under `/uploads/…`).
- */
 export default function HybridImagePicker({
   value,
   onChange,
@@ -27,11 +25,11 @@ export default function HybridImagePicker({
   helpText,
 }: Props) {
   const initialSource: Source =
-    value && !value.startsWith("/uploads/") && /^https?:\/\//i.test(value)
+    value && !isStoredUploadUrl(value) && /^https?:\/\//i.test(value)
       ? "url"
-      : value.startsWith("/uploads/")
-      ? "upload"
-      : "upload";
+      : isStoredUploadUrl(value) || !value
+        ? "upload"
+        : "upload";
   const [source, setSource] = useState<Source>(initialSource);
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -40,7 +38,7 @@ export default function HybridImagePicker({
   const inputRef = useRef<HTMLInputElement | null>(null);
 
   const uploadedPath = useMemo(
-    () => (value.startsWith("/uploads/") ? value : ""),
+    () => (isStoredUploadUrl(value) ? value : ""),
     [value],
   );
   const externalUrl = useMemo(
@@ -53,42 +51,17 @@ export default function HybridImagePicker({
     setSource(next);
     setError(null);
     setUrlError(null);
-    // Wipe the value so the user starts fresh in the new mode.
     onChange("");
     if (next === "url") setUrlDraft("");
   };
 
   const upload = async (file: File) => {
-    if (!file.type.startsWith("image/")) {
-      setError("Please choose an image file.");
-      return;
-    }
-    if (file.size > 8 * 1024 * 1024) {
-      setError("File is larger than 8MB.");
-      return;
-    }
     setUploading(true);
     setError(null);
-    try {
-      const fd = new FormData();
-      fd.append("file", file);
-      fd.append("subdir", subdir);
-      const res = await fetch("/api/admin/upload", {
-        method: "POST",
-        body: fd,
-      });
-      const data = (await res.json()) as {
-        ok: boolean;
-        url?: string;
-        error?: string;
-      };
-      if (data.ok && data.url) onChange(data.url);
-      else setError(data.error || "Upload failed.");
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Upload failed.");
-    } finally {
-      setUploading(false);
-    }
+    const result = await postAdminUpload(file, subdir);
+    if (result.ok) onChange(result.url);
+    else setError(result.error);
+    setUploading(false);
   };
 
   const commitUrl = () => {
@@ -147,10 +120,7 @@ export default function HybridImagePicker({
 
       <div className="mc-hybrid-img__body">
         <div
-          className={cx(
-            "mc-hybrid-img__preview",
-            !value && "is-empty",
-          )}
+          className={cx("mc-hybrid-img__preview", !value && "is-empty")}
         >
           {value ? (
             /* eslint-disable-next-line @next/next/no-img-element */
@@ -161,7 +131,6 @@ export default function HybridImagePicker({
         </div>
 
         <div className="mc-hybrid-img__controls">
-          {/* Upload pane */}
           <div
             className={cx(
               "mc-hybrid-img__pane",
@@ -182,19 +151,22 @@ export default function HybridImagePicker({
             />
             <button
               type="button"
-              className="mc-btn mc-btn--ghost"
+              className={cx(
+                "mc-btn mc-btn--primary mc-upload-btn",
+                uploading && "is-loading",
+              )}
               onClick={() => inputRef.current?.click()}
               disabled={source !== "upload" || uploading}
             >
               {uploading
                 ? "Uploading…"
                 : uploadedPath
-                ? "Replace file"
-                : "Choose file"}
+                  ? "Replace image"
+                  : "Upload image"}
             </button>
             {uploadedPath && source === "upload" && (
-              <p className="mc-admin__hint">
-                Uploaded to <code>{uploadedPath}</code>
+              <p className="mc-admin__hint mc-upload-btn__hint">
+                Saved to cloud storage
               </p>
             )}
             {error && source === "upload" && (
@@ -204,7 +176,6 @@ export default function HybridImagePicker({
             )}
           </div>
 
-          {/* URL pane */}
           <div
             className={cx(
               "mc-hybrid-img__pane",

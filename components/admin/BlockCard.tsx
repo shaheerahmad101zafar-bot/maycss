@@ -20,6 +20,7 @@ import type {
   VideoBlock,
 } from "@/lib/blocks/types";
 import { cx } from "@/lib/utils";
+import { postAdminUpload } from "@/lib/uploads/client";
 import ImageAdjustFields from "./ImageAdjustFields";
 
 interface Props {
@@ -347,22 +348,10 @@ function ImageUpload({
   const upload = async (file: File) => {
     setUploading(true);
     setError(null);
-    try {
-      const fd = new FormData();
-      fd.append("file", file);
-      fd.append("subdir", "cms");
-      const res = await fetch("/api/admin/upload", {
-        method: "POST",
-        body: fd,
-      });
-      const data = (await res.json()) as { ok: boolean; url?: string; error?: string };
-      if (data.ok && data.url) onChange(data.url);
-      else setError(data.error || "Upload failed");
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Upload failed");
-    } finally {
-      setUploading(false);
-    }
+    const result = await postAdminUpload(file, "cms");
+    if (result.ok) onChange(result.url);
+    else setError(result.error);
+    setUploading(false);
   };
 
   return (
@@ -382,11 +371,11 @@ function ImageUpload({
         />
         <button
           type="button"
-          className="mc-btn mc-btn--ghost"
+          className={cx("mc-btn mc-btn--primary mc-upload-btn", uploading && "is-loading")}
           onClick={() => inputRef.current?.click()}
           disabled={uploading}
         >
-          {uploading ? "Uploading…" : value ? "Replace" : "Upload"}
+          {uploading ? "Uploading…" : value ? "Replace image" : "Upload image"}
         </button>
         {value && (
           <button

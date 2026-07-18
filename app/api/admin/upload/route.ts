@@ -3,8 +3,10 @@ import crypto from "node:crypto";
 import { getSessionToken } from "@/lib/auth-config";
 import { optimizeImage } from "@/lib/images/optimizer";
 import { saveUploadFile } from "@/lib/storage/upload-store";
+import { MAX_UPLOAD_BYTES, MAX_UPLOAD_LABEL } from "@/lib/uploads/constants";
 
-const MAX_BYTES = 8 * 1024 * 1024; // 8 MB pre-optimization
+export const runtime = "nodejs";
+export const maxDuration = 60;
 
 const ALLOWED_TYPES = new Set([
   "image/png",
@@ -71,9 +73,9 @@ export async function POST(request: NextRequest) {
         { status: 400 },
       );
     }
-    if (file.size > MAX_BYTES) {
+    if (file.size > MAX_UPLOAD_BYTES) {
       return NextResponse.json(
-        { ok: false, error: "File is larger than 8MB." },
+        { ok: false, error: `File is larger than ${MAX_UPLOAD_LABEL}.` },
         { status: 400 },
       );
     }

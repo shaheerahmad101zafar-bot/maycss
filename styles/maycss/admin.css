@@ -993,6 +993,26 @@ a.mc-admin__stat:hover {
   background: var(--mc-gray-100);
 }
 
+/* ─────── Upload buttons (admin-wide) ─────── */
+.mc-upload-btn {
+  align-self: flex-start;
+  min-width: 160px;
+  padding: 11px 20px;
+  font-size: 0.82rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+.mc-upload-btn__hint {
+  margin-top: 2px;
+}
+
+.mc-qr-upload .mc-upload-btn,
+.mc-qr-upload .mc-btn--primary {
+  min-width: 150px;
+}
+
 /* ─────── Block editor ─────── */
 .mc-blk-editor { display: flex; flex-direction: column; gap: 14px; }
 .mc-blk-editor__toolbar {

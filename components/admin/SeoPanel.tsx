@@ -5,6 +5,7 @@ import type { ContentBlock } from "@/lib/blocks/types";
 import { SeoAuditor } from "@/lib/seo/auditor";
 import { KeywordChecker } from "@/lib/seo/keywords";
 import { cx } from "@/lib/utils";
+import SeoBodyGuide from "./SeoBodyGuide";
 
 interface Props {
   title: string;
@@ -173,6 +174,8 @@ export default function SeoPanel(props: Props) {
           )}
         </div>
       </div>
+
+      <SeoBodyGuide mode="page" blocks={blocks} hero={hero} />
 
       <div className="mc-seo-panel__audit">
         <div className="mc-seo-panel__audit-head">

@@ -4,6 +4,10 @@
  */
 
 import type { ContentBlock } from "@/lib/blocks/types";
+import {
+  countWords,
+  extractPageBodyText,
+} from "@/lib/seo/body-content";
 
 export type PageForAudit = {
   title: string;
@@ -39,47 +43,6 @@ export type AuditResult = {
   wordCount: number;
   readingTimeMinutes: number;
 };
-
-/** Flatten every user-visible string in the block tree for keyword analysis. */
-function extractText(blocks: ContentBlock[]): string {
-  const parts: string[] = [];
-  for (const b of blocks) {
-    switch (b.type) {
-      case "richtext":
-        if (b.heading) parts.push(b.heading);
-        parts.push(b.body);
-        break;
-      case "hero":
-        parts.push(b.heading);
-        if (b.subheading) parts.push(b.subheading);
-        break;
-      case "cta":
-        parts.push(b.heading);
-        if (b.body) parts.push(b.body);
-        break;
-      case "faq":
-        for (const it of b.items) {
-          parts.push(it.q, it.a);
-        }
-        break;
-      case "columns":
-        for (const c of b.columns) {
-          if (c.heading) parts.push(c.heading);
-          parts.push(c.body);
-        }
-        break;
-      case "image":
-        if (b.alt) parts.push(b.alt);
-        if (b.caption) parts.push(b.caption);
-        break;
-    }
-  }
-  return parts.join(" ");
-}
-
-function countWords(text: string): number {
-  return text.trim() ? text.trim().split(/\s+/).length : 0;
-}
 
 function includes(haystack: string, needle: string): boolean {
   return haystack.toLowerCase().includes(needle.toLowerCase());
@@ -198,6 +161,10 @@ export const SeoAuditor = {
         label: "Focus keyword appears in body content",
         pass: includes(text, focus),
         severity: "error",
+        hint:
+          !includes(text, focus)
+            ? `Add "${focus}" in Description or a Content block Body field — not only in meta title.`
+            : undefined,
       });
       checks.push({
         id: "kw-in-slug",
@@ -231,7 +198,7 @@ export const SeoAuditor = {
       severity: "warn",
       hint:
         wordCount < minLength
-          ? `Only ${wordCount} words — thin content may struggle to rank.`
+          ? `Only ${wordCount} words — add more in Description and Content blocks (Rich text, Editorial split, FAQ…).`
           : undefined,
     });
 
@@ -263,7 +230,7 @@ export const SeoAuditor = {
 
   analyze(page: PageForAudit): AuditResult {
     const keywords = page.seo?.keywords ?? [];
-    const text = extractText(page.blocks);
+    const text = extractPageBodyText(page.blocks, page.hero);
     const wordCount = countWords(text);
     const readingTime = Math.max(1, Math.round(wordCount / 220));
 
@@ -348,6 +315,10 @@ export const SeoAuditor = {
         label: "Primary keyword appears in body content",
         pass: includes(text, primary),
         severity: "error",
+        hint:
+          !includes(text, primary)
+            ? `Use "${primary}" in Content blocks (Body on Editorial split / Split promo / Rich text) or the Hero paragraph — meta fields alone do not count.`
+            : undefined,
       });
     }
 
@@ -369,7 +340,14 @@ export const SeoAuditor = {
 
     // At least one heading in content.
     const hasHeading = page.blocks.some(
-      (b) => (b.type === "richtext" && b.heading) || b.type === "hero",
+      (b) =>
+        (b.type === "richtext" && b.heading) ||
+        b.type === "hero" ||
+        b.type === "editorial" ||
+        b.type === "splitbanner" ||
+        b.type === "banner" ||
+        b.type === "countdown" ||
+        b.type === "cta",
     );
     checks.push({
       id: "has-heading",
@@ -385,7 +363,7 @@ export const SeoAuditor = {
       severity: "warn",
       hint:
         wordCount < 150
-          ? `Only ${wordCount} words — thin content may struggle to rank.`
+          ? `Only ${wordCount} words — expand Content blocks (Editorial split, Split promo, Rich text, FAQ) or the Hero paragraph. See the body guide above.`
           : undefined,
     });
 

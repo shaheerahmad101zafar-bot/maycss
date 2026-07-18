@@ -25,8 +25,15 @@ export default function SplitBannerView({ block }: { block: SplitBannerBlock }) 
     <div className="mc-split-banner__media mc-split-banner__media--placeholder" aria-hidden />
   );
 
+  const copyAlign = block.layout?.alignment ?? "left";
+
   const copyPanel = (
-    <div className="mc-split-banner__copy">
+    <div
+      className={cx(
+        "mc-split-banner__copy",
+        copyAlign !== "full" && `is-text-${copyAlign}`,
+      )}
+    >
       {block.eyebrow && <p className="mc-split-banner__eyebrow">{block.eyebrow}</p>}
       <h2 className="mc-split-banner__title">{block.heading}</h2>
       {block.body && <p className="mc-split-banner__body">{block.body}</p>}

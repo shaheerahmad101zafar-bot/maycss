@@ -9,10 +9,17 @@ export default function EditorialBlockView({ block }: { block: EditorialBlock })
     !block.ctaHref.startsWith("http") &&
     !block.ctaHref.startsWith("mailto:");
 
+  const copyAlign = block.layout?.alignment ?? "left";
+
   return (
     <section className="mc-block mc-block--editorial mc-editorial">
       <div className="mc-container mc-editorial__grid">
-        <div className="mc-editorial__copy">
+        <div
+          className={cx(
+            "mc-editorial__copy",
+            copyAlign !== "full" && `is-text-${copyAlign}`,
+          )}
+        >
           {block.eyebrow && (
             <p className="mc-editorial__eyebrow">{block.eyebrow}</p>
           )}

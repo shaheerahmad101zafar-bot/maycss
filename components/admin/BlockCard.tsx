@@ -142,6 +142,11 @@ export default function BlockCard({
         <LayoutFields
           layout={block.layout}
           onChange={(next) => onChange({ layout: next } as Partial<ContentBlock>)}
+          alignmentHint={
+            block.type === "editorial" || block.type === "splitbanner"
+              ? "Centers or aligns the text panel (heading, body, button) on the live site."
+              : undefined
+          }
         />
 
         {block.type === "richtext" && (
@@ -205,9 +210,11 @@ export default function BlockCard({
 function LayoutFields({
   layout,
   onChange,
+  alignmentHint,
 }: {
   layout: BlockLayout | undefined;
   onChange: (next: BlockLayout) => void;
+  alignmentHint?: string;
 }) {
   const l = layout ?? {};
   const patch = (p: Partial<BlockLayout>) => onChange({ ...l, ...p });
@@ -219,7 +226,7 @@ function LayoutFields({
         style={{ marginTop: 8, background: "rgba(0,0,0,0.03)", padding: 10, borderRadius: 6 }}
       >
         <div className="mc-field">
-          <label>Alignment</label>
+          <label>Alignment (text position)</label>
           <select
             value={l.alignment ?? "center"}
             onChange={(e) => patch({ alignment: e.target.value as Alignment })}
@@ -229,6 +236,9 @@ function LayoutFields({
             <option value="right">Right</option>
             <option value="full">Stretch (full)</option>
           </select>
+          {alignmentHint && (
+            <p className="mc-admin__hint">{alignmentHint}</p>
+          )}
         </div>
         <div className="mc-field">
           <label>Width</label>
@@ -795,6 +805,11 @@ function EditorialFields({
 }: FieldsProps<Extract<ContentBlock, { type: "editorial" }>>) {
   return (
     <div className="mc-admin__form-grid">
+      <p className="mc-field mc-field--full mc-admin__callout">
+        Homepage About-style section — edit eyebrow, heading, body, image, and button
+        here. Open <strong>Layout &amp; spacing → Alignment → Center</strong> to center
+        text on the live site.
+      </p>
       <div className="mc-field">
         <label>Eyebrow</label>
         <input
@@ -810,11 +825,12 @@ function EditorialFields({
         />
       </div>
       <div className="mc-field mc-field--full">
-        <label>Body *</label>
+        <label>Body * (counts for SEO word count)</label>
         <textarea
-          rows={4}
+          rows={6}
           value={block.body}
           onChange={(e) => onChange({ body: e.target.value })}
+          placeholder="Write at least 150 words total across your page blocks. Include your primary keyword here."
         />
       </div>
       <div className="mc-field mc-field--full">
@@ -858,6 +874,11 @@ function SplitBannerFields({
 }: FieldsProps<Extract<ContentBlock, { type: "splitbanner" }>>) {
   return (
     <div className="mc-admin__form-grid">
+      <p className="mc-field mc-field--full mc-admin__callout">
+        Split image + text promo (e.g. &quot;Explore the look&quot;). Edit heading,
+        body, and CTA below. Use <strong>Layout → Alignment → Center</strong> to center
+        the text panel.
+      </p>
       <div className="mc-field mc-field--full">
         <ImageUpload
           value={block.image}
@@ -915,11 +936,12 @@ function SplitBannerFields({
         />
       </div>
       <div className="mc-field mc-field--full">
-        <label>Body</label>
+        <label>Body (counts for SEO word count)</label>
         <textarea
-          rows={3}
+          rows={5}
           value={block.body ?? ""}
           onChange={(e) => onChange({ body: e.target.value })}
+          placeholder="Long paragraph beside the image — include your primary keyword."
         />
       </div>
       <div className="mc-field">

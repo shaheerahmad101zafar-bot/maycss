@@ -4,6 +4,9 @@ import { useMemo, useState } from "react";
 import { SeoAuditor, type EntityForAudit } from "@/lib/seo/auditor";
 import { KeywordChecker } from "@/lib/seo/keywords";
 import { cx } from "@/lib/utils";
+import SeoBodyGuide from "./SeoBodyGuide";
+import type { BodySource } from "@/lib/seo/body-content";
+import { countWords } from "@/lib/seo/body-content";
 
 interface Props {
   kind: "category" | "product" | "generic";
@@ -11,6 +14,8 @@ interface Props {
   slug: string;
   /** All the searchable body text (description + specs + block text …). */
   contentText: string;
+  /** Optional breakdown shown in the body-content guide. */
+  bodySources?: BodySource[];
   /** Optional block-derived extras. */
   extras?: EntityForAudit["extras"];
 
@@ -45,6 +50,7 @@ export default function MetaSeoPanel({
   title,
   slug,
   contentText,
+  bodySources,
   extras,
   focusKeyword,
   metaTitle,
@@ -236,6 +242,32 @@ export default function MetaSeoPanel({
           )}
         </div>
       </div>
+
+      <SeoBodyGuide
+        mode={kind}
+        totalWords={audit.wordCount}
+        sources={
+          bodySources ??
+          (kind === "category"
+            ? [
+                {
+                  id: "category-name",
+                  label: "Category name",
+                  field: "name",
+                  words: countWords(title),
+                  preview: title || "(empty)",
+                },
+                {
+                  id: "category-description",
+                  label: "Description",
+                  field: "description",
+                  words: Math.max(0, audit.wordCount - countWords(title)),
+                  preview: contentText.slice(0, 72) || "(empty)",
+                },
+              ]
+            : [])
+        }
+      />
 
       <div className="mc-seo-panel__audit">
         <div className="mc-seo-panel__audit-head">

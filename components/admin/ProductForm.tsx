@@ -8,6 +8,12 @@ import {
 } from "@/app/admin/actions";
 import { cx, type Category, type Product } from "@/lib/utils";
 import type { BlockTemplate, ContentBlock } from "@/lib/blocks/types";
+import {
+  countWords,
+  extractBodyTextFromBlocks,
+  listPageBodySources,
+  type BodySource,
+} from "@/lib/seo/body-content";
 import BlockEditor from "./BlockEditor";
 import MetaSeoPanel from "./MetaSeoPanel";
 
@@ -24,41 +30,6 @@ function toColorsString(p?: Product) {
 }
 function toSpecsString(p?: Product) {
   return (p?.specs ?? []).map((s) => `${s.label}: ${s.value}`).join("\n");
-}
-
-/** Flatten every block's user-visible text so the SEO auditor can search it. */
-function blocksToText(blocks: ContentBlock[]): string {
-  const parts: string[] = [];
-  for (const b of blocks) {
-    switch (b.type) {
-      case "richtext":
-        if (b.heading) parts.push(b.heading);
-        parts.push(b.body);
-        break;
-      case "hero":
-        parts.push(b.heading);
-        if (b.subheading) parts.push(b.subheading);
-        break;
-      case "cta":
-        parts.push(b.heading);
-        if (b.body) parts.push(b.body);
-        break;
-      case "faq":
-        for (const i of b.items) parts.push(i.q, i.a);
-        break;
-      case "columns":
-        for (const c of b.columns) {
-          if (c.heading) parts.push(c.heading);
-          parts.push(c.body);
-        }
-        break;
-      case "image":
-        if (b.alt) parts.push(b.alt);
-        if (b.caption) parts.push(b.caption);
-        break;
-    }
-  }
-  return parts.filter(Boolean).join(" ");
 }
 
 interface Props {
@@ -133,8 +104,44 @@ export default function ProductForm({ product, categories, templates }: Props) {
     if (product?.specs) {
       for (const s of product.specs) parts.push(s.label, s.value);
     }
-    parts.push(blocksToText(contentBlocks));
+    parts.push(extractBodyTextFromBlocks(contentBlocks));
     return parts.filter(Boolean).join(" ");
+  }, [name, description, product, contentBlocks]);
+
+  const seoBodySources = useMemo((): BodySource[] => {
+    const sources: BodySource[] = [];
+    if (name.trim()) {
+      sources.push({
+        id: "product-name",
+        label: "Product name",
+        field: "name",
+        words: countWords(name),
+        preview: name,
+      });
+    }
+    if (description.trim()) {
+      sources.push({
+        id: "product-description",
+        label: "Description (main body text)",
+        field: "description",
+        words: countWords(description),
+        preview: description,
+      });
+    }
+    if (product?.specs?.length) {
+      const specText = product.specs
+        .map((s) => `${s.label} ${s.value}`)
+        .join(" ");
+      sources.push({
+        id: "product-specs",
+        label: "Specs",
+        field: "specs",
+        words: countWords(specText),
+        preview: specText,
+      });
+    }
+    sources.push(...listPageBodySources(contentBlocks));
+    return sources;
   }, [name, description, product, contentBlocks]);
 
   // Extras for image alt-text check on content blocks.
@@ -525,6 +532,7 @@ export default function ProductForm({ product, categories, templates }: Props) {
           title={name}
           slug={String(product?.id ?? "new")}
           contentText={contentText}
+          bodySources={seoBodySources}
           extras={seoExtras}
           focusKeyword={focusKeyword}
           metaTitle={metaTitle}

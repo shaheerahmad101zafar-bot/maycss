@@ -51,9 +51,9 @@ export default function ProductImportForm({ categories }: Props) {
                 placeholder="https://www.macys.com/shop/product/…"
               />
               <p className="mc-admin__hint">
-                Works with any site that publishes Schema.org Product JSON-LD
-                (Macy&apos;s, Nordstrom, Uniqlo, Shopify, WooCommerce, and more).
-                Fully JS-rendered SPAs may not scrape cleanly.
+                Macy&apos;s links use their product API (name, price, sizes,
+                colors, images, materials). Other stores work best with
+                Schema.org Product JSON-LD (Nordstrom, Shopify, WooCommerce).
               </p>
             </div>
 

@@ -22,6 +22,10 @@ export type ProductContentInput = {
   price?: number;
   sizes?: string[];
   colors?: string[];
+  /** Source PDP bullets (materials, features, care). */
+  features?: string[];
+  /** Model / hem / fit notes from the source. */
+  sizeAndFit?: string[];
   focusKeyword: string;
   additionalKeywords?: string[];
 };
@@ -56,16 +60,33 @@ function writeSection(
   const noun = kw || name.toLowerCase();
   const brand = input.brand ?? "our featured brand";
 
+  const features = (input.features ?? []).filter(Boolean);
+  const fitNotes = (input.sizeAndFit ?? []).filter(Boolean);
+  const careLines = features.filter((f) =>
+    /clean|wash|dry|care|polyester|cotton|silk|imported|spot/i.test(f),
+  );
+  const designLines = features.filter((f) => !careLines.includes(f));
+
   switch (section) {
     case "overview":
       return (
         `${input.description ?? `${name} sets a new standard for ${noun}.`} ` +
-        `We picked this piece because it delivers on the details that matter — ` +
-        `crafted materials, a considered fit, and a design that will earn ` +
-        `its place in your rotation. If you have been searching for the right ` +
-        `${noun}, this is a strong pick.`
+        (designLines.length
+          ? `Standout details include ${joinList(designLines.slice(0, 3).map((f) => f.replace(/\.$/, "").toLowerCase()))}. `
+          : `We picked this piece because it delivers on the details that matter — crafted materials, a considered fit, and a design that earns its place in your rotation. `) +
+        `If you have been searching for the right ${noun}, this is a strong pick from ${brand}.`
       );
     case "features":
+      if (designLines.length > 0) {
+        return (
+          `Every ${noun} we stock has to earn its shelf space. With ${name}, ` +
+          `these are the details that stood out: ${joinList(
+            designLines.map((f) => f.replace(/\.$/, "")),
+          )}. ` +
+          `Quality of materials shows in how the piece hangs, wears, and ages — ` +
+          `the kind of finish you notice the first time you try it on.`
+        );
+      }
       return (
         `Every ${noun} we stock has to earn its shelf space. Here is what ` +
         `stood out with ${name}. Quality of materials shows in how the piece ` +
@@ -75,24 +96,38 @@ function writeSection(
       );
     case "styling":
       return (
-        `Style ${name} however you love. Dressed down, pair it with your ` +
-        `favourite denim and a clean sneaker. Dressed up, layer it under a ` +
-        `blazer or over a slip dress. The versatility is part of what makes ` +
-        `this such a strong ${noun}. Once you have it in your wardrobe, you ` +
-        `will find yourself styling it three, maybe four different ways in ` +
-        `a single week.`
+        `Style ${name} however you love. For evenings and formal events, pair it with ` +
+        `refined heels and delicate jewellery. For a softer look, keep accessories minimal ` +
+        `and let the silhouette lead. The versatility is part of what makes ` +
+        `this such a strong ${noun}` +
+        (input.colors?.length
+          ? ` — available in ${joinList(input.colors)}`
+          : "") +
+        `. Once you have it in your wardrobe, you will find yourself reaching for it again.`
       );
-    case "sizing":
-      if (!input.sizes || input.sizes.length === 0) {
-        return `Available in a range of sizes. Consult the size guide on the product page for the best fit.`;
-      }
+    case "sizing": {
+      const sizeLine =
+        input.sizes && input.sizes.length > 0
+          ? `${name} is available in sizes ${joinList(input.sizes)}. `
+          : `Available in a range of sizes. `;
+      const fitLine = fitNotes.length
+        ? `${fitNotes.join(" ")} `
+        : `If you are between sizes, most customers size down for a fitted look and size up for a relaxed silhouette. `;
       return (
-        `${name} is available in ${joinList(input.sizes)}. If you are between ` +
-        `sizes, most customers size down for a fitted look and size up for ` +
-        `a relaxed silhouette. When in doubt, check the size guide or ` +
-        `contact us — we are happy to help you land the right fit.`
+        sizeLine +
+        fitLine +
+        `When in doubt, check the size guide or contact us — we are happy to help you land the right fit.`
       );
+    }
     case "care":
+      if (careLines.length > 0) {
+        return (
+          `Care for your ${noun} with intention: ${joinList(
+            careLines.map((f) => f.replace(/\.$/, "")),
+          )}. ` +
+          `Well-cared-for pieces reward you with years of wear.`
+        );
+      }
       return (
         `To keep your ${noun} looking its best, follow the care label. ` +
         `In general: wash cold when possible, air-dry over a hanger or ` +
@@ -103,9 +138,8 @@ function writeSection(
       return (
         `Choosing ${name} means investing in a ${noun} that is designed to ` +
         `last. From the moment you unbox it, the difference is obvious — ` +
-        `the weight, the finish, the way it feels in your hands. When you ` +
-        `love the piece, you will care for it. When you care for it, it ` +
-        `keeps its shape and its story. That is the ${brand} promise.`
+        `the weight, the finish, the way it feels. When you love the piece, you will care for it. ` +
+        `That is the ${brand} promise — and why we carry it at MayCSS.`
       );
   }
 }
@@ -156,11 +190,19 @@ export function generateProductContent(
   const name = input.name;
   const sections = [
     { level: 2, heading: `About the ${name}`, body: writeSection("overview", input) },
-    { level: 2, heading: `Why this ${kw || "piece"} works`, body: writeSection("features", input) },
-    { level: 2, heading: `How to style your ${name}`, body: writeSection("styling", input) },
-    { level: 3, heading: `Sizing & fit`, body: writeSection("sizing", input) },
-    { level: 3, heading: `Care instructions`, body: writeSection("care", input) },
-    { level: 2, heading: `Why we chose it`, body: writeSection("why-buy", input) },
+    {
+      level: 2,
+      heading: `Why this ${kw || "piece"} is in style`,
+      body: writeSection("features", input),
+    },
+    {
+      level: 2,
+      heading: `How to style our ${name}`,
+      body: writeSection("styling", input),
+    },
+    { level: 3, heading: `Size and fit`, body: writeSection("sizing", input) },
+    { level: 3, heading: `Materials & care`, body: writeSection("care", input) },
+    { level: 2, heading: `Why we love it`, body: writeSection("why-buy", input) },
   ];
 
   const richtextBlocks: ContentBlock[] = sections.map((s) => {

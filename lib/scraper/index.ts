@@ -4,6 +4,7 @@ import type { ScrapeResult, ScrapedProduct } from "./types";
 import { scrapeFromJsonLd } from "./jsonld";
 import { scrapeFromOpenGraph } from "./opengraph";
 import { buildHumanHeaders, pickUserAgent } from "./headers";
+import { canScrapeMacys, scrapeMacysProduct } from "./macys";
 
 export type { ScrapedProduct, ScrapeResult } from "./types";
 
@@ -190,7 +191,16 @@ function merge(
 ): Partial<ScrapedProduct> {
   const merged: Partial<ScrapedProduct> = { ...a };
   for (const key of Object.keys(b) as Array<keyof ScrapedProduct>) {
-    if (key === "sources" || key === "images") continue;
+    if (
+      key === "sources" ||
+      key === "images" ||
+      key === "sizes" ||
+      key === "colors" ||
+      key === "features" ||
+      key === "sizeAndFit"
+    ) {
+      continue;
+    }
     if (merged[key] == null || merged[key] === "") {
       // @ts-expect-error dynamic assignment
       merged[key] = b[key];
@@ -200,10 +210,35 @@ function merge(
   for (const v of a.images ?? []) imgSet.add(v);
   for (const v of b.images ?? []) imgSet.add(v);
   merged.images = Array.from(imgSet);
+
+  const uniq = (list: string[] | undefined) =>
+    Array.from(new Set((list ?? []).map((s) => s.trim()).filter(Boolean)));
+  merged.sizes = uniq([...(a.sizes ?? []), ...(b.sizes ?? [])]);
+  merged.colors = uniq([...(a.colors ?? []), ...(b.colors ?? [])]);
+  merged.features = uniq([...(a.features ?? []), ...(b.features ?? [])]);
+  merged.sizeAndFit = uniq([...(a.sizeAndFit ?? []), ...(b.sizeAndFit ?? [])]);
+
   merged.sources = Array.from(
     new Set([...(a.sources ?? []), ...(b.sources ?? [])]),
   ) as ScrapedProduct["sources"];
   return merged;
+}
+
+/** Last-resort name from URL slug when markup is blocked. */
+function nameFromUrlSlug(url: string): string | undefined {
+  try {
+    const path = new URL(url).pathname;
+    const slug = path.split("/").filter(Boolean).pop() ?? "";
+    if (!slug || /^\d+$/.test(slug)) return undefined;
+    const cleaned = slug
+      .replace(/[-_]+/g, " ")
+      .replace(/\s+/g, " ")
+      .trim();
+    if (cleaned.length < 4) return undefined;
+    return cleaned.replace(/\b\w/g, (c) => c.toUpperCase());
+  } catch {
+    return undefined;
+  }
 }
 
 /* -------------------------------------------------------------------------- */
@@ -214,6 +249,8 @@ function merge(
  * Scrape a product from any public URL.
  *
  * Pipeline:
+ *   0. Retailer-specific APIs first (e.g. Macy's XAPI) — HTML is often
+ *      bot-blocked even when product JSON is still public.
  *   1. Direct fetch with rotating Chrome UAs + full human header set +
  *      random 250–900ms delays + exponential retry on 403/429/5xx.
  *   2. If direct still returns 403/429/503 → automatic fallback to
@@ -225,6 +262,22 @@ function merge(
 export async function scrapeProductUrl(url: string): Promise<ScrapeResult> {
   if (!/^https?:\/\//i.test(url)) {
     return { ok: false, error: "URL must start with http(s)://" };
+  }
+
+  // 0) Retailer adapters (bypass Akamai HTML walls).
+  if (canScrapeMacys(url)) {
+    const macys = await scrapeMacysProduct(url);
+    if (macys?.name) {
+      console.log(`[scraper] recovered ${macys.name} via Macy's XAPI`);
+      return {
+        ok: true,
+        product: {
+          sourceUrl: url,
+          sources: macys.sources ?? ["dom"],
+          ...macys,
+        } as ScrapedProduct,
+      };
+    }
   }
 
   // 1) Try direct.
@@ -257,18 +310,29 @@ export async function scrapeProductUrl(url: string): Promise<ScrapeResult> {
   const jsonld = scrapeFromJsonLd(html, url);
   const og = scrapeFromOpenGraph(html, url);
 
-  const merged: Partial<ScrapedProduct> = jsonld
+  let merged: Partial<ScrapedProduct> = jsonld
     ? og
       ? merge(jsonld, og)
       : jsonld
     : og ?? { sourceUrl: url, sources: [] };
 
   if (!merged.name) {
+    const slugName = nameFromUrlSlug(url);
+    if (slugName) {
+      merged = merge(merged, {
+        sourceUrl: url,
+        name: slugName,
+        sources: ["dom"],
+      });
+    }
+  }
+
+  if (!merged.name) {
     return {
       ok: false,
       error:
         via === "jina"
-          ? "Fetched the page via Jina Reader but couldn't find a product name in the markup. The source may not expose Schema.org Product — try a different URL."
+          ? "Fetched the page via Jina Reader but couldn't find a product name in the markup. The source may not expose Schema.org Product — try a different URL (Macy's links are supported via their product API)."
           : "Reached the page but couldn't extract a product name. Try a different URL or install a headless-browser scraper.",
     };
   }

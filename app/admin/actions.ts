@@ -355,9 +355,17 @@ export async function importProductFromUrlAction(
     price: p.price,
     sizes: p.sizes,
     colors: p.colors,
+    features: p.features,
+    sizeAndFit: p.sizeAndFit,
     focusKeyword,
     additionalKeywords,
   });
+
+  const metaDescription = (
+    p.description ||
+    (p.features?.length ? p.features.slice(0, 2).join(". ") : "") ||
+    `${p.name} — curated at ${cfg.siteName}.`
+  ).slice(0, 155);
 
   const newProduct: Product = {
     id: nextProductId(products),
@@ -380,8 +388,8 @@ export async function importProductFromUrlAction(
     seo: {
       focusKeyword,
       keywords: additionalKeywords.length ? additionalKeywords : undefined,
-      metaTitle: `${p.name} · ${cfg.siteName}`,
-      metaDescription: (p.description ?? "").slice(0, 155),
+      metaTitle: `${p.name} · ${cfg.siteName}`.slice(0, 60),
+      metaDescription,
     },
   };
 

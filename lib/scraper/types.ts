@@ -11,6 +11,10 @@ export type ScrapedProduct = {
   images?: string[];
   colors?: string[];
   sizes?: string[];
+  /** Bullet features / materials / care lines from the source PDP. */
+  features?: string[];
+  /** Size-and-fit notes (model height, hem length, etc.). */
+  sizeAndFit?: string[];
   rating?: number;
   reviewCount?: number;
   sku?: string;

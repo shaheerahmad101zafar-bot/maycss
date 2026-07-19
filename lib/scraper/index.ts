@@ -4,7 +4,12 @@ import type { ScrapeResult, ScrapedProduct } from "./types";
 import { scrapeFromJsonLd } from "./jsonld";
 import { scrapeFromOpenGraph } from "./opengraph";
 import { buildHumanHeaders, pickUserAgent } from "./headers";
-import { canScrapeMacys, scrapeMacysProduct } from "./macys";
+import {
+  canScrapeMacys,
+  extractMacysProductId,
+  isMacysUrl,
+  scrapeMacysProduct,
+} from "./macys";
 
 export type { ScrapedProduct, ScrapeResult } from "./types";
 
@@ -265,17 +270,38 @@ export async function scrapeProductUrl(url: string): Promise<ScrapeResult> {
   }
 
   // 0) Retailer adapters (bypass Akamai HTML walls).
-  if (canScrapeMacys(url)) {
-    const macys = await scrapeMacysProduct(url);
-    if (macys?.name) {
-      console.log(`[scraper] recovered ${macys.name} via Macy's XAPI`);
+  if (isMacysUrl(url)) {
+    if (!extractMacysProductId(url)) {
       return {
-        ok: true,
-        product: {
-          sourceUrl: url,
-          sources: macys.sources ?? ["dom"],
-          ...macys,
-        } as ScrapedProduct,
+        ok: false,
+        error:
+          "Macy's link must include the product ID in the address bar — it looks like …?ID=12345678. Copy the full URL from your browser (not a shortened share link), then try again.",
+      };
+    }
+    if (canScrapeMacys(url)) {
+      const macys = await scrapeMacysProduct(url);
+      const hasCore =
+        Boolean(macys?.name) &&
+        ((typeof macys?.price === "number" && macys.price > 0) ||
+          (macys?.images?.length ?? 0) > 0 ||
+          (macys?.sizes?.length ?? 0) > 0);
+      if (macys?.name && hasCore) {
+        console.log(`[scraper] recovered ${macys.name} via Macy's XAPI`);
+        return {
+          ok: true,
+          product: {
+            sourceUrl: url,
+            sources: macys.sources ?? ["dom"],
+            ...macys,
+          } as ScrapedProduct,
+        };
+      }
+      // Do NOT fall through to slug-only HTML scrape for Macy's — that fills
+      // a fake name and leaves price/images empty (the bug in your screenshot).
+      return {
+        ok: false,
+        error:
+          "Could not load full product data from Macy's (name/price/images). Confirm the full URL with ?ID=… works in your browser, then try Auto-fill again.",
       };
     }
   }

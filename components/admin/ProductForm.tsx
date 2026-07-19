@@ -75,6 +75,7 @@ export default function ProductForm({ product, categories, templates }: Props) {
   const [categoryId, setCategoryId] = useState<string>(
     product?.categoryId ?? "",
   );
+  const [badge, setBadge] = useState<string>(product?.badge ?? "");
   const [scrapeUrl, setScrapeUrl] = useState("");
   const [scrapeFocusKeyword, setScrapeFocusKeyword] = useState("");
   const [scrapeError, setScrapeError] = useState("");
@@ -249,10 +250,11 @@ export default function ProductForm({ product, categories, templates }: Props) {
           description: string;
           price?: number;
           originalPrice?: number;
+          badge?: string;
           image?: string;
           gallery: string[];
           sizes: string[];
-          colors: string[];
+          colorLines: string[];
           specs: Array<{ label: string; value: string }>;
           contentBlocks: ContentBlock[];
           focusKeyword: string;
@@ -269,24 +271,40 @@ export default function ProductForm({ product, categories, templates }: Props) {
         return;
       }
       const a = data.autofill;
+      const imgCount = a.gallery.length + (a.image ? 1 : 0);
+      if (
+        typeof a.price !== "number" ||
+        a.price <= 0 ||
+        !a.image ||
+        imgCount < 1
+      ) {
+        setScrapeError(
+          "Scrape returned incomplete product data (missing price or images). " +
+            "For Macy's, copy the full browser URL that includes ?ID=… and try again.",
+        );
+        // Still apply whatever we got so the admin can see partial data.
+      }
       setName(a.name);
-      if (a.brand) setBrand(a.brand);
+      setBrand(a.brand ?? "");
       setDescription(a.description);
-      if (typeof a.price === "number" && a.price > 0) setPrice(String(a.price));
-      if (typeof a.originalPrice === "number" && a.originalPrice > 0) {
-        setOriginalPrice(String(a.originalPrice));
-      } else {
-        setOriginalPrice("");
-      }
-      if (a.image) setImage(a.image);
+      setPrice(
+        typeof a.price === "number" && a.price > 0 ? String(a.price) : "",
+      );
+      setOriginalPrice(
+        typeof a.originalPrice === "number" && a.originalPrice > 0
+          ? String(a.originalPrice)
+          : "",
+      );
+      if (a.badge) setBadge(a.badge);
+      setImage(a.image ?? "");
       setGallery(a.gallery.length ? a.gallery.join("\n") : "");
-      if (a.sizes.length) setSizes(a.sizes.join(", "));
-      if (a.colors.length) {
-        setColors(a.colors.map((c) => `${c}: #cccccc`).join("\n"));
-      }
-      if (a.specs.length) {
-        setSpecs(a.specs.map((s) => `${s.label}: ${s.value}`).join("\n"));
-      }
+      setSizes(a.sizes.length ? a.sizes.join(", ") : "");
+      setColors(a.colorLines.length ? a.colorLines.join("\n") : "");
+      setSpecs(
+        a.specs.length
+          ? a.specs.map((s) => `${s.label}: ${s.value}`).join("\n")
+          : "",
+      );
       setContentBlocks(a.contentBlocks);
       setFocusKeyword(a.focusKeyword);
       setAdditionalKeywords(a.additionalKeywords);
@@ -295,11 +313,16 @@ export default function ProductForm({ product, categories, templates }: Props) {
       if (a.ogImage) setOgImage(a.ogImage);
       const matched = matchCategoryId(a.categoryHint);
       if (matched) setCategoryId(matched);
-      setScrapeOk(
-        `Filled ${a.name} — ${a.gallery.length + (a.image ? 1 : 0)} images, ` +
-          `${a.contentBlocks.length} SEO content blocks, focus “${a.focusKeyword}”. ` +
-          `Review the SEO score below, then save.`,
-      );
+      if (typeof a.price === "number" && a.price > 0 && a.image) {
+        setScrapeOk(
+          `Filled like the live product: “${a.name}” — $${a.price}` +
+            (a.originalPrice ? ` (was $${a.originalPrice})` : "") +
+            `, ${imgCount} images` +
+            (a.sizes.length ? `, sizes ${a.sizes.join("/")}` : "") +
+            (a.colorLines.length ? `, ${a.colorLines.length} color(s)` : "") +
+            `. Scroll down, check SEO score, then Create Product.`,
+        );
+      }
     } catch {
       setScrapeError("Network error while scraping. Try again.");
     } finally {
@@ -326,9 +349,10 @@ export default function ProductForm({ product, categories, templates }: Props) {
         <fieldset className="mc-fieldset mc-admin__scrape">
           <legend>Auto-scrape from URL</legend>
           <p className="mc-admin__hint">
-            Paste a product link (Macy&apos;s works best). We fill name, price,
-            images, description, sizes/colors, long-form SEO content blocks, and
-            meta fields so the live SEO checklist can go green — then you save.
+            Paste the <strong>full</strong> product link from your browser
+            address bar (Macy&apos;s must include <code>?ID=…</code>). One click
+            fills name, brand, price, images, gallery, sizes, colors, specs,
+            description, and SEO — same details you see on the live product page.
           </p>
           <div className="mc-admin__scrape-row">
             <input
@@ -438,6 +462,14 @@ export default function ProductForm({ product, categories, templates }: Props) {
               placeholder="https://…"
             />
             {errFor("image")}
+            {image.trim() && (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={image.trim()}
+                alt="Primary product"
+                className="mc-admin__scrape-preview-main"
+              />
+            )}
           </div>
 
           <div className="mc-field">
@@ -478,8 +510,9 @@ export default function ProductForm({ product, categories, templates }: Props) {
             <input
               id="badge"
               name="badge"
-              defaultValue={product?.badge ?? ""}
-              placeholder="e.g. Best Seller"
+              value={badge}
+              onChange={(e) => setBadge(e.target.value)}
+              placeholder="e.g. Sale / Best Seller"
             />
           </div>
 
@@ -504,6 +537,19 @@ export default function ProductForm({ product, categories, templates }: Props) {
               onChange={(e) => setGallery(e.target.value)}
               placeholder="https://…"
             />
+            {gallery.trim() && (
+              <div className="mc-admin__scrape-preview-grid">
+                {gallery
+                  .split("\n")
+                  .map((u) => u.trim())
+                  .filter(Boolean)
+                  .slice(0, 8)
+                  .map((src) => (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img key={src} src={src} alt="" />
+                  ))}
+              </div>
+            )}
           </div>
 
           <div className="mc-field mc-field--full">

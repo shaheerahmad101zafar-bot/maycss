@@ -10,6 +10,8 @@ export type ScrapedProduct = {
   currency?: string;
   images?: string[];
   colors?: string[];
+  /** Parallel hex codes for `colors` (same order), when known. */
+  colorHex?: string[];
   sizes?: string[];
   /** Bullet features / materials / care lines from the source PDP. */
   features?: string[];

@@ -14,10 +14,12 @@ export type ProductAutofill = {
   description: string;
   price?: number;
   originalPrice?: number;
+  badge?: string;
   image?: string;
   gallery: string[];
   sizes: string[];
-  colors: string[];
+  /** Ready for the Colors textarea: `Name: #hex` */
+  colorLines: string[];
   specs: Array<{ label: string; value: string }>;
   contentBlocks: ContentBlock[];
   focusKeyword: string;
@@ -162,6 +164,7 @@ function buildDescription(
 function buildSpecs(product: ScrapedProduct): Array<{ label: string; value: string }> {
   const specs: Array<{ label: string; value: string }> = [];
   const features = (product.features ?? []).map((f) => stripHtml(f)).filter(Boolean);
+  let featureIdx = 1;
 
   for (const line of features) {
     const split = line.match(/^([^:：-]{2,40})\s*[:：-]\s*(.+)$/);
@@ -179,16 +182,43 @@ function buildSpecs(product: ScrapedProduct): Array<{ label: string; value: stri
     }
     if (/imported|made in/i.test(line)) {
       specs.push({ label: "Origin", value: line.replace(/\.$/, "") });
+      continue;
     }
+    // Keep every bullet so Specs is never empty after a Macy's scrape.
+    specs.push({
+      label: `Detail ${featureIdx++}`,
+      value: line.replace(/\.$/, ""),
+    });
   }
 
-  // Deduplicate by label (keep first).
+  if (product.sizes?.length) {
+    specs.push({ label: "Sizes", value: product.sizes.join(", ") });
+  }
+  if (product.colors?.length) {
+    specs.push({ label: "Colors", value: product.colors.join(", ") });
+  }
+
+  // Deduplicate by label+value.
   const seen = new Set<string>();
   return specs.filter((s) => {
-    const key = s.label.toLowerCase();
+    const key = `${s.label.toLowerCase()}|${s.value.toLowerCase()}`;
     if (seen.has(key)) return false;
     seen.add(key);
     return true;
+  });
+}
+
+function buildColorLines(product: ScrapedProduct): string[] {
+  const names = product.colors ?? [];
+  if (names.length === 0) return [];
+  return names.map((name, i) => {
+    const hex =
+      product.colorHex?.[i] && /^#?[0-9a-f]{6}$/i.test(product.colorHex[i])
+        ? product.colorHex[i].startsWith("#")
+          ? product.colorHex[i]
+          : `#${product.colorHex[i]}`
+        : "#cccccc";
+    return `${name}: ${hex}`;
   });
 }
 
@@ -273,6 +303,10 @@ export function buildProductAutofill(
   const metaDescription = buildMetaDescription(focusKeyword, name, description);
   const image = images[0];
   const gallery = images.slice(1);
+  const onSale =
+    typeof product.originalPrice === "number" &&
+    typeof product.price === "number" &&
+    product.originalPrice > product.price;
 
   return {
     name,
@@ -280,10 +314,11 @@ export function buildProductAutofill(
     description,
     price: product.price,
     originalPrice: product.originalPrice,
+    badge: onSale ? "Sale" : undefined,
     image,
     gallery,
     sizes: product.sizes ?? [],
-    colors: product.colors ?? [],
+    colorLines: buildColorLines(product),
     specs: buildSpecs(product),
     contentBlocks,
     focusKeyword,

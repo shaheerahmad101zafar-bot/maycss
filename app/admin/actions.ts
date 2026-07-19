@@ -10,6 +10,7 @@ import {
 } from "@/lib/auth";
 import {
   getCategories,
+  getProductById,
   getProducts,
   nextProductId,
   saveCategories,
@@ -320,82 +321,111 @@ export async function importProductFromUrlAction(
   _prev: ImportProductState | null,
   formData: FormData,
 ): Promise<ImportProductState> {
-  const url = String(formData.get("url") ?? "").trim();
-  const focusKeyword = String(formData.get("focusKeyword") ?? "").trim();
-  const categoryId = String(formData.get("categoryId") ?? "").trim();
-  const additionalKeywordsRaw = String(
-    formData.get("additionalKeywords") ?? "",
-  ).trim();
+  try {
+    const url = String(formData.get("url") ?? "").trim();
+    const focusKeyword = String(formData.get("focusKeyword") ?? "").trim();
+    const categoryId = String(formData.get("categoryId") ?? "").trim();
+    const additionalKeywordsRaw = String(
+      formData.get("additionalKeywords") ?? "",
+    ).trim();
 
-  if (!url) return { ok: false, error: "Paste a product URL to import." };
-  if (!focusKeyword) {
+    if (!url) return { ok: false, error: "Paste a product URL to import." };
+    if (!focusKeyword) {
+      return {
+        ok: false,
+        error:
+          "Set a focus keyword — the auto-content writer needs it to hit SEO targets.",
+      };
+    }
+
+    const scraped = await scrapeProductUrl(url);
+    if (!scraped.ok) return { ok: false, error: scraped.error };
+
+    const p = scraped.product;
+    const [products, cfg] = await Promise.all([getProducts(), getAppConfig()]);
+    const additionalKeywords = additionalKeywordsRaw
+      .split(",")
+      .map((k) => k.trim())
+      .filter(Boolean);
+
+    // Generate long-form SEO content blocks + humanise.
+    const contentBlocks = generateProductContent({
+      name: p.name ?? "Untitled product",
+      brand: p.brand,
+      description: p.description,
+      category: p.category,
+      price: p.price,
+      sizes: p.sizes,
+      colors: p.colors,
+      features: p.features,
+      sizeAndFit: p.sizeAndFit,
+      focusKeyword,
+      additionalKeywords,
+    });
+
+    const metaDescription = (
+      p.description ||
+      (p.features?.length ? p.features.slice(0, 2).join(". ") : "") ||
+      `${p.name} — curated at ${cfg.siteName}.`
+    ).slice(0, 155);
+
+    const newProduct: Product = {
+      id: nextProductId(products),
+      name: p.name ?? "Imported product",
+      brand: p.brand,
+      image: p.images?.[0] ?? "",
+      gallery: p.images && p.images.length > 1 ? p.images : undefined,
+      price: p.price ?? 0,
+      originalPrice: p.originalPrice,
+      rating: p.rating,
+      reviews: p.reviewCount,
+      description: p.description,
+      categoryId: categoryId || undefined,
+      category: categoryId || p.category,
+      sizes: p.sizes,
+      colors: p.colors?.map((name) => ({ name, hex: "#cccccc" })),
+      status: "draft",
+      sourceUrl: p.sourceUrl,
+      contentBlocks,
+      seo: {
+        focusKeyword,
+        keywords: additionalKeywords.length ? additionalKeywords : undefined,
+        metaTitle: `${p.name} · ${cfg.siteName}`.slice(0, 60),
+        metaDescription,
+      },
+    };
+
+    await saveProducts([...products, newProduct]);
+
+    // Confirm the write is readable before sending the admin to the edit page.
+    // (Avoids a race where CDN still serves the pre-import products.json.)
+    const saved = await getProductById(newProduct.id);
+    if (!saved) {
+      return {
+        ok: false,
+        error:
+          "Product was written but could not be re-loaded yet. Wait a few seconds, then open Products → Drafts.",
+      };
+    }
+
+    const editPath = `/admin/products/${String(newProduct.id)}/edit`;
+    revalidatePath("/admin/products");
+    revalidatePath(editPath);
+    // Land on the edit screen (publish / save) — same flow as manual product create.
+    redirect(editPath);
+  } catch (err) {
+    rethrowIfNavigationError(err);
+    console.error("[importProductFromUrlAction]", err);
     return {
       ok: false,
       error:
-        "Set a focus keyword — the auto-content writer needs it to hit SEO targets.",
+        err instanceof StoreWriteError
+          ? err.message
+          : err instanceof Error
+            ? err.message
+            : "Import failed unexpectedly. Try again.",
     };
   }
-
-  const scraped = await scrapeProductUrl(url);
-  if (!scraped.ok) return { ok: false, error: scraped.error };
-
-  const p = scraped.product;
-  const [products, cfg] = await Promise.all([getProducts(), getAppConfig()]);
-  const additionalKeywords = additionalKeywordsRaw
-    .split(",")
-    .map((k) => k.trim())
-    .filter(Boolean);
-
-  // Generate long-form SEO content blocks + humanise.
-  const contentBlocks = generateProductContent({
-    name: p.name ?? "Untitled product",
-    brand: p.brand,
-    description: p.description,
-    category: p.category,
-    price: p.price,
-    sizes: p.sizes,
-    colors: p.colors,
-    features: p.features,
-    sizeAndFit: p.sizeAndFit,
-    focusKeyword,
-    additionalKeywords,
-  });
-
-  const metaDescription = (
-    p.description ||
-    (p.features?.length ? p.features.slice(0, 2).join(". ") : "") ||
-    `${p.name} — curated at ${cfg.siteName}.`
-  ).slice(0, 155);
-
-  const newProduct: Product = {
-    id: nextProductId(products),
-    name: p.name ?? "Imported product",
-    brand: p.brand,
-    image: p.images?.[0] ?? "",
-    gallery: p.images && p.images.length > 1 ? p.images : undefined,
-    price: p.price ?? 0,
-    originalPrice: p.originalPrice,
-    rating: p.rating,
-    reviews: p.reviewCount,
-    description: p.description,
-    categoryId: categoryId || undefined,
-    category: categoryId || p.category,
-    sizes: p.sizes,
-    colors: p.colors?.map((name) => ({ name, hex: "#cccccc" })),
-    status: "draft",
-    sourceUrl: p.sourceUrl,
-    contentBlocks,
-    seo: {
-      focusKeyword,
-      keywords: additionalKeywords.length ? additionalKeywords : undefined,
-      metaTitle: `${p.name} · ${cfg.siteName}`.slice(0, 60),
-      metaDescription,
-    },
-  };
-
-  await saveProducts([...products, newProduct]);
-  revalidatePath("/admin/products");
-  return { ok: true, productId: newProduct.id };
 }
 
 export async function deleteProductAction(formData: FormData): Promise<void> {

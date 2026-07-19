@@ -32,10 +32,14 @@ async function readBlobJson<T>(relativePath: StorePath): Promise<T | null> {
   if (!auth.enabled) return null;
 
   try {
+    // CMS JSON files are overwritten in place. Default CDN caching can serve a
+    // stale products/pages snapshot for up to ~60s after save — which makes
+    // "Review draft" 404 right after import. Always bypass cache for reads.
     const result = await get(relativePath, {
       access: auth.access,
       token: auth.token,
       storeId: auth.storeId,
+      useCache: false,
     });
     if (!result || result.statusCode !== 200 || !result.stream) return null;
     const text = await new Response(result.stream).text();
@@ -83,6 +87,8 @@ async function writeBlobJson(
     addRandomSuffix: false,
     allowOverwrite: true,
     contentType: "application/json",
+    // Minimum allowed by Blob; keeps overwrite windows short for CMS JSON.
+    cacheControlMaxAge: 60,
   });
 }
 

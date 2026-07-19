@@ -112,14 +112,13 @@ export default function ProductImportForm({ categories }: Props) {
 
         {state && state.ok && (
           <div className="mc-admin__banner">
-            Draft created. Review the scraped fields and the auto-generated
-            content below the standard PDP, then publish when ready.
+            Draft created. Opening the edit screen…
             <div style={{ marginTop: 10, display: "flex", gap: 8 }}>
               <Link
-                href={`/admin/products/${state.productId}/edit`}
+                href={`/admin/products/${String(state.productId)}/edit`}
                 className="mc-btn mc-btn--primary"
               >
-                Review draft →
+                Open draft →
               </Link>
               <Link
                 href="/admin/products?filter=drafts"

@@ -32,6 +32,16 @@ function toSpecsString(p?: Product) {
   return (p?.specs ?? []).map((s) => `${s.label}: ${s.value}`).join("\n");
 }
 
+function slugifyName(name: string): string {
+  return name
+    .toLowerCase()
+    .trim()
+    .replace(/['']/g, "")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "")
+    .slice(0, 80);
+}
+
 interface Props {
   product?: Product;
   categories: Category[];
@@ -61,8 +71,14 @@ export default function ProductForm({ product, categories, templates }: Props) {
   const [description, setDescription] = useState<string>(
     product?.description ?? "",
   );
+  const [specs, setSpecs] = useState<string>(toSpecsString(product));
+  const [categoryId, setCategoryId] = useState<string>(
+    product?.categoryId ?? "",
+  );
   const [scrapeUrl, setScrapeUrl] = useState("");
+  const [scrapeFocusKeyword, setScrapeFocusKeyword] = useState("");
   const [scrapeError, setScrapeError] = useState("");
+  const [scrapeOk, setScrapeOk] = useState("");
   const [scraping, setScraping] = useState(false);
   const [contentBlocks, setContentBlocks] = useState<ContentBlock[]>(
     product?.contentBlocks ?? [],
@@ -100,13 +116,10 @@ export default function ProductForm({ product, categories, templates }: Props) {
   // Deps list matches React Compiler's inferred set — we depend on `product`
   // as a whole rather than `product?.specs` so the compiler can memoise.
   const contentText = useMemo(() => {
-    const parts: string[] = [name, description];
-    if (product?.specs) {
-      for (const s of product.specs) parts.push(s.label, s.value);
-    }
+    const parts: string[] = [name, description, specs];
     parts.push(extractBodyTextFromBlocks(contentBlocks));
     return parts.filter(Boolean).join(" ");
-  }, [name, description, product, contentBlocks]);
+  }, [name, description, specs, contentBlocks]);
 
   const seoBodySources = useMemo((): BodySource[] => {
     const sources: BodySource[] = [];
@@ -128,21 +141,18 @@ export default function ProductForm({ product, categories, templates }: Props) {
         preview: description,
       });
     }
-    if (product?.specs?.length) {
-      const specText = product.specs
-        .map((s) => `${s.label} ${s.value}`)
-        .join(" ");
+    if (specs.trim()) {
       sources.push({
         id: "product-specs",
         label: "Specs",
         field: "specs",
-        words: countWords(specText),
-        preview: specText,
+        words: countWords(specs),
+        preview: specs,
       });
     }
     sources.push(...listPageBodySources(contentBlocks));
     return sources;
-  }, [name, description, product, contentBlocks]);
+  }, [name, description, specs, contentBlocks]);
 
   // Extras for image alt-text check on content blocks.
   const seoExtras = useMemo(() => {
@@ -191,6 +201,18 @@ export default function ProductForm({ product, categories, templates }: Props) {
     }
   };
 
+  const matchCategoryId = (hint?: string): string | undefined => {
+    if (!hint?.trim()) return undefined;
+    const q = hint.trim().toLowerCase();
+    const exact = categories.find((c) => c.name.toLowerCase() === q);
+    if (exact) return exact.id;
+    const partial = categories.find(
+      (c) =>
+        c.name.toLowerCase().includes(q) || q.includes(c.name.toLowerCase()),
+    );
+    return partial?.id;
+  };
+
   const handleScrape = async () => {
     const url = scrapeUrl.trim();
     if (!url) {
@@ -199,11 +221,15 @@ export default function ProductForm({ product, categories, templates }: Props) {
     }
     setScraping(true);
     setScrapeError("");
+    setScrapeOk("");
     try {
       const res = await fetch("/api/admin/scrape", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ url }),
+        body: JSON.stringify({
+          url,
+          focusKeyword: scrapeFocusKeyword.trim() || undefined,
+        }),
       });
       const data = (await res.json()) as {
         ok: boolean;
@@ -217,33 +243,63 @@ export default function ProductForm({ product, categories, templates }: Props) {
           sizes?: string[];
           colors?: string[];
         };
+        autofill?: {
+          name: string;
+          brand?: string;
+          description: string;
+          price?: number;
+          originalPrice?: number;
+          image?: string;
+          gallery: string[];
+          sizes: string[];
+          colors: string[];
+          specs: Array<{ label: string; value: string }>;
+          contentBlocks: ContentBlock[];
+          focusKeyword: string;
+          additionalKeywords: string[];
+          metaTitle: string;
+          metaDescription: string;
+          ogImage?: string;
+          categoryHint?: string;
+        };
         error?: string;
       };
-      if (!res.ok || !data.ok || !data.product) {
+      if (!res.ok || !data.ok || !data.autofill) {
         setScrapeError(data.error ?? "Could not scrape that URL.");
         return;
       }
-      const p = data.product;
-      if (p.name) setName(p.name);
-      if (p.brand) setBrand(p.brand);
-      if (p.description) setDescription(p.description);
-      if (typeof p.price === "number" && p.price > 0) setPrice(String(p.price));
-      if (typeof p.originalPrice === "number" && p.originalPrice > 0) {
-        setOriginalPrice(String(p.originalPrice));
+      const a = data.autofill;
+      setName(a.name);
+      if (a.brand) setBrand(a.brand);
+      setDescription(a.description);
+      if (typeof a.price === "number" && a.price > 0) setPrice(String(a.price));
+      if (typeof a.originalPrice === "number" && a.originalPrice > 0) {
+        setOriginalPrice(String(a.originalPrice));
+      } else {
+        setOriginalPrice("");
       }
-      if (p.images?.[0]) setImage(p.images[0]);
-      if (p.images && p.images.length > 1) {
-        setGallery(p.images.slice(1).join("\n"));
+      if (a.image) setImage(a.image);
+      setGallery(a.gallery.length ? a.gallery.join("\n") : "");
+      if (a.sizes.length) setSizes(a.sizes.join(", "));
+      if (a.colors.length) {
+        setColors(a.colors.map((c) => `${c}: #cccccc`).join("\n"));
       }
-      if (p.sizes?.length) setSizes(p.sizes.join(", "));
-      if (p.colors?.length) {
-        setColors(p.colors.map((c) => `${c}: #cccccc`).join("\n"));
+      if (a.specs.length) {
+        setSpecs(a.specs.map((s) => `${s.label}: ${s.value}`).join("\n"));
       }
-      if (p.name && !metaTitle) setMetaTitle(`${p.name} · myacss`);
-      if (p.description && !metaDescription) {
-        setMetaDescription(p.description.slice(0, 155));
-      }
-      if (p.images?.[0] && !ogImage) setOgImage(p.images[0]);
+      setContentBlocks(a.contentBlocks);
+      setFocusKeyword(a.focusKeyword);
+      setAdditionalKeywords(a.additionalKeywords);
+      setMetaTitle(a.metaTitle);
+      setMetaDescription(a.metaDescription);
+      if (a.ogImage) setOgImage(a.ogImage);
+      const matched = matchCategoryId(a.categoryHint);
+      if (matched) setCategoryId(matched);
+      setScrapeOk(
+        `Filled ${a.name} — ${a.gallery.length + (a.image ? 1 : 0)} images, ` +
+          `${a.contentBlocks.length} SEO content blocks, focus “${a.focusKeyword}”. ` +
+          `Review the SEO score below, then save.`,
+      );
     } catch {
       setScrapeError("Network error while scraping. Try again.");
     } finally {
@@ -270,29 +326,47 @@ export default function ProductForm({ product, categories, templates }: Props) {
         <fieldset className="mc-fieldset mc-admin__scrape">
           <legend>Auto-scrape from URL</legend>
           <p className="mc-admin__hint">
-            Paste any fashion product link — we fetch name, price, description,
-            sizes, colors, and images server-side, then fill the form below.
+            Paste a product link (Macy&apos;s works best). We fill name, price,
+            images, description, sizes/colors, long-form SEO content blocks, and
+            meta fields so the live SEO checklist can go green — then you save.
           </p>
           <div className="mc-admin__scrape-row">
             <input
               type="url"
               value={scrapeUrl}
               onChange={(e) => setScrapeUrl(e.target.value)}
-              placeholder="https://www.example.com/product/…"
+              placeholder="https://www.macys.com/shop/product/…"
               aria-label="Product URL to scrape"
             />
             <button
               type="button"
-              className={cx("mc-btn mc-btn--ghost", scraping && "is-loading")}
+              className={cx("mc-btn mc-btn--primary", scraping && "is-loading")}
               disabled={scraping}
               onClick={handleScrape}
             >
-              {scraping ? "Scraping…" : "Auto-fill"}
+              {scraping ? "Scraping + writing SEO…" : "Auto-fill + SEO"}
             </button>
+          </div>
+          <div className="mc-field" style={{ marginTop: 12 }}>
+            <label htmlFor="scrapeFocusKeyword">
+              Focus keyword (optional — auto-derived if blank)
+            </label>
+            <input
+              id="scrapeFocusKeyword"
+              type="text"
+              value={scrapeFocusKeyword}
+              onChange={(e) => setScrapeFocusKeyword(e.target.value)}
+              placeholder='e.g. "Vince Camuto Boots"'
+            />
           </div>
           {scrapeError && (
             <p className="mc-admin__banner is-error" role="alert">
               {scrapeError}
+            </p>
+          )}
+          {scrapeOk && (
+            <p className="mc-admin__banner" role="status">
+              {scrapeOk}
             </p>
           )}
         </fieldset>
@@ -371,7 +445,8 @@ export default function ProductForm({ product, categories, templates }: Props) {
             <select
               id="categoryId"
               name="categoryId"
-              defaultValue={product?.categoryId ?? ""}
+              value={categoryId}
+              onChange={(e) => setCategoryId(e.target.value)}
             >
               <option value="">— Uncategorised —</option>
               {roots.map((root) => {
@@ -464,7 +539,8 @@ export default function ProductForm({ product, categories, templates }: Props) {
               id="specs"
               name="specs"
               rows={4}
-              defaultValue={toSpecsString(product)}
+              value={specs}
+              onChange={(e) => setSpecs(e.target.value)}
               placeholder="Material: 100% Wool"
             />
           </div>
@@ -530,7 +606,11 @@ export default function ProductForm({ product, categories, templates }: Props) {
         <MetaSeoPanel
           kind="product"
           title={name}
-          slug={String(product?.id ?? "new")}
+          slug={
+            product?.id != null
+              ? String(product.id)
+              : slugifyName(name) || "new-product"
+          }
           contentText={contentText}
           bodySources={seoBodySources}
           extras={seoExtras}

@@ -98,13 +98,16 @@ export async function scrapeMacysProduct(
       (brand && shortName ? `${brand} ${shortName}` : shortName) ||
       undefined;
 
-    const description =
-      (typeof detail.description === "string" && detail.description.trim()) ||
-      undefined;
-
     const bullets = Array.isArray(detail.bulletText)
       ? detail.bulletText.map((b) => String(b).trim()).filter(Boolean)
       : [];
+
+    const rawDescription =
+      typeof detail.description === "string" ? detail.description.trim() : "";
+    // Macy's often returns empty/HTML-light descriptions — fall back to bullets.
+    const description =
+      rawDescription ||
+      (bullets.length ? bullets.join(". ").replace(/\.\./g, ".") : undefined);
 
     const processed = asRecord(detail.processedProdDesc);
     const sizeAndFit = Array.isArray(processed?.sizeAndFit)
@@ -168,24 +171,26 @@ export async function scrapeMacysProduct(
       })
       .filter(Boolean);
 
-    // Images — prefer selected color imagery, then product-level imagery
-    const selectedColorId = colorsRoot?.selectedColor;
-    const selectedColor = asRecord(
-      selectedColorId != null
-        ? colorMap[String(selectedColorId)]
-        : Object.values(colorMap)[0],
-    );
-    const colorImagery = asRecord(selectedColor?.imagery);
+    // Images — collect from every color + product-level imagery
     const productImagery = asRecord(product.imagery);
-    const imageNodes = [
-      ...(Array.isArray(colorImagery?.images) ? colorImagery!.images : []),
+    const imageNodes: unknown[] = [
       ...(Array.isArray(productImagery?.images) ? productImagery!.images : []),
     ];
+    for (const colorVal of Object.values(colorMap)) {
+      const colorRow = asRecord(colorVal);
+      const colorImagery = asRecord(colorRow?.imagery);
+      if (Array.isArray(colorImagery?.images)) {
+        imageNodes.push(...colorImagery!.images);
+      }
+    }
     const images: string[] = [];
     const seen = new Set<string>();
     for (const node of imageNodes) {
       const row = asRecord(node);
-      const filePath = typeof row?.filePath === "string" ? row.filePath : "";
+      const filePath =
+        (typeof row?.filePath === "string" && row.filePath) ||
+        (typeof row?.path === "string" && row.path) ||
+        "";
       if (!filePath) continue;
       const src = macysImageUrl(filePath);
       if (seen.has(src)) continue;

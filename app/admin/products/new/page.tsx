@@ -15,9 +15,9 @@ export default async function NewProductPage() {
         <div>
           <h1>New Product</h1>
           <p>
-            Paste a product URL in <strong>Auto-scrape</strong> to fill name,
-            price, description, sizes, and colors — or enter details manually.
-            Use <strong>Dynamic content</strong> below for rich PDP blocks.
+            Paste a product URL in <strong>Auto-scrape</strong> — we fill name,
+            price, images, description, sizes/colors, SEO content blocks, and
+            meta fields automatically. Review the SEO score, then create.
           </p>
         </div>
       </header>

@@ -102,12 +102,25 @@ export default function ProductImportForm({ categories }: Props) {
         </fieldset>
 
         {state && !state.ok && (
-          <p
-            className="mc-admin__banner is-error"
-            role="alert"
-          >
-            {state.error}
-          </p>
+          <div className="mc-admin__banner is-error" role="alert">
+            <p>{state.error}</p>
+            {state.productId != null && (
+              <div style={{ marginTop: 10, display: "flex", gap: 8 }}>
+                <Link
+                  href={`/admin/products/${String(state.productId)}/edit`}
+                  className="mc-btn mc-btn--primary"
+                >
+                  Try opening draft →
+                </Link>
+                <Link
+                  href="/admin/products?filter=drafts"
+                  className="mc-btn mc-btn--ghost"
+                >
+                  See all drafts
+                </Link>
+              </div>
+            )}
+          </div>
         )}
 
         {state && state.ok && (

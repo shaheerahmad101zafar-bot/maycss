@@ -9,12 +9,14 @@ import {
   getSessionToken,
 } from "@/lib/auth";
 import {
+  deleteProductRecord,
   getCategories,
   getProductById,
   getProducts,
   nextProductId,
   saveCategories,
   saveProducts,
+  saveProductsWithRecords,
 } from "@/lib/data";
 import type {
   Category,
@@ -294,7 +296,7 @@ export async function upsertProductAction(
     ? products.map((p) => (p.id === existing.id ? newProduct : p))
     : [...products, newProduct];
   try {
-    await saveProducts(next);
+    await saveProductsWithRecords(next, [newProduct]);
   } catch (err) {
     rethrowIfNavigationError(err);
     const message =
@@ -315,7 +317,7 @@ export async function upsertProductAction(
 
 export type ImportProductState =
   | { ok: true; productId: string | number }
-  | { ok: false; error: string };
+  | { ok: false; error: string; productId?: string | number };
 
 export async function importProductFromUrlAction(
   _prev: ImportProductState | null,
@@ -395,16 +397,17 @@ export async function importProductFromUrlAction(
       },
     };
 
-    await saveProducts([...products, newProduct]);
+    // Write catalog + a fresh per-id Blob record. The shared products.json path
+    // can stay CDN-stale right after overwrite; by-id is a new URL so edit works.
+    await saveProductsWithRecords([...products, newProduct], [newProduct]);
 
-    // Confirm the write is readable before sending the admin to the edit page.
-    // (Avoids a race where CDN still serves the pre-import products.json.)
     const saved = await getProductById(newProduct.id);
     if (!saved) {
       return {
         ok: false,
         error:
           "Product was written but could not be re-loaded yet. Wait a few seconds, then open Products → Drafts.",
+        productId: newProduct.id,
       };
     }
 
@@ -435,6 +438,7 @@ export async function deleteProductAction(formData: FormData): Promise<void> {
     const products = await getProducts();
     const next = products.filter((p) => String(p.id) !== id);
     await saveProducts(next);
+    await deleteProductRecord(id);
     revalidatePath("/", "layout");
     redirect("/admin/products");
   } catch (err) {
@@ -634,7 +638,10 @@ export async function deleteCategoryAction(formData: FormData): Promise<void> {
         ? { ...p, categoryId: undefined, category: undefined }
         : p,
     );
-    await saveProducts(nextProducts);
+    const touched = nextProducts.filter((p) =>
+      affectedProducts.some((a) => a.id === p.id),
+    );
+    await saveProductsWithRecords(nextProducts, touched);
   }
 
   await saveCategories(nextCats);

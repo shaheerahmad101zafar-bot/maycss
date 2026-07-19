@@ -2,7 +2,7 @@ import "server-only";
 
 import { promises as fs } from "node:fs";
 import path from "node:path";
-import { get, put } from "@vercel/blob";
+import { del, get, put } from "@vercel/blob";
 import { getBlobAuth, usesBlobStorage } from "./blob-config";
 
 /** Relative path from project root, e.g. `data/products.json`. */
@@ -115,4 +115,35 @@ export async function writeStoreJson(
   }
 
   await writeLocalJson(relativePath, data);
+}
+
+async function deleteLocalJson(relativePath: StorePath): Promise<void> {
+  try {
+    await fs.unlink(resolveLocal(relativePath));
+  } catch (err) {
+    if ((err as NodeJS.ErrnoException).code === "ENOENT") return;
+    throw err;
+  }
+}
+
+async function deleteBlobJson(relativePath: StorePath): Promise<void> {
+  const auth = getBlobAuth();
+  if (!auth.enabled) return;
+  try {
+    await del(relativePath, {
+      token: auth.token,
+      storeId: auth.storeId,
+    });
+  } catch {
+    // Missing blob is fine — import/delete races shouldn't fail the admin action.
+  }
+}
+
+export async function deleteStoreJson(relativePath: StorePath): Promise<void> {
+  if (usesBlobStorage()) {
+    await deleteBlobJson(relativePath);
+    return;
+  }
+  if (process.env.VERCEL) return;
+  await deleteLocalJson(relativePath);
 }

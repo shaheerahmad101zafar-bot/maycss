@@ -1,11 +1,20 @@
 import "server-only";
 
 import type { BannerSlide, Category, Product } from "./utils";
-import { readStoreJson, writeStoreJson } from "./storage/json-store";
+import {
+  deleteStoreJson,
+  readStoreJson,
+  writeStoreJson,
+} from "./storage/json-store";
 
 const productsFile = "data/products.json";
 const slidesFile = "data/banner-slides.json";
 const categoriesFile = "data/categories.json";
+
+/** Per-product Blob path — avoids stale CDN reads of the shared products.json. */
+function productRecordPath(id: string | number): string {
+  return `data/products/by-id/${String(id)}.json`;
+}
 
 async function readJson<T>(relativePath: string, fallback: T): Promise<T> {
   return readStoreJson(relativePath, fallback);
@@ -26,6 +35,14 @@ export async function getProducts(): Promise<Product[]> {
 export async function getProductById(
   id: string | number,
 ): Promise<Product | undefined> {
+  // Prefer the per-id record. Overwriting data/products.json can leave the Blob
+  // CDN serving a pre-import snapshot for up to ~60s; a brand-new by-id path
+  // has no stale cache entry, so "Review draft" stops 404ing.
+  const fromRecord = await readJson<Product | null>(productRecordPath(id), null);
+  if (fromRecord && String(fromRecord.id) === String(id)) {
+    return fromRecord;
+  }
+
   const list = await getProducts();
   return list.find((p) => String(p.id) === String(id));
 }
@@ -89,8 +106,27 @@ export async function getBannerSlides(): Promise<BannerSlide[]> {
   return readJson<BannerSlide[]>(slidesFile, []);
 }
 
+export async function saveProductRecord(product: Product): Promise<void> {
+  await writeJson(productRecordPath(product.id), product);
+}
+
+export async function deleteProductRecord(
+  id: string | number,
+): Promise<void> {
+  await deleteStoreJson(productRecordPath(id));
+}
+
 export async function saveProducts(products: Product[]): Promise<void> {
   await writeJson(productsFile, products);
+}
+
+/** Persist the catalog list and refresh per-id records for the touched products. */
+export async function saveProductsWithRecords(
+  products: Product[],
+  touched: Product[],
+): Promise<void> {
+  await writeJson(productsFile, products);
+  await Promise.all(touched.map((p) => writeJson(productRecordPath(p.id), p)));
 }
 
 export function nextProductId(products: Product[]): number {

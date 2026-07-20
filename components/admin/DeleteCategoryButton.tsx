@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useTransition } from "react";
 import { deleteCategoryAction } from "@/app/admin/actions";
 import { cx } from "@/lib/utils";
 
@@ -15,9 +15,8 @@ interface Props {
 
 /**
  * Smart delete button.
- * - No children AND no product refs → simple confirm + delete
- * - Has children/products → dialog offering "Move to top-level" or "Delete all"
- *   (products are always preserved — moved to Uncategorised — even in cascade).
+ * - No children → force delete (products become Uncategorised)
+ * - Has children → dialog: move to top-level OR cascade delete
  */
 export default function DeleteCategoryButton({
   id,
@@ -27,8 +26,16 @@ export default function DeleteCategoryButton({
 }: Props) {
   const [open, setOpen] = useState(false);
   const [strategy, setStrategy] = useState<"orphan" | "cascade">("orphan");
+  const [pending, startTransition] = useTransition();
 
-  const hasReferences = childCount > 0 || productCount > 0;
+  const submit = (chosen: "force" | "orphan" | "cascade") => {
+    const fd = new FormData();
+    fd.set("id", id);
+    fd.set("strategy", chosen);
+    startTransition(() => {
+      void deleteCategoryAction(fd);
+    });
+  };
 
   if (!open) {
     return (
@@ -36,108 +43,106 @@ export default function DeleteCategoryButton({
         type="button"
         className="mc-admin__link mc-admin__link--danger"
         onClick={() => setOpen(true)}
+        disabled={pending}
       >
         Delete
       </button>
     );
   }
 
-  // Simple confirm — no references to worry about.
-  if (!hasReferences) {
+  // Simple confirm — no sub-categories.
+  if (childCount === 0) {
     return (
-      <form action={deleteCategoryAction} className="mc-admin__confirm">
-        <input type="hidden" name="id" value={id} />
-        <input type="hidden" name="strategy" value="refuse" />
+      <div className="mc-admin__confirm">
         <span className="mc-admin__confirm-text">
           Delete &ldquo;{name}&rdquo;?
+          {productCount > 0
+            ? ` ${productCount} product(s) become Uncategorised.`
+            : ""}
         </span>
-        <button type="submit" className="mc-admin__link mc-admin__link--danger">
-          Yes, delete
+        <button
+          type="button"
+          className="mc-admin__link mc-admin__link--danger"
+          disabled={pending}
+          onClick={() => submit("force")}
+        >
+          {pending ? "Deleting…" : "Yes, delete"}
         </button>
         <button
           type="button"
           className="mc-admin__link"
+          disabled={pending}
           onClick={() => setOpen(false)}
         >
           Cancel
         </button>
-      </form>
+      </div>
     );
   }
 
-  // Complex confirm — has children or products.
   return (
-    <form action={deleteCategoryAction} className="mc-cat-delete">
-      <input type="hidden" name="id" value={id} />
-      <input type="hidden" name="strategy" value={strategy} />
-
-      <p className="mc-cat-delete__title">
-        Delete &ldquo;{name}&rdquo;?
-      </p>
+    <div className="mc-cat-delete">
+      <p className="mc-cat-delete__title">Delete &ldquo;{name}&rdquo;?</p>
       <p className="mc-cat-delete__summary">
-        {childCount > 0 && (
-          <>
-            <strong>{childCount}</strong> sub-categor
-            {childCount === 1 ? "y" : "ies"}
-          </>
-        )}
-        {childCount > 0 && productCount > 0 && <> · </>}
+        <strong>{childCount}</strong> sub-categor
+        {childCount === 1 ? "y" : "ies"}
         {productCount > 0 && (
           <>
-            <strong>{productCount}</strong>{" "}
-            product{productCount === 1 ? "" : "s"} reference this
+            {" "}
+            · <strong>{productCount}</strong> product
+            {productCount === 1 ? "" : "s"}
           </>
         )}
         .
       </p>
 
-      {childCount > 0 && (
-        <div className="mc-cat-delete__choices">
-          <label
-            className={cx(
-              "mc-cat-delete__choice",
-              strategy === "orphan" && "is-active",
-            )}
-          >
-            <input
-              type="radio"
-              name="strategyRadio"
-              checked={strategy === "orphan"}
-              onChange={() => setStrategy("orphan")}
-            />
-            <div>
-              <p className="mc-cat-delete__choice-title">
-                Move sub-categories to top-level
-              </p>
-              <p className="mc-cat-delete__choice-sub">
-                Each becomes its own parent. Nothing else is lost.
-              </p>
-            </div>
-          </label>
+      <div className="mc-cat-delete__choices">
+        <label
+          className={cx(
+            "mc-cat-delete__choice",
+            strategy === "orphan" && "is-active",
+          )}
+        >
+          <input
+            type="radio"
+            name={`strategy-${id}`}
+            checked={strategy === "orphan"}
+            onChange={() => setStrategy("orphan")}
+            disabled={pending}
+          />
+          <div>
+            <p className="mc-cat-delete__choice-title">
+              Move sub-categories to top-level
+            </p>
+            <p className="mc-cat-delete__choice-sub">
+              Each becomes its own parent. Nothing else is lost.
+            </p>
+          </div>
+        </label>
 
-          <label
-            className={cx(
-              "mc-cat-delete__choice",
-              strategy === "cascade" && "is-active",
-            )}
-          >
-            <input
-              type="radio"
-              name="strategyRadio"
-              checked={strategy === "cascade"}
-              onChange={() => setStrategy("cascade")}
-            />
-            <div>
-              <p className="mc-cat-delete__choice-title">
-                Delete sub-categories too
-              </p>
-              <p className="mc-cat-delete__choice-sub">
-                Removes this category and every descendant.
-              </p>
-            </div>
-          </label>
-        </div>
-      )}
+        <label
+          className={cx(
+            "mc-cat-delete__choice",
+            strategy === "cascade" && "is-active",
+          )}
+        >
+          <input
+            type="radio"
+            name={`strategy-${id}`}
+            checked={strategy === "cascade"}
+            onChange={() => setStrategy("cascade")}
+            disabled={pending}
+          />
+          <div>
+            <p className="mc-cat-delete__choice-title">
+              Delete sub-categories too
+            </p>
+            <p className="mc-cat-delete__choice-sub">
+              Removes this category and every descendant.
+            </p>
+          </div>
+        </label>
+      </div>
 
       {productCount > 0 && (
         <p className="mc-cat-delete__note">
@@ -149,20 +154,27 @@ export default function DeleteCategoryButton({
 
       <div className="mc-cat-delete__actions">
         <button
-          type="submit"
+          type="button"
           className="mc-btn mc-btn--primary"
           style={{ background: "var(--mc-red)" }}
+          disabled={pending}
+          onClick={() => submit(strategy)}
         >
-          {strategy === "cascade" ? "Cascade delete" : "Delete & move"}
+          {pending
+            ? "Deleting…"
+            : strategy === "cascade"
+              ? "Cascade delete"
+              : "Delete & move"}
         </button>
         <button
           type="button"
           className="mc-btn mc-btn--ghost"
+          disabled={pending}
           onClick={() => setOpen(false)}
         >
           Cancel
         </button>
       </div>
-    </form>
+    </div>
   );
 }

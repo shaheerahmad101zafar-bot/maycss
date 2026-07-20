@@ -8,8 +8,10 @@ import {
 } from "./storage/json-store";
 
 const productsFile = "data/products.json";
+const productDeletedIdsFile = "data/products/deleted-ids.json";
 const slidesFile = "data/banner-slides.json";
 const categoriesFile = "data/categories.json";
+const categoryDeletedIdsFile = "data/categories/deleted-ids.json";
 
 /** Per-product Blob path — avoids stale CDN reads of the shared products.json. */
 function productRecordPath(id: string | number): string {
@@ -24,21 +26,44 @@ async function writeJson(relativePath: string, data: unknown): Promise<void> {
   await writeStoreJson(relativePath, data);
 }
 
+async function readDeletedIds(file: string): Promise<string[]> {
+  const raw = await readJson<unknown>(file, []);
+  if (!Array.isArray(raw)) return [];
+  return raw.map((id) => String(id)).filter(Boolean);
+}
+
+async function writeDeletedIds(file: string, ids: string[]): Promise<void> {
+  const unique = [...new Set(ids.map(String).filter(Boolean))];
+  await writeJson(file, unique);
+}
+
 /* -------------------------------------------------------------------------- */
 /*  Products                                                                  */
 /* -------------------------------------------------------------------------- */
 
 export async function getProducts(): Promise<Product[]> {
-  return readJson<Product[]>(productsFile, []);
+  const [list, deleted] = await Promise.all([
+    readJson<Product[]>(productsFile, []),
+    readDeletedIds(productDeletedIdsFile),
+  ]);
+  if (deleted.length === 0) return list;
+  const banned = new Set(deleted);
+  return list.filter((p) => !banned.has(String(p.id)));
 }
 
 export async function getProductById(
   id: string | number,
 ): Promise<Product | undefined> {
+  const deleted = await readDeletedIds(productDeletedIdsFile);
+  if (deleted.includes(String(id))) return undefined;
+
   // Prefer the per-id record. Overwriting data/products.json can leave the Blob
   // CDN serving a pre-import snapshot for up to ~60s; a brand-new by-id path
   // has no stale cache entry, so "Review draft" stops 404ing.
-  const fromRecord = await readJson<Product | null>(productRecordPath(id), null);
+  const fromRecord = await readJson<Product | null>(
+    productRecordPath(id),
+    null,
+  );
   if (fromRecord && String(fromRecord.id) === String(id)) {
     return fromRecord;
   }
@@ -116,8 +141,47 @@ export async function deleteProductRecord(
   await deleteStoreJson(productRecordPath(id));
 }
 
+/**
+ * Mark product IDs deleted immediately (survives stale products.json CDN),
+ * rewrite the catalog without them, and remove per-id records.
+ */
+export async function removeProductsByIds(
+  ids: Array<string | number>,
+): Promise<number> {
+  const wanted = [...new Set(ids.map(String).filter(Boolean))];
+  if (wanted.length === 0) return 0;
+
+  const banned = new Set(wanted);
+  const [existingDeleted, rawList] = await Promise.all([
+    readDeletedIds(productDeletedIdsFile),
+    readJson<Product[]>(productsFile, []),
+  ]);
+
+  // Tombstone first so a stale CDN list cannot resurrect these IDs.
+  await writeDeletedIds(productDeletedIdsFile, [...existingDeleted, ...wanted]);
+
+  const next = rawList.filter((p) => !banned.has(String(p.id)));
+  await writeJson(productsFile, next);
+  await Promise.all(wanted.map((id) => deleteProductRecord(id)));
+
+  const pruned = [...new Set([...existingDeleted, ...wanted])].filter(
+    (id) => !next.some((p) => String(p.id) === id),
+  );
+  await writeDeletedIds(productDeletedIdsFile, pruned);
+
+  return wanted.length;
+}
+
 export async function saveProducts(products: Product[]): Promise<void> {
   await writeJson(productsFile, products);
+  // Creating/saving products clears their tombstones if they were re-added.
+  const deleted = await readDeletedIds(productDeletedIdsFile);
+  if (deleted.length === 0) return;
+  const keep = new Set(products.map((p) => String(p.id)));
+  const nextDeleted = deleted.filter((id) => !keep.has(id));
+  if (nextDeleted.length !== deleted.length) {
+    await writeDeletedIds(productDeletedIdsFile, nextDeleted);
+  }
 }
 
 /** Persist the catalog list and refresh per-id records for the touched products. */
@@ -125,7 +189,7 @@ export async function saveProductsWithRecords(
   products: Product[],
   touched: Product[],
 ): Promise<void> {
-  await writeJson(productsFile, products);
+  await saveProducts(products);
   await Promise.all(touched.map((p) => writeJson(productRecordPath(p.id), p)));
 }
 
@@ -141,8 +205,15 @@ export function nextProductId(products: Product[]): number {
 /* -------------------------------------------------------------------------- */
 
 export async function getCategories(): Promise<Category[]> {
-  const list = await readJson<Category[]>(categoriesFile, []);
-  return [...list].sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+  const [list, deleted] = await Promise.all([
+    readJson<Category[]>(categoriesFile, []),
+    readDeletedIds(categoryDeletedIdsFile),
+  ]);
+  const filtered =
+    deleted.length === 0
+      ? list
+      : list.filter((c) => !new Set(deleted).has(String(c.id)));
+  return [...filtered].sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
 }
 
 export async function getCategoryBySlug(
@@ -191,6 +262,30 @@ export async function getProductsByCategoryId(
   return products.filter((p) => p.categoryId && descendantIds.has(p.categoryId));
 }
 
+export async function removeCategoriesByIds(ids: string[]): Promise<void> {
+  const wanted = [...new Set(ids.map(String).filter(Boolean))];
+  if (wanted.length === 0) return;
+  const banned = new Set(wanted);
+  const [existingDeleted, rawList] = await Promise.all([
+    readDeletedIds(categoryDeletedIdsFile),
+    readJson<Category[]>(categoriesFile, []),
+  ]);
+  await writeDeletedIds(categoryDeletedIdsFile, [...existingDeleted, ...wanted]);
+  const next = rawList.filter((c) => !banned.has(String(c.id)));
+  await writeJson(categoriesFile, next);
+  const pruned = [...new Set([...existingDeleted, ...wanted])].filter(
+    (id) => !next.some((c) => String(c.id) === id),
+  );
+  await writeDeletedIds(categoryDeletedIdsFile, pruned);
+}
+
 export async function saveCategories(list: Category[]): Promise<void> {
   await writeJson(categoriesFile, list);
+  const deleted = await readDeletedIds(categoryDeletedIdsFile);
+  if (deleted.length === 0) return;
+  const keep = new Set(list.map((c) => String(c.id)));
+  const nextDeleted = deleted.filter((id) => !keep.has(id));
+  if (nextDeleted.length !== deleted.length) {
+    await writeDeletedIds(categoryDeletedIdsFile, nextDeleted);
+  }
 }

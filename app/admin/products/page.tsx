@@ -1,14 +1,18 @@
+import { unstable_noStore as noStore } from "next/cache";
 import Link from "next/link";
 import { getProducts } from "@/lib/data";
-import { cx, formatPrice } from "@/lib/utils";
-import DeleteProductButton from "@/components/admin/DeleteProductButton";
+import { cx } from "@/lib/utils";
+import ProductsAdminTable from "@/components/admin/ProductsAdminTable";
 
 export const metadata = { title: "Products · Admin · MayCSS" };
 
-type Props = { searchParams: Promise<{ filter?: string }> };
+type Props = {
+  searchParams: Promise<{ filter?: string; deleted?: string; error?: string }>;
+};
 
 export default async function AdminProductsPage({ searchParams }: Props) {
-  const { filter } = await searchParams;
+  noStore();
+  const { filter, deleted, error } = await searchParams;
   const all = await getProducts();
   const drafts = all.filter((p) => p.status === "draft");
   const published = all.filter((p) => p.status !== "draft");
@@ -17,8 +21,8 @@ export default async function AdminProductsPage({ searchParams }: Props) {
     filter === "drafts"
       ? drafts
       : filter === "published"
-      ? published
-      : all;
+        ? published
+        : all;
 
   return (
     <section className="mc-admin__section">
@@ -42,6 +46,22 @@ export default async function AdminProductsPage({ searchParams }: Props) {
           </Link>
         </div>
       </header>
+
+      {deleted && (
+        <p className="mc-admin__banner" role="status">
+          Deleted {deleted === "1" ? "1 product" : `${deleted} products`}.
+        </p>
+      )}
+      {error === "delete-failed" && (
+        <p className="mc-admin__banner is-error" role="alert">
+          Delete failed — check Vercel Blob storage, then try again.
+        </p>
+      )}
+      {error === "none-selected" && (
+        <p className="mc-admin__banner is-error" role="alert">
+          Select at least one product to delete.
+        </p>
+      )}
 
       <div className="mc-admin__tabs" role="tablist">
         <Link
@@ -80,79 +100,7 @@ export default async function AdminProductsPage({ searchParams }: Props) {
         </Link>
       </div>
 
-      <div className="mc-admin__table-wrap">
-        <table className="mc-admin__table">
-          <thead>
-            <tr>
-              <th scope="col">Product</th>
-              <th scope="col">Status</th>
-              <th scope="col">Brand</th>
-              <th scope="col">Price</th>
-              <th scope="col">Badge</th>
-              <th scope="col" aria-label="Actions" />
-            </tr>
-          </thead>
-          <tbody>
-            {shown.map((p) => (
-              <tr key={p.id}>
-                <td>
-                  <div className="mc-admin__row-product">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={p.image} alt="" />
-                    <div>
-                      <p className="mc-admin__row-name">{p.name}</p>
-                      <p className="mc-admin__row-id">ID {p.id}</p>
-                    </div>
-                  </div>
-                </td>
-                <td>
-                  {p.status === "draft" ? (
-                    <span className="mc-status-pill is-status-hold">Draft</span>
-                  ) : (
-                    <span className="mc-status-pill is-status-completed">
-                      Published
-                    </span>
-                  )}
-                </td>
-                <td>{p.brand || "—"}</td>
-                <td>
-                  <div className="mc-admin__price-cell">
-                    <span>{formatPrice(p.price)}</span>
-                    {p.originalPrice && <s>{formatPrice(p.originalPrice)}</s>}
-                  </div>
-                </td>
-                <td>
-                  {p.badge ? (
-                    <span className="mc-admin__pill">{p.badge}</span>
-                  ) : (
-                    "—"
-                  )}
-                </td>
-                <td>
-                  <div className="mc-admin__actions">
-                    <Link
-                      href={`/admin/products/${p.id}/edit`}
-                      className="mc-admin__link"
-                    >
-                      Edit
-                    </Link>
-                    <DeleteProductButton id={p.id} name={p.name} />
-                  </div>
-                </td>
-              </tr>
-            ))}
-            {shown.length === 0 && (
-              <tr>
-                <td colSpan={6} className="mc-admin__empty-cell">
-                  {filter === "drafts"
-                    ? "No drafts right now."
-                    : "No products yet. Create one or import from a URL."}
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
+      <ProductsAdminTable products={shown} filter={filter} />
     </section>
   );
 }

@@ -1,16 +1,23 @@
+import { Fragment } from "react";
+import { unstable_noStore as noStore } from "next/cache";
 import Link from "next/link";
 import { getCategories, getProducts } from "@/lib/data";
 import DeleteCategoryButton from "@/components/admin/DeleteCategoryButton";
 
 export const metadata = { title: "Categories · Admin · MayCSS" };
 
-export default async function AdminCategoriesPage() {
+type Props = {
+  searchParams: Promise<{ deleted?: string; error?: string }>;
+};
+
+export default async function AdminCategoriesPage({ searchParams }: Props) {
+  noStore();
+  const { deleted, error } = await searchParams;
   const [categories, products] = await Promise.all([
     getCategories(),
     getProducts(),
   ]);
 
-  // Group by parent to render a tree.
   const roots = categories
     .filter((c) => !c.parentId)
     .sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
@@ -36,6 +43,23 @@ export default async function AdminCategoriesPage() {
         </Link>
       </header>
 
+      {deleted && (
+        <p className="mc-admin__banner" role="status">
+          Category deleted.
+        </p>
+      )}
+      {error === "delete-failed" && (
+        <p className="mc-admin__banner is-error" role="alert">
+          Delete failed — check Vercel Blob storage, then try again.
+        </p>
+      )}
+      {error === "has-children" && (
+        <p className="mc-admin__banner is-error" role="alert">
+          This category has sub-categories. Choose how to handle them in the
+          delete dialog.
+        </p>
+      )}
+
       <div className="mc-admin__table-wrap">
         <table className="mc-admin__table">
           <thead>
@@ -51,8 +75,8 @@ export default async function AdminCategoriesPage() {
               const rootKids = childrenOf(root.id);
               const rootUsed = productCount(root.id);
               return (
-                <>
-                  <tr key={root.id}>
+                <Fragment key={root.id}>
+                  <tr>
                     <td>
                       <div className="mc-admin__row-product">
                         <div
@@ -151,7 +175,7 @@ export default async function AdminCategoriesPage() {
                       </tr>
                     );
                   })}
-                </>
+                </Fragment>
               );
             })}
             {categories.length === 0 && (

@@ -9,11 +9,12 @@ import {
   getSessionToken,
 } from "@/lib/auth";
 import {
-  deleteProductRecord,
   getCategories,
   getProductById,
   getProducts,
   nextProductId,
+  removeCategoriesByIds,
+  removeProductsByIds,
   saveCategories,
   saveProducts,
   saveProductsWithRecords,
@@ -433,17 +434,40 @@ export async function importProductFromUrlAction(
 
 export async function deleteProductAction(formData: FormData): Promise<void> {
   const id = String(formData.get("id") ?? "").trim();
-  if (!id) return;
+  if (!id) {
+    redirect("/admin/products?error=delete-failed");
+  }
   try {
-    const products = await getProducts();
-    const next = products.filter((p) => String(p.id) !== id);
-    await saveProducts(next);
-    await deleteProductRecord(id);
+    await removeProductsByIds([id]);
     revalidatePath("/", "layout");
-    redirect("/admin/products");
+    revalidatePath("/admin/products");
+    redirect("/admin/products?deleted=1");
   } catch (err) {
     rethrowIfNavigationError(err);
     console.error("[deleteProductAction]", err);
+    redirect("/admin/products?error=delete-failed");
+  }
+}
+
+export async function deleteProductsBulkAction(
+  formData: FormData,
+): Promise<void> {
+  const raw = String(formData.get("ids") ?? "").trim();
+  const ids = raw
+    .split(",")
+    .map((id) => id.trim())
+    .filter(Boolean);
+  if (ids.length === 0) {
+    redirect("/admin/products?error=none-selected");
+  }
+  try {
+    await removeProductsByIds(ids);
+    revalidatePath("/", "layout");
+    revalidatePath("/admin/products");
+    redirect(`/admin/products?deleted=${ids.length}`);
+  } catch (err) {
+    rethrowIfNavigationError(err);
+    console.error("[deleteProductsBulkAction]", err);
     redirect("/admin/products?error=delete-failed");
   }
 }
@@ -572,81 +596,101 @@ async function upsertCategoryCore(
 
 /**
  * Delete a category with an explicit strategy for its descendants + products:
- *   - "refuse"  → default; refuses if children/products exist
- *   - "orphan"  → sub-categories become top-level; products marked Uncategorised
- *   - "cascade" → sub-categories deleted too; products still preserved
- *                 (moved to Uncategorised — we never delete customer data)
+ *   - "force"   → delete this category (no children allowed); products → Uncategorised
+ *   - "orphan"  → sub-categories become top-level; products → Uncategorised
+ *   - "cascade" → sub-categories deleted too; products → Uncategorised
  */
 export async function deleteCategoryAction(formData: FormData): Promise<void> {
   const id = String(formData.get("id") ?? "").trim();
-  const strategy = String(formData.get("strategy") ?? "refuse").trim() as
-    | "refuse"
+  const strategy = String(formData.get("strategy") ?? "force").trim() as
+    | "force"
     | "orphan"
     | "cascade";
-  if (!id) return;
-
-  const [cats, products] = await Promise.all([getCategories(), getProducts()]);
-  const hasChildren = cats.some((c) => c.parentId === id);
-  const productRefs = products.filter((p) => p.categoryId === id);
-
-  // No children AND no product refs → simple delete regardless of strategy.
-  if (!hasChildren && productRefs.length === 0) {
-    await saveCategories(cats.filter((c) => c.id !== id));
-    revalidatePath("/", "layout");
-    redirect("/admin/categories");
+  if (!id) {
+    redirect("/admin/categories?error=delete-failed");
   }
 
-  if (strategy === "refuse") {
-    // Legacy behaviour — no-op if anything references this category.
-    return;
-  }
+  try {
+    const [cats, products] = await Promise.all([
+      getCategories(),
+      getProducts(),
+    ]);
+    const hasChildren = cats.some((c) => c.parentId === id);
 
-  // Build the set of category IDs we're about to remove.
-  const toDelete = new Set<string>([id]);
-  if (strategy === "cascade") {
-    // Walk descendants and mark them for deletion too.
-    const stack = [id];
-    while (stack.length) {
-      const cur = stack.pop()!;
-      for (const c of cats) {
-        if (c.parentId === cur && !toDelete.has(c.id)) {
-          toDelete.add(c.id);
-          stack.push(c.id);
+    if (strategy === "force") {
+      if (hasChildren) {
+        redirect("/admin/categories?error=has-children");
+      }
+      const productRefs = products.filter((p) => p.categoryId === id);
+      if (productRefs.length > 0) {
+        const nextProducts = products.map((p) =>
+          p.categoryId === id
+            ? { ...p, categoryId: undefined, category: undefined }
+            : p,
+        );
+        const touched = nextProducts.filter((p) =>
+          productRefs.some((a) => a.id === p.id),
+        );
+        await saveProductsWithRecords(nextProducts, touched);
+      }
+      await removeCategoriesByIds([id]);
+      revalidatePath("/", "layout");
+      revalidatePath("/admin/categories");
+      redirect("/admin/categories?deleted=1");
+    }
+
+    const toDelete = new Set<string>([id]);
+    if (strategy === "cascade") {
+      const stack = [id];
+      while (stack.length) {
+        const cur = stack.pop()!;
+        for (const c of cats) {
+          if (c.parentId === cur && !toDelete.has(c.id)) {
+            toDelete.add(c.id);
+            stack.push(c.id);
+          }
         }
       }
     }
-  }
 
-  // Re-parent survivors (only affects strategy="orphan").
-  const nextCats: Category[] = cats
-    .filter((c) => !toDelete.has(c.id))
-    .map((c) => {
-      if (c.parentId && toDelete.has(c.parentId)) {
-        // Its parent is being deleted → promote to top-level.
-        return { ...c, parentId: null };
-      }
-      return c;
-    });
+    const nextCats: Category[] = cats
+      .filter((c) => !toDelete.has(c.id))
+      .map((c) => {
+        if (c.parentId && toDelete.has(c.parentId)) {
+          return { ...c, parentId: null };
+        }
+        return c;
+      });
 
-  // Products in any deleted category → uncategorised.
-  const affectedProducts = products.filter(
-    (p) => p.categoryId && toDelete.has(p.categoryId),
-  );
-  if (affectedProducts.length > 0) {
-    const nextProducts = products.map((p) =>
-      p.categoryId && toDelete.has(p.categoryId)
-        ? { ...p, categoryId: undefined, category: undefined }
-        : p,
+    const affectedProducts = products.filter(
+      (p) => p.categoryId && toDelete.has(p.categoryId),
     );
-    const touched = nextProducts.filter((p) =>
-      affectedProducts.some((a) => a.id === p.id),
-    );
-    await saveProductsWithRecords(nextProducts, touched);
-  }
+    if (affectedProducts.length > 0) {
+      const nextProducts = products.map((p) =>
+        p.categoryId && toDelete.has(p.categoryId)
+          ? { ...p, categoryId: undefined, category: undefined }
+          : p,
+      );
+      const touched = nextProducts.filter((p) =>
+        affectedProducts.some((a) => a.id === p.id),
+      );
+      await saveProductsWithRecords(nextProducts, touched);
+    }
 
-  await saveCategories(nextCats);
-  revalidatePath("/", "layout");
-  redirect("/admin/categories");
+    await removeCategoriesByIds([...toDelete]);
+    if (strategy === "orphan") {
+      // Persist re-parented survivors (parentId → null).
+      await saveCategories(nextCats);
+    }
+
+    revalidatePath("/", "layout");
+    revalidatePath("/admin/categories");
+    redirect("/admin/categories?deleted=1");
+  } catch (err) {
+    rethrowIfNavigationError(err);
+    console.error("[deleteCategoryAction]", err);
+    redirect("/admin/categories?error=delete-failed");
+  }
 }
 
 /* -------------------------------------------------------------------------- */

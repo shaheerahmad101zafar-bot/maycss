@@ -117,13 +117,23 @@ export function cx(...parts: Array<string | false | null | undefined>): string {
  * Client + server safe.
  */
 export function resolveGallery(product: Product, colorName?: string | null): string[] {
+  const dedupe = (urls: string[]) => {
+    const out: string[] = [];
+    const seen = new Set<string>();
+    for (const u of urls) {
+      if (!u || seen.has(u)) continue;
+      seen.add(u);
+      out.push(u);
+    }
+    return out;
+  };
+
   if (colorName && product.colorImages?.[colorName]) {
     const override = product.colorImages[colorName];
-    return override.gallery && override.gallery.length > 0
-      ? override.gallery
-      : [override.image];
+    return dedupe([override.image, ...(override.gallery ?? [])]);
   }
-  return product.gallery && product.gallery.length > 0
-    ? product.gallery
-    : [product.image];
+  return dedupe([
+    product.image,
+    ...(product.gallery && product.gallery.length > 0 ? product.gallery : []),
+  ]);
 }

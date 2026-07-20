@@ -159,15 +159,50 @@ function parseGallery(input: string) {
 function parseColors(input: string): ProductColor[] {
   return input
     .split(/\r?\n/)
+    .map((line) => line.trim())
+    .filter(Boolean)
     .map((line) => {
-      const i = line.indexOf(":");
-      if (i === -1) return null;
-      const name = line.slice(0, i).trim();
-      const hex = line.slice(i + 1).trim();
-      return name && hex ? { name, hex } : null;
-    })
-    .filter((v): v is ProductColor => v !== null);
+      const [name, hex] = line.split(":").map((s) => s.trim());
+      return {
+        name: name || line,
+        hex: hex && /^#?[0-9a-fA-F]{3,8}$/.test(hex)
+          ? hex.startsWith("#")
+            ? hex
+            : `#${hex}`
+          : "#cccccc",
+      };
+    });
 }
+
+function parseColorImagesJson(raw: string): Product["colorImages"] | undefined {
+  const text = raw.trim();
+  if (!text) return undefined;
+  try {
+    const parsed = JSON.parse(text) as unknown;
+    if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) {
+      return undefined;
+    }
+    const out: NonNullable<Product["colorImages"]> = {};
+    for (const [key, val] of Object.entries(parsed as Record<string, unknown>)) {
+      const name = key.trim();
+      if (!name || !val || typeof val !== "object") continue;
+      const row = val as Record<string, unknown>;
+      const image = String(row.image ?? "").trim();
+      if (!image) continue;
+      const gallery = Array.isArray(row.gallery)
+        ? row.gallery.map((u) => String(u).trim()).filter(Boolean)
+        : undefined;
+      out[name] = {
+        image,
+        gallery: gallery && gallery.length > 0 ? gallery : undefined,
+      };
+    }
+    return Object.keys(out).length > 0 ? out : undefined;
+  } catch {
+    return undefined;
+  }
+}
+
 function parseSpecs(input: string): ProductSpec[] {
   return input
     .split(/\r?\n/)
@@ -231,6 +266,9 @@ export async function upsertProductAction(
   const sizes = parseSizes(sizesRaw);
   const colors = parseColors(colorsRaw);
   const specs = parseSpecs(specsRaw);
+  const colorImagesFromForm = parseColorImagesJson(
+    String(formData.get("colorImagesJson") ?? ""),
+  );
 
   // Parse dynamic content blocks (same block factory used by CMS pages).
   const contentBlocksRaw = String(formData.get("contentBlocksJson") ?? "").trim();
@@ -270,7 +308,7 @@ export async function upsertProductAction(
     specs: specs.length ? specs : undefined,
     sizes: sizes.length ? sizes : undefined,
     colors: colors.length ? colors : undefined,
-    colorImages: existing?.colorImages,
+    colorImages: colorImagesFromForm ?? existing?.colorImages,
     status: formData.get("publish") === "on" ? "published" : "draft",
     sourceUrl: existing?.sourceUrl,
     contentBlocks,
@@ -372,12 +410,20 @@ export async function importProductFromUrlAction(
       `${p.name} — curated at ${cfg.siteName}.`
     ).slice(0, 155);
 
+    const firstColor = p.colors?.[0];
+    const colorSet =
+      firstColor && p.colorImages?.[firstColor]
+        ? p.colorImages[firstColor]
+        : undefined;
+
     const newProduct: Product = {
       id: nextProductId(products),
       name: p.name ?? "Imported product",
       brand: p.brand,
-      image: p.images?.[0] ?? "",
-      gallery: p.images && p.images.length > 1 ? p.images : undefined,
+      image: colorSet?.image ?? p.images?.[0] ?? "",
+      gallery:
+        colorSet?.gallery ??
+        (p.images && p.images.length > 1 ? p.images.slice(1) : undefined),
       price: p.price ?? 0,
       originalPrice: p.originalPrice,
       rating: p.rating,
@@ -386,7 +432,16 @@ export async function importProductFromUrlAction(
       categoryId: categoryId || undefined,
       category: categoryId || p.category,
       sizes: p.sizes,
-      colors: p.colors?.map((name) => ({ name, hex: "#cccccc" })),
+      colors: p.colors?.map((name, i) => ({
+        name,
+        hex:
+          p.colorHex?.[i] && /^#?[0-9a-fA-F]{6}$/i.test(p.colorHex[i])
+            ? p.colorHex[i].startsWith("#")
+              ? p.colorHex[i]
+              : `#${p.colorHex[i]}`
+            : "#cccccc",
+      })),
+      colorImages: p.colorImages,
       status: "draft",
       sourceUrl: p.sourceUrl,
       contentBlocks,

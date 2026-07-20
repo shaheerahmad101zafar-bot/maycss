@@ -6,6 +6,7 @@
 
 import { generateProductContent } from "@/lib/ai/product-content-writer";
 import type { ContentBlock } from "@/lib/blocks/types";
+import type { ColorImageMap } from "@/lib/utils";
 import type { ScrapedProduct } from "./types";
 
 export type ProductAutofill = {
@@ -20,6 +21,8 @@ export type ProductAutofill = {
   sizes: string[];
   /** Ready for the Colors textarea: `Name: #hex` */
   colorLines: string[];
+  /** Per-color galleries for PDP swatch switching. */
+  colorImages?: ColorImageMap;
   specs: Array<{ label: string; value: string }>;
   contentBlocks: ContentBlock[];
   focusKeyword: string;
@@ -301,8 +304,16 @@ export function buildProductAutofill(
 
   const metaTitle = buildMetaTitle(focusKeyword, name);
   const metaDescription = buildMetaDescription(focusKeyword, name, description);
-  const image = images[0];
-  const gallery = images.slice(1);
+  const colorImages = product.colorImages;
+  const firstColorName = product.colors?.[0];
+  const firstColorSet =
+    firstColorName && colorImages?.[firstColorName]
+      ? colorImages[firstColorName]
+      : undefined;
+  const image = firstColorSet?.image ?? images[0];
+  const gallery = firstColorSet
+    ? firstColorSet.gallery ?? []
+    : images.slice(1);
   const onSale =
     typeof product.originalPrice === "number" &&
     typeof product.price === "number" &&
@@ -319,6 +330,7 @@ export function buildProductAutofill(
     gallery,
     sizes: product.sizes ?? [],
     colorLines: buildColorLines(product),
+    colorImages,
     specs: buildSpecs(product),
     contentBlocks,
     focusKeyword,

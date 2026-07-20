@@ -76,8 +76,33 @@ export default function ProductDetail({ product }: Props) {
   return (
     <section className="mc-pdp mc-container">
       <div className="mc-pdp__grid">
-        {/* Gallery */}
+        {/* Gallery — Macy's-style: vertical thumbs + main stage */}
         <div className="mc-pdp__gallery">
+          {gallery.length > 1 && (
+            <div
+              className="mc-pdp__thumbs"
+              role="tablist"
+              aria-label="Product images"
+            >
+              {gallery.slice(0, 8).map((src, i) => (
+                <button
+                  key={src + i}
+                  type="button"
+                  role="tab"
+                  aria-selected={i === activeImage}
+                  className={cx(
+                    "mc-pdp__thumb",
+                    i === activeImage && "is-active",
+                  )}
+                  onClick={() => setActiveImage(i)}
+                >
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={src} alt={`${product.name} view ${i + 1}`} />
+                </button>
+              ))}
+            </div>
+          )}
+
           <div
             ref={stageRef}
             className={cx("mc-pdp__stage", zoom && "is-zooming")}
@@ -100,35 +125,10 @@ export default function ProductDetail({ product }: Props) {
             <img
               className="mc-pdp__image"
               src={gallery[activeImage]}
-              alt={product.name}
+              alt={`${product.name}${color ? ` — ${color}` : ""}`}
               key={gallery[activeImage]}
             />
           </div>
-
-          {gallery.length > 1 && (
-            <div
-              className="mc-pdp__thumbs"
-              role="tablist"
-              aria-label="Product images"
-            >
-              {gallery.map((src, i) => (
-                <button
-                  key={src + i}
-                  type="button"
-                  role="tab"
-                  aria-selected={i === activeImage}
-                  className={cx(
-                    "mc-pdp__thumb",
-                    i === activeImage && "is-active",
-                  )}
-                  onClick={() => setActiveImage(i)}
-                >
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={src} alt={`${product.name} view ${i + 1}`} />
-                </button>
-              ))}
-            </div>
-          )}
         </div>
 
         {/* Info */}
@@ -168,7 +168,11 @@ export default function ProductDetail({ product }: Props) {
           </div>
 
           {product.description && (
-            <p className="mc-pdp__desc">{product.description}</p>
+            <p className="mc-pdp__desc">
+              {product.description.length > 420
+                ? `${product.description.slice(0, 420).replace(/\s+\S*$/, "")}…`
+                : product.description}
+            </p>
           )}
 
           {product.colors && product.colors.length > 0 && (

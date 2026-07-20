@@ -97,7 +97,21 @@
 /* ---------- PDP responsive ---------- */
 @media (max-width: 900px) {
   .mc-pdp__grid { grid-template-columns: 1fr; gap: 32px; }
-  .mc-pdp__gallery { position: static; }
+  .mc-pdp__gallery {
+    position: static;
+    grid-template-columns: 1fr;
+  }
+  .mc-pdp__thumbs {
+    order: 2;
+    flex-direction: row;
+    max-height: none;
+    overflow-x: auto;
+    overflow-y: hidden;
+  }
+  .mc-pdp__thumb {
+    width: 64px;
+    flex: 0 0 64px;
+  }
   .mc-pdp__specs-row { grid-template-columns: 110px 1fr; }
 }
 
@@ -105,7 +119,6 @@
   .mc-pdp { padding: 20px 16px 40px; }
   .mc-pdp__stage { cursor: default; background-image: none !important; }
   .mc-pdp__stage.is-zooming .mc-pdp__image { opacity: 1; }
-  .mc-pdp__thumbs { grid-template-columns: repeat(4, minmax(0, 1fr)); }
   .mc-pdp__actions { flex-wrap: wrap; }
   .mc-pdp__actions .mc-stepper { width: 100%; justify-content: center; }
   .mc-pdp__specs-row { grid-template-columns: 100px 1fr; font-size: 0.85rem; }

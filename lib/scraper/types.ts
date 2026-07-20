@@ -12,6 +12,11 @@ export type ScrapedProduct = {
   colors?: string[];
   /** Parallel hex codes for `colors` (same order), when known. */
   colorHex?: string[];
+  /**
+   * Per-color image sets — keyed by color name.
+   * Used so clicking a swatch swaps the PDP gallery like Macy's.
+   */
+  colorImages?: Record<string, { image: string; gallery?: string[] }>;
   sizes?: string[];
   /** Bullet features / materials / care lines from the source PDP. */
   features?: string[];

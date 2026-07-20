@@ -310,11 +310,31 @@ export async function scrapeMacysProduct(
         .filter(Boolean),
     );
 
-    // Colors (+ hex when swatch present)
+    // Colors (+ hex) and per-color image galleries
     const colorsRoot = asRecord(traits?.colors);
     const colorMap = asRecord(colorsRoot?.colorMap) ?? {};
     const colors: string[] = [];
     const colorHex: string[] = [];
+    const colorImages: NonNullable<ScrapedProduct["colorImages"]> = {};
+
+    const extractImageUrls = (nodes: unknown[]): string[] => {
+      const out: string[] = [];
+      const seenLocal = new Set<string>();
+      for (const node of nodes) {
+        const row = asRecord(node);
+        const filePath =
+          (typeof row?.filePath === "string" && row.filePath) ||
+          (typeof row?.path === "string" && row.path) ||
+          "";
+        if (!filePath) continue;
+        const src = macysImageUrl(filePath);
+        if (seenLocal.has(src)) continue;
+        seenLocal.add(src);
+        out.push(src);
+      }
+      return out;
+    };
+
     for (const colorVal of Object.values(colorMap)) {
       const row = asRecord(colorVal);
       const cname = String(row?.name ?? row?.normalName ?? "").trim();
@@ -328,33 +348,60 @@ export async function scrapeMacysProduct(
           : "") ||
         "";
       colorHex.push(colorHexFromName(cname, swatch));
-    }
 
-    // Images — product-level + every color
-    const productImagery = asRecord(product.imagery);
-    const imageNodes: unknown[] = [
-      ...(Array.isArray(productImagery?.images) ? productImagery!.images : []),
-    ];
-    for (const colorVal of Object.values(colorMap)) {
-      const colorRow = asRecord(colorVal);
-      const colorImagery = asRecord(colorRow?.imagery);
-      if (Array.isArray(colorImagery?.images)) {
-        imageNodes.push(...colorImagery!.images);
+      const colorImagery = asRecord(row?.imagery);
+      const colorNodes = Array.isArray(colorImagery?.images)
+        ? colorImagery!.images
+        : [];
+      const colorUrls = extractImageUrls(colorNodes);
+      if (colorUrls.length > 0) {
+        colorImages[cname] = {
+          image: colorUrls[0],
+          gallery: colorUrls.length > 1 ? colorUrls.slice(1) : undefined,
+        };
       }
     }
-    const images: string[] = [];
-    const seen = new Set<string>();
-    for (const node of imageNodes) {
-      const row = asRecord(node);
-      const filePath =
-        (typeof row?.filePath === "string" && row.filePath) ||
-        (typeof row?.path === "string" && row.path) ||
-        "";
-      if (!filePath) continue;
-      const src = macysImageUrl(filePath);
-      if (seen.has(src)) continue;
-      seen.add(src);
-      images.push(src);
+
+    // Product-level images as fallback / default gallery
+    const productImagery = asRecord(product.imagery);
+    const productUrls = extractImageUrls(
+      Array.isArray(productImagery?.images) ? productImagery!.images : [],
+    );
+
+    // Prefer selected color's set as the primary `images` list so the PDP
+    // default matches what Macy's shows first.
+    const selectedColorId = colorsRoot?.selectedColor;
+    const selectedColor = asRecord(
+      selectedColorId != null
+        ? colorMap[String(selectedColorId)]
+        : Object.values(colorMap)[0],
+    );
+    const selectedName = String(
+      selectedColor?.name ?? selectedColor?.normalName ?? colors[0] ?? "",
+    ).trim();
+    const selectedSet = selectedName ? colorImages[selectedName] : undefined;
+    const images: string[] = selectedSet
+      ? [
+          selectedSet.image,
+          ...(selectedSet.gallery ?? []),
+        ]
+      : productUrls.length > 0
+        ? productUrls
+        : Object.values(colorImages).flatMap((c) => [
+            c.image,
+            ...(c.gallery ?? []),
+          ]);
+
+    // If a color has no dedicated imagery, fall back to product-level set.
+    if (productUrls.length > 0) {
+      for (const cname of colors) {
+        if (!colorImages[cname]) {
+          colorImages[cname] = {
+            image: productUrls[0],
+            gallery: productUrls.length > 1 ? productUrls.slice(1) : undefined,
+          };
+        }
+      }
     }
 
     const category =
@@ -376,6 +423,8 @@ export async function scrapeMacysProduct(
       images,
       colors,
       colorHex,
+      colorImages:
+        Object.keys(colorImages).length > 0 ? colorImages : undefined,
       sizes,
       features: bullets,
       sizeAndFit,

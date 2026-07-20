@@ -6,7 +6,7 @@ import {
   upsertProductAction,
   type ProductFormState,
 } from "@/app/admin/actions";
-import { cx, type Category, type Product } from "@/lib/utils";
+import { cx, type Category, type ColorImageMap, type Product } from "@/lib/utils";
 import type { BlockTemplate, ContentBlock } from "@/lib/blocks/types";
 import {
   countWords,
@@ -98,6 +98,9 @@ export default function ProductForm({ product, categories, templates }: Props) {
   const [ogImage, setOgImage] = useState<string>(product?.seo?.ogImage ?? "");
   const [additionalKeywords, setAdditionalKeywords] = useState<string[]>(
     product?.seo?.keywords ?? [],
+  );
+  const [colorImages, setColorImages] = useState<ColorImageMap | undefined>(
+    product?.colorImages,
   );
 
   const serverErrors = state.ok === false ? state.errors : {};
@@ -255,6 +258,7 @@ export default function ProductForm({ product, categories, templates }: Props) {
           gallery: string[];
           sizes: string[];
           colorLines: string[];
+          colorImages?: ColorImageMap;
           specs: Array<{ label: string; value: string }>;
           contentBlocks: ContentBlock[];
           focusKeyword: string;
@@ -300,6 +304,7 @@ export default function ProductForm({ product, categories, templates }: Props) {
       setGallery(a.gallery.length ? a.gallery.join("\n") : "");
       setSizes(a.sizes.length ? a.sizes.join(", ") : "");
       setColors(a.colorLines.length ? a.colorLines.join("\n") : "");
+      setColorImages(a.colorImages);
       setSpecs(
         a.specs.length
           ? a.specs.map((s) => `${s.label}: ${s.value}`).join("\n")
@@ -338,6 +343,11 @@ export default function ProductForm({ product, categories, templates }: Props) {
       noValidate
     >
       {product && <input type="hidden" name="id" value={String(product.id)} />}
+      <input
+        type="hidden"
+        name="colorImagesJson"
+        value={colorImages ? JSON.stringify(colorImages) : ""}
+      />
 
       {serverErrors._form && (
         <p className="mc-admin__banner is-error" role="alert">

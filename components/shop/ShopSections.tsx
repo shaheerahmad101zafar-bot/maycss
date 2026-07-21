@@ -5,7 +5,7 @@ import {
   getSubcategories,
   getTopLevelCategories,
 } from "@/lib/data";
-import type { Category } from "@/lib/utils";
+import type { Category, Product } from "@/lib/utils";
 
 export default async function ShopCategoryIndex() {
   const topCats = await getTopLevelCategories();
@@ -67,8 +67,12 @@ export default async function ShopCategoryIndex() {
   );
 }
 
-export async function ShopCatalogSection() {
-  const products = await getProducts();
+export async function ShopCatalogSection({
+  products: incoming,
+}: {
+  products?: Product[];
+} = {}) {
+  const products = incoming ?? (await getProducts());
   if (products.length === 0) return null;
 
   return (

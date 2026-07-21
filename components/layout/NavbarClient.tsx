@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useCart } from "@/context/CartContext";
 import NavAuth from "@/components/auth/NavAuth";
 import TextLogo from "@/components/layout/TextLogo";
@@ -30,6 +30,10 @@ function isActive(pathname: string, href: string) {
   return pathname === href || pathname.startsWith(`${href}/`);
 }
 
+function isSaleLink(href: string, label: string) {
+  return href.includes("/sale") || /sale|black friday/i.test(label);
+}
+
 export default function NavbarClient({
   siteName,
   tagline,
@@ -37,11 +41,13 @@ export default function NavbarClient({
   useTextLogo = true,
   links,
   menuAlignment = "justify-center",
-  activeLinkStyle = { showUnderline: true, activeColor: "#b8956b" },
+  activeLinkStyle = { showUnderline: true, activeColor: "#e21a2c" },
 }: NavbarClientProps) {
   const pathname = usePathname();
+  const router = useRouter();
   const { openDrawer, itemCount } = useCart();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [query, setQuery] = useState("");
 
   const { showUnderline, activeColor } = activeLinkStyle;
   const showTextLogo = useTextLogo || !logoUrl;
@@ -61,12 +67,24 @@ export default function NavbarClient({
     "--mc-nav-active-color": activeColor,
   } as React.CSSProperties;
 
-  const linkClass = (active: boolean) =>
-    cx(active && "is-active", showUnderline && "has-underline");
+  const linkClass = (active: boolean, sale: boolean) =>
+    cx(
+      active && "is-active",
+      showUnderline && "has-underline",
+      sale && "is-sale",
+    );
+
+  const onSearch = (e: FormEvent) => {
+    e.preventDefault();
+    const q = query.trim();
+    router.push(q ? `/shop?q=${encodeURIComponent(q)}` : "/shop");
+    setMenuOpen(false);
+  };
 
   const renderLinks = (className: string) =>
     links.map((l) => {
       const active = !l.external && isActive(pathname, l.href);
+      const sale = isSaleLink(l.href, l.label);
       if (l.external) {
         return (
           <a
@@ -74,14 +92,18 @@ export default function NavbarClient({
             href={l.href}
             target="_blank"
             rel="noopener noreferrer"
-            className={className}
+            className={cx(className, sale && "is-sale")}
           >
             {l.label}
           </a>
         );
       }
       return (
-        <Link key={l.href} href={l.href} className={cx(className, linkClass(active))}>
+        <Link
+          key={l.href}
+          href={l.href}
+          className={cx(className, linkClass(active, sale))}
+        >
           {l.label}
         </Link>
       );
@@ -90,16 +112,16 @@ export default function NavbarClient({
   return (
     <header
       className={cx(
-        "mc-navbar mc-navbar--sticky mc-navbar--luxury",
+        "mc-navbar mc-navbar--sticky mc-navbar--dept",
         !showUnderline && "mc-navbar--no-underline",
         `mc-navbar--align-${menuAlignment.replace("justify-", "")}`,
       )}
       style={navStyle}
     >
       <div className="mc-container mc-navbar__shell">
-        {/* Top row: hamburger · logo · actions */}
-        <div className="mc-navbar__top">
-          <div className="mc-navbar__left">
+        {/* Macy's-style top: logo · search · actions */}
+        <div className="mc-navbar__dept-top">
+          <div className="mc-navbar__dept-brand">
             <button
               type="button"
               className="mc-navbar__hamburger"
@@ -109,9 +131,6 @@ export default function NavbarClient({
             >
               {menuOpen ? "\u2715" : "\u2630"}
             </button>
-          </div>
-
-          <div className="mc-navbar__brand">
             {showTextLogo ? (
               <TextLogo siteName={siteName} tagline={tagline} />
             ) : (
@@ -128,12 +147,45 @@ export default function NavbarClient({
             )}
           </div>
 
+          <form
+            className="mc-navbar__search"
+            role="search"
+            onSubmit={onSearch}
+          >
+            <label className="sr-only" htmlFor="mc-nav-search">
+              Search
+            </label>
+            <input
+              id="mc-nav-search"
+              type="search"
+              name="q"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="What are you looking for today?"
+              autoComplete="off"
+            />
+            <button type="submit" aria-label="Search">
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                aria-hidden
+              >
+                <circle cx="11" cy="11" r="7" />
+                <path d="m20 20-3.5-3.5" />
+              </svg>
+            </button>
+          </form>
+
           <div className="mc-navbar__actions">
             <NavAuth />
             <button
               type="button"
               className="mc-navbar__icon"
-              aria-label={`Open cart${itemCount > 0 ? `, ${itemCount} items` : ""}`}
+              aria-label={`Open bag${itemCount > 0 ? `, ${itemCount} items` : ""}`}
               onClick={openDrawer}
             >
               <svg
@@ -157,9 +209,8 @@ export default function NavbarClient({
           </div>
         </div>
 
-        {/* Desktop nav row — full width, admin-aligned */}
         <nav
-          className={cx("mc-navbar__navrow", menuAlignment)}
+          className={cx("mc-navbar__navrow", "mc-navbar__navrow--dept", menuAlignment)}
           aria-label="Primary navigation"
         >
           {renderLinks("mc-navbar__link")}
@@ -188,9 +239,19 @@ export default function NavbarClient({
             &times;
           </button>
         </div>
+        <form className="mc-mnav__search" onSubmit={onSearch}>
+          <input
+            type="search"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder="Search products"
+          />
+          <button type="submit">Search</button>
+        </form>
         <ul className="mc-mnav__links">
           {links.map((l) => {
             const active = !l.external && isActive(pathname, l.href);
+            const sale = isSaleLink(l.href, l.label);
             return (
               <li key={l.href}>
                 {l.external ? (
@@ -198,7 +259,10 @@ export default function NavbarClient({
                     {l.label}
                   </a>
                 ) : (
-                  <Link href={l.href} className={cx(active && "is-active")}>
+                  <Link
+                    href={l.href}
+                    className={cx(active && "is-active", sale && "is-sale")}
+                  >
                     {l.label}
                   </Link>
                 )}

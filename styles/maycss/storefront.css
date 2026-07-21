@@ -29,12 +29,15 @@ body {
   line-height: 1.6;
 }
 
-/* Black Friday promo strip (Macy's-inspired) */
+/* Black Friday promo strip (department-store inspired) */
 .mc-promo-bar {
   background: var(--mc-bf-bar, #111111);
   color: #fff;
   font-size: 0.8125rem;
   letter-spacing: 0.04em;
+}
+.mc-promo-bar--sale {
+  background: var(--mc-red);
 }
 .mc-promo-bar__inner {
   display: flex;
@@ -50,7 +53,7 @@ body {
   color: #fff;
 }
 .mc-promo-bar__text strong {
-  color: #ff4d5a;
+  color: #fff;
   text-transform: uppercase;
   letter-spacing: 0.08em;
 }
@@ -61,13 +64,106 @@ body {
   text-underline-offset: 3px;
 }
 .mc-promo-bar__cta:hover {
-  color: #ff4d5a;
+  opacity: 0.9;
 }
 
 .mc-navbar__links a[href="/sale"],
-.mc-navbar__link[href="/sale"] {
+.mc-navbar__link[href="/sale"],
+.mc-navbar__link.is-sale {
   color: var(--mc-red) !important;
   font-weight: 700;
+}
+
+/* Department-store header: logo · search · bag */
+.mc-navbar--dept {
+  border-bottom: 1px solid var(--mc-gray-100);
+  background: #fff;
+}
+.mc-navbar__dept-top {
+  display: grid;
+  grid-template-columns: minmax(140px, 1fr) minmax(220px, 560px) minmax(120px, 1fr);
+  align-items: center;
+  gap: 16px;
+  padding: 14px 0 10px;
+}
+.mc-navbar__dept-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+.mc-navbar__search {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  border: 1px solid var(--mc-gray-200);
+  border-radius: 999px;
+  background: var(--mc-gray-50);
+  overflow: hidden;
+}
+.mc-navbar__search:focus-within {
+  border-color: var(--mc-black);
+  background: #fff;
+}
+.mc-navbar__search input {
+  flex: 1;
+  border: 0;
+  background: transparent;
+  padding: 12px 16px;
+  font-size: 0.95rem;
+  outline: none;
+  min-width: 0;
+}
+.mc-navbar__search button {
+  border: 0;
+  background: transparent;
+  padding: 10px 14px;
+  cursor: pointer;
+  color: var(--mc-black);
+}
+.mc-navbar__navrow--dept {
+  border-top: 1px solid var(--mc-gray-100);
+  padding: 10px 0 12px;
+  gap: 22px;
+  flex-wrap: wrap;
+  justify-content: flex-start !important;
+}
+.mc-navbar__link.is-sale {
+  color: var(--mc-red) !important;
+}
+.mc-mnav__search {
+  display: flex;
+  gap: 8px;
+  padding: 12px 16px;
+}
+.mc-mnav__search input {
+  flex: 1;
+  border: 1px solid var(--mc-gray-200);
+  border-radius: 8px;
+  padding: 10px 12px;
+}
+.mc-mnav__search button {
+  border: 0;
+  background: var(--mc-black);
+  color: #fff;
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-weight: 600;
+}
+.mc-mnav__links a.is-sale {
+  color: var(--mc-red) !important;
+}
+@media (max-width: 900px) {
+  .mc-navbar__dept-top {
+    grid-template-columns: 1fr auto;
+    grid-template-areas:
+      "brand actions"
+      "search search";
+  }
+  .mc-navbar__dept-brand { grid-area: brand; }
+  .mc-navbar__actions { grid-area: actions; }
+  .mc-navbar__search { grid-area: search; }
+  .mc-navbar__navrow--dept { display: none; }
 }
 
 .mc-container {

@@ -3,7 +3,7 @@ import CmsPageView from "@/components/cms/CmsPageView";
 import ShopCategoryIndex, {
   ShopCatalogSection,
 } from "@/components/shop/ShopSections";
-import BlackFridayHero from "@/components/marketing/BlackFridayHero";
+import PagePromoBanner from "@/components/marketing/PagePromoBanner";
 import { PageFactory } from "@/lib/pages";
 import { getCategories, getListingProducts } from "@/lib/data";
 import {
@@ -68,7 +68,7 @@ export default async function ShopPage({ searchParams }: Props) {
 
   return (
     <>
-      {!query && <BlackFridayHero />}
+      {!query && <PagePromoBanner page="shop" />}
       {!query && (
         <CmsPageView
           page={page}

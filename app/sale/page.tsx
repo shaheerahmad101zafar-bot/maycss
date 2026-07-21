@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import CmsPageView from "@/components/cms/CmsPageView";
-import BlackFridayHero from "@/components/marketing/BlackFridayHero";
+import PagePromoBanner from "@/components/marketing/PagePromoBanner";
 import CategoryPage, {
   paginateProducts,
 } from "@/components/products/CategoryPage";
@@ -35,7 +35,6 @@ export default async function SalePage({ searchParams }: Props) {
 
   if (!page) notFound();
 
-  // CMS productgrid only shows a tiny slice — full sale catalog is below with pagination.
   const cmsPage = {
     ...page,
     blocks: page.blocks.filter((b) => b.type !== "productgrid"),
@@ -49,7 +48,7 @@ export default async function SalePage({ searchParams }: Props) {
 
   return (
     <>
-      <BlackFridayHero />
+      <PagePromoBanner page="sale" />
       <CmsPageView page={cmsPage} products={[]} />
       <CategoryPage
         eyebrow="Black Friday"

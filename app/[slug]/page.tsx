@@ -1,13 +1,15 @@
 import { notFound } from "next/navigation";
 import CmsPageView from "@/components/cms/CmsPageView";
-import BlackFridayHero from "@/components/marketing/BlackFridayHero";
+import PagePromoBanner from "@/components/marketing/PagePromoBanner";
 import { PageFactory } from "@/lib/pages";
 import { getListingProducts } from "@/lib/data";
+import type { PagePromoKey } from "@/components/marketing/PagePromoBanner";
 
 type Props = { params: Promise<{ slug: string }> };
 
-/** CMS pages that should open with the Black Friday hero slider. */
-const BF_BANNER_SLUGS = new Set(["about", "faq", "privacy", "refund"]);
+const PAGE_BANNER: Partial<Record<string, PagePromoKey>> = {
+  about: "about",
+};
 
 export async function generateMetadata({ params }: Props) {
   const { slug } = await params;
@@ -21,8 +23,18 @@ export default async function CmsPageRoute({ params }: Props) {
   const page = await PageFactory.getBySlug(slug);
   if (!page) notFound();
   const jsonLd = PageFactory.toJsonLd(page);
-  const products = (await getListingProducts()).slice(0, 24);
-  const showBfBanner = BF_BANNER_SLUGS.has(slug);
+  const bannerKey = PAGE_BANNER[slug];
+
+  // Only pull catalog when a CMS block actually needs products.
+  const needsProducts = page.blocks.some(
+    (b) =>
+      b.type === "productgrid" ||
+      b.type === "featured" ||
+      b.type === "productcarousel",
+  );
+  const products = needsProducts
+    ? (await getListingProducts()).slice(0, 12)
+    : [];
 
   return (
     <>
@@ -30,7 +42,7 @@ export default async function CmsPageRoute({ params }: Props) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: jsonLd }}
       />
-      {showBfBanner && <BlackFridayHero />}
+      {bannerKey && <PagePromoBanner page={bannerKey} />}
       <CmsPageView page={page} products={products} />
     </>
   );

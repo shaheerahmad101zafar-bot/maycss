@@ -1,9 +1,8 @@
 import { notFound } from "next/navigation";
 import CmsPageView from "@/components/cms/CmsPageView";
 import FeaturesStrip from "@/components/marketing/FeaturesStrip";
-import BlackFridayHero from "@/components/marketing/BlackFridayHero";
+import PagePromoBanner from "@/components/marketing/PagePromoBanner";
 import { PageFactory } from "@/lib/pages";
-import { getListingProducts } from "@/lib/data";
 import type { Metadata } from "next";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -17,17 +16,13 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function ContactPage() {
-  const [page, products] = await Promise.all([
-    PageFactory.getBySlug("contact"),
-    getListingProducts(),
-  ]);
-
+  const page = await PageFactory.getBySlug("contact");
   if (!page) notFound();
 
   return (
     <>
-      <BlackFridayHero />
-      <CmsPageView page={page} products={products.slice(0, 8)} />
+      <PagePromoBanner page="contact" />
+      <CmsPageView page={page} products={[]} />
       <FeaturesStrip />
     </>
   );

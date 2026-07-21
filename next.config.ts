@@ -62,23 +62,38 @@ const nextConfig: NextConfig = {
   async redirects() {
     return [
       {
+        source: "/category/women",
+        destination: "/category/womens-clothing",
+        permanent: false,
+      },
+      {
         source: "/category/women-clothing",
-        destination: "/category/women",
+        destination: "/category/womens-clothing",
         permanent: false,
       },
       {
-        source: "/category/women-clothing/:subslug",
-        destination: "/category/women/:subslug",
+        source: "/category/women/:subslug",
+        destination: "/category/womens-dresses/:subslug",
         permanent: false,
       },
       {
-        source: "/category/dresses/formal",
-        destination: "/category/women/formal",
+        source: "/category/dresses",
+        destination: "/category/womens-dresses",
+        permanent: false,
+      },
+      {
+        source: "/category/dresses/:subslug",
+        destination: "/category/womens-dresses/:subslug",
+        permanent: false,
+      },
+      {
+        source: "/category/jeans",
+        destination: "/category/womens-jeans-denim",
         permanent: false,
       },
       {
         source: "/collections/women",
-        destination: "/category/women",
+        destination: "/category/womens-clothing",
         permanent: false,
       },
     ];

@@ -83,6 +83,8 @@ export type BannerSlide = {
   subtitle: string;
   ctaLabel: string;
   ctaHref: string;
+  /** Optional full-bleed background image for the slide. */
+  image?: string;
 };
 
 /** Format a number as USD currency. */

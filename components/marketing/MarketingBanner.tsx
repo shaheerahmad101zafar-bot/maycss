@@ -29,7 +29,7 @@ const pad = (n: number) => n.toString().padStart(2, "0");
 
 export default function MarketingBanner({
   slides,
-  showDelay = 5000,
+  showDelay = 0,
   slideInterval = 5000,
   countdownTo,
 }: MarketingBannerProps) {
@@ -112,6 +112,15 @@ export default function MarketingBanner({
             aria-hidden={i !== active}
             aria-roledescription="slide"
             aria-label={`${i + 1} of ${slides.length}`}
+            style={
+              s.image
+                ? {
+                    backgroundImage: `linear-gradient(90deg, rgba(0,0,0,.72), rgba(0,0,0,.35)), url(${s.image})`,
+                    backgroundSize: "cover",
+                    backgroundPosition: "center",
+                  }
+                : undefined
+            }
           >
             <span className="mc-banner__eyebrow">{s.eyebrow}</span>
             <h2 className="mc-banner__title">{s.title}</h2>

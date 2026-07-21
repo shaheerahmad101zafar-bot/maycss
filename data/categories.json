@@ -1,109 +1,198 @@
 [
   {
-    "id": "cat_women",
-    "slug": "women",
-    "name": "Women Clothing",
+    "id": "cat_womens_clothing",
+    "slug": "womens-clothing",
+    "name": "Women's Clothing",
     "parentId": null,
     "order": 0,
-    "description": "Women clothing — formal gowns, jeans, and everyday pieces curated at MAYCSS.",
-    "image": "/uploads/categories/mriu1xji-fdc5cdfb1a199330.webp",
+    "description": "Shop women's clothing at MAYCSS — dresses, denim, and everyday essentials curated for fit and quality.",
     "seo": {
-      "metaTitle": "Women Clothing · MayCSS",
-      "metaDescription": "Shop women clothing at MAYCSS — formal dresses, jeans, and curated fashion for every occasion.",
-      "focusKeyword": "women clothing",
-      "keywords": ["women clothing", "women", "dresses", "formal", "jeans"]
+      "metaTitle": "Women's Clothing · MAYCSS",
+      "metaDescription": "Shop women's clothing online at MAYCSS. Discover dresses, jeans, tops, and Black Friday fashion deals.",
+      "focusKeyword": "women's clothing",
+      "keywords": ["women's clothing", "women clothing", "MAYCSS", "fashion", "Black Friday"]
+    }
+  },
+  {
+    "id": "cat_womens_dresses",
+    "slug": "womens-dresses",
+    "name": "Women's Dresses",
+    "parentId": null,
+    "order": 1,
+    "description": "Women's dresses for every occasion — formal, wedding guest, cocktail, day, casual, and work.",
+    "seo": {
+      "metaTitle": "Women's Dresses · MAYCSS",
+      "metaDescription": "Shop women's dresses at MAYCSS — formal gowns, wedding guest, cocktail & party, day, casual, and work dresses.",
+      "focusKeyword": "women's dresses",
+      "keywords": ["women's dresses", "dresses for women", "formal", "wedding guest", "cocktail"]
     }
   },
   {
     "id": "cat_formal",
     "slug": "formal",
     "name": "Formal",
-    "parentId": "cat_women",
+    "parentId": "cat_womens_dresses",
     "order": 0,
-    "description": "Evening gowns, ball gowns, and formal occasion dresses curated at MAYCSS.",
+    "description": "Evening gowns and formal dresses for galas, black-tie, and special occasions.",
     "seo": {
       "metaTitle": "Formal Dresses for Women · MAYCSS",
-      "metaDescription": "Shop formal dresses for women at MAYCSS — evening gowns, wedding guest looks, and party dresses for every occasion.",
-      "focusKeyword": "dresses for women",
-      "keywords": [
-        "MAYCSS",
-        "wholesale clothing",
-        "fashion products",
-        "wedding guest",
-        "party",
-        "formal"
-      ]
+      "metaDescription": "Shop formal dresses for women at MAYCSS — evening gowns, ball gowns, and Black Friday formal fashion.",
+      "focusKeyword": "formal dresses",
+      "keywords": ["formal", "evening gown", "ball gown", "dresses for women"]
     }
   },
   {
-    "id": "cat_jeans",
-    "slug": "jeans",
-    "name": "Jeans",
-    "parentId": "cat_women",
+    "id": "cat_wedding_guest",
+    "slug": "wedding-guest",
+    "name": "Wedding Guest",
+    "parentId": "cat_womens_dresses",
     "order": 1,
-    "description": "Women jeans and denim styles — shop the MAYCSS denim edit.",
+    "description": "Wedding guest dresses — elegant looks for ceremonies, receptions, and celebrations.",
     "seo": {
-      "metaTitle": "Women Jeans · MAYCSS",
-      "metaDescription": "Shop women jeans and denim at MAYCSS — straight leg, black jeans, and everyday denim styles.",
-      "focusKeyword": "women jeans",
-      "keywords": ["jeans", "women jeans", "denim", "straight leg jeans"]
+      "metaTitle": "Wedding Guest Dresses · MAYCSS",
+      "metaDescription": "Shop wedding guest dresses at MAYCSS — polished silhouettes for every dress code.",
+      "focusKeyword": "wedding guest dresses",
+      "keywords": ["wedding guest", "occasion dress", "dresses for women"]
     }
   },
   {
-    "id": "cat_men",
-    "slug": "men",
-    "name": "Men",
-    "parentId": null,
-    "order": 1,
-    "description": "Refined essentials and statement pieces for every season.",
-    "image": "/uploads/categories/mriu2gj3-892876186c6c0f15.webp",
+    "id": "cat_cocktail_party",
+    "slug": "cocktail-party",
+    "name": "Cocktail & Party",
+    "parentId": "cat_womens_dresses",
+    "order": 2,
+    "description": "Cocktail and party dresses for nights out, celebrations, and holiday events.",
     "seo": {
-      "metaTitle": "Men's Premium Fashion · MayCSS",
-      "metaDescription": "Discover men's curated fashion — blazers, shirting, knitwear, and accessories from independent ateliers.",
-      "focusKeyword": "men premium fashion",
-      "keywords": ["men", "blazers", "shirts", "menswear"]
+      "metaTitle": "Cocktail & Party Dresses · MAYCSS",
+      "metaDescription": "Shop cocktail and party dresses at MAYCSS — bold and refined looks for every celebration.",
+      "focusKeyword": "cocktail dresses",
+      "keywords": ["cocktail", "party", "party dresses", "Black Friday"]
     }
   },
   {
-    "id": "cat_dresses",
-    "slug": "dresses",
-    "name": "Dresses",
+    "id": "cat_day",
+    "slug": "day",
+    "name": "Day",
+    "parentId": "cat_womens_dresses",
+    "order": 3,
+    "description": "Day dresses for brunch, events, and polished daytime dressing.",
+    "seo": {
+      "metaTitle": "Day Dresses · MAYCSS",
+      "metaDescription": "Shop day dresses at MAYCSS — easy, elevated styles for daytime occasions.",
+      "focusKeyword": "day dresses",
+      "keywords": ["day dress", "occasion", "dresses for women"]
+    }
+  },
+  {
+    "id": "cat_casual",
+    "slug": "casual",
+    "name": "Casual",
+    "parentId": "cat_womens_dresses",
+    "order": 4,
+    "description": "Casual dresses for everyday comfort with elevated style.",
+    "seo": {
+      "metaTitle": "Casual Dresses · MAYCSS",
+      "metaDescription": "Shop casual dresses at MAYCSS — everyday silhouettes with premium feel.",
+      "focusKeyword": "casual dresses",
+      "keywords": ["casual", "everyday dress", "dresses for women"]
+    }
+  },
+  {
+    "id": "cat_work",
+    "slug": "work",
+    "name": "Work",
+    "parentId": "cat_womens_dresses",
+    "order": 5,
+    "description": "Work dresses for the office, meetings, and professional polish.",
+    "seo": {
+      "metaTitle": "Work Dresses · MAYCSS",
+      "metaDescription": "Shop work dresses at MAYCSS — professional silhouettes for the modern wardrobe.",
+      "focusKeyword": "work dresses",
+      "keywords": ["work", "office dress", "womens work clothes"]
+    }
+  },
+  {
+    "id": "cat_womens_jeans",
+    "slug": "womens-jeans-denim",
+    "name": "Women's Jeans & Denim",
     "parentId": null,
     "order": 2,
-    "description": "From day dresses to evening silhouettes.",
-    "image": "/uploads/cms/mrjjx6ir-cc868794b5f4e226.webp",
+    "description": "Women's jeans and denim — wide-leg, straight, barrel, flare & bootcut, and skinny fits.",
     "seo": {
-      "metaTitle": "Designer Dresses · MayCSS",
-      "metaDescription": "Shop curated designer dresses — midi, maxi, and occasion wear with timeless appeal.",
-      "keywords": ["dresses", "designer dresses", "evening wear"]
+      "metaTitle": "Women's Jeans & Denim · MAYCSS",
+      "metaDescription": "Shop women's jeans and denim at MAYCSS — wide-leg, straight, barrel, flare, bootcut, and skinny.",
+      "focusKeyword": "women's jeans",
+      "keywords": ["jeans", "denim", "women jeans", "Black Friday"]
     }
   },
   {
-    "id": "cat_outerwear",
-    "slug": "outerwear",
-    "name": "Outerwear",
-    "parentId": null,
+    "id": "cat_jeans_wide_leg",
+    "slug": "wide-leg-jeans",
+    "name": "Wide-Leg Jeans",
+    "parentId": "cat_womens_jeans",
+    "order": 0,
+    "description": "Wide-leg jeans with modern volume and easy movement.",
+    "seo": {
+      "metaTitle": "Wide-Leg Jeans · MAYCSS",
+      "metaDescription": "Shop wide-leg jeans at MAYCSS — statement denim fits for every day.",
+      "focusKeyword": "wide-leg jeans",
+      "keywords": ["wide-leg jeans", "jeans", "denim"]
+    }
+  },
+  {
+    "id": "cat_jeans_straight",
+    "slug": "straight-jeans",
+    "name": "Straight",
+    "parentId": "cat_womens_jeans",
+    "order": 1,
+    "description": "Straight-leg jeans — classic denim with a clean line.",
+    "seo": {
+      "metaTitle": "Straight-Leg Jeans · MAYCSS",
+      "metaDescription": "Shop straight-leg jeans at MAYCSS — timeless denim fits.",
+      "focusKeyword": "straight leg jeans",
+      "keywords": ["straight leg jeans", "jeans", "denim"]
+    }
+  },
+  {
+    "id": "cat_jeans_barrel",
+    "slug": "barrel-jeans",
+    "name": "Barrel",
+    "parentId": "cat_womens_jeans",
+    "order": 2,
+    "description": "Barrel-leg jeans with curved volume through the leg.",
+    "seo": {
+      "metaTitle": "Barrel Jeans · MAYCSS",
+      "metaDescription": "Shop barrel jeans at MAYCSS — modern curved denim silhouettes.",
+      "focusKeyword": "barrel jeans",
+      "keywords": ["barrel jeans", "jeans", "denim"]
+    }
+  },
+  {
+    "id": "cat_jeans_flare_bootcut",
+    "slug": "flare-bootcut-jeans",
+    "name": "Flare & Bootcut",
+    "parentId": "cat_womens_jeans",
     "order": 3,
-    "description": "Coats, blazers, and layers built to last.",
-    "image": "/uploads/cms/mrjjwq5w-36fe848ffd416220.webp",
+    "description": "Flare and bootcut jeans for a lengthening, retro-modern line.",
     "seo": {
-      "metaTitle": "Luxury Outerwear · MayCSS",
-      "metaDescription": "Investment coats and blazers — tailored layers for transitional seasons and beyond.",
-      "keywords": ["outerwear", "coats", "blazers", "jackets"]
+      "metaTitle": "Flare & Bootcut Jeans · MAYCSS",
+      "metaDescription": "Shop flare and bootcut jeans at MAYCSS — elongated denim silhouettes.",
+      "focusKeyword": "flare jeans",
+      "keywords": ["flare jeans", "bootcut jeans", "denim"]
     }
   },
   {
-    "id": "cat_accessories",
-    "slug": "accessories",
-    "name": "Accessories",
-    "parentId": null,
+    "id": "cat_jeans_skinny",
+    "slug": "skinny-jeans",
+    "name": "Skinny",
+    "parentId": "cat_womens_jeans",
     "order": 4,
-    "description": "Fine leather, jewelry, and finishing touches.",
-    "image": "/uploads/cms/mrjjvu9f-a7927dcf34fe5e25.webp",
+    "description": "Skinny jeans — fitted denim staples in classic washes.",
     "seo": {
-      "metaTitle": "Luxury Accessories · MayCSS",
-      "metaDescription": "Complete the look with curated accessories — bags, jewelry, and leather goods.",
-      "keywords": ["accessories", "bags", "jewelry", "leather"]
+      "metaTitle": "Skinny Jeans · MAYCSS",
+      "metaDescription": "Shop skinny jeans at MAYCSS — sleek fitted denim for everyday wear.",
+      "focusKeyword": "skinny jeans",
+      "keywords": ["skinny jeans", "jeans", "black jeans"]
     }
   }
 ]

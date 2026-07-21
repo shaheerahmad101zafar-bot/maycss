@@ -454,20 +454,20 @@
           "columnCount": 1,
           "padding": "none"
         },
-        "eyebrow": "Spring / Summer 2026",
-        "heading": "Choose Your Signature Style",
-        "subheading": "Welcome to Shop MayCSS Online Store — where curated luxury fashion meets timeless design. Explore premium apparel selected for craft, fit, and quiet confidence.",
+        "eyebrow": "Black Friday Sale",
+        "heading": "MayCSS Black Friday Edit",
+        "subheading": "Shop women's clothing, dresses, and denim — curated brands with limited-time savings.",
         "backgroundImage": "/uploads/cms/mrkwp1c3-69538bb97150baf8.webp",
         "imageFocus": {
           "x": 50,
           "y": 28,
           "fit": "cover"
         },
-        "overlayStrength": 42,
-        "ctaLabel": "Shop the Collection",
-        "ctaHref": "/shop",
-        "secondaryCtaLabel": "New Arrivals",
-        "secondaryCtaHref": "/new",
+        "overlayStrength": 48,
+        "ctaLabel": "Shop Black Friday",
+        "ctaHref": "/sale",
+        "secondaryCtaLabel": "Women's Clothing",
+        "secondaryCtaHref": "/category/womens-clothing",
         "height": "large"
       },
       {
@@ -553,11 +553,11 @@
           "columnCount": 1,
           "padding": "none"
         },
-        "heading": "Seasonal Offer — Ends Soon",
-        "body": "Extra 15% off selected pieces. One week only.",
+        "heading": "Black Friday — Ends Soon",
+        "body": "Limited-time savings across women's clothing, dresses, and denim.",
         "ctaLabel": "Shop the sale",
         "ctaHref": "/sale",
-        "targetDate": "2026-09-14T00:00:00.000Z",
+        "targetDate": "2026-12-01T00:00:00.000Z",
         "variant": "accent"
       },
       {
@@ -571,9 +571,13 @@
         },
         "eyebrow": "Browse",
         "heading": "Shop by Category",
-        "subheading": "Every piece, organised the way we shop — from outerwear to finishing touches.",
-        "limit": 5,
-        "categoryIds": []
+        "subheading": "Women's Clothing, Women's Dresses, and Women's Jeans & Denim — organised the way you shop.",
+        "limit": 3,
+        "categoryIds": [
+          "cat_womens_clothing",
+          "cat_womens_dresses",
+          "cat_womens_jeans"
+        ]
       },
       {
         "id": "blk_home_editorial",

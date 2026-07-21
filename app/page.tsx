@@ -46,6 +46,13 @@ export default async function Home() {
             <div className="mc-page-banner__overlay" />
           </div>
         )}
+        {slides.length > 0 && (
+          <MarketingBanner
+            slides={slides}
+            showDelay={0}
+            countdownTo="2026-12-01T00:00:00.000Z"
+          />
+        )}
         <BlockRenderer
           blocks={homePage.blocks}
           products={products}

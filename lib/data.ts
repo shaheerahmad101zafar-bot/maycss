@@ -216,11 +216,12 @@ export async function getCategories(): Promise<Category[]> {
   return [...filtered].sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
 }
 
-/** Extra public slugs that resolve to an existing category slug. */
 const CATEGORY_SLUG_ALIASES: Record<string, string> = {
-  "women-clothing": "women",
-  "women_clothing": "women",
-  clothing: "women",
+  "women-clothing": "womens-clothing",
+  women: "womens-clothing",
+  clothing: "womens-clothing",
+  dresses: "womens-dresses",
+  jeans: "womens-jeans-denim",
 };
 
 export async function getCategoryBySlug(

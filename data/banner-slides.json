@@ -1,26 +1,29 @@
 [
   {
-    "id": "summer-sale",
-    "eyebrow": "Limited Edition",
-    "title": "The Summer Luxe Collection",
-    "subtitle": "Effortless silhouettes in the season's most coveted fabrics — complimentary shipping on orders over $75.",
-    "ctaLabel": "Discover Now",
-    "ctaHref": "#featured"
+    "id": "bf-main",
+    "eyebrow": "Black Friday Sale",
+    "title": "Black Friday Starts Now",
+    "subtitle": "Limited-time savings on women's clothing, dresses, and denim — curated brands, high-quality edits.",
+    "ctaLabel": "Shop Black Friday",
+    "ctaHref": "/sale",
+    "image": "/uploads/cms/mrkwp1c3-69538bb97150baf8.webp"
   },
   {
-    "id": "autumn-preview",
-    "eyebrow": "New Arrivals",
-    "title": "The Autumn Preview Has Arrived",
-    "subtitle": "Investment pieces and refined layers, curated for wardrobes that transcend the season.",
-    "ctaLabel": "Shop New In",
-    "ctaHref": "/new"
+    "id": "bf-dresses",
+    "eyebrow": "Women's Dresses",
+    "title": "Formal to Everyday Dressing",
+    "subtitle": "Wedding guest, cocktail, work, and casual dresses — shop the MAYCSS dress edit.",
+    "ctaLabel": "Shop Dresses",
+    "ctaHref": "/category/womens-dresses",
+    "image": "/uploads/cms/mrjjx6ir-cc868794b5f4e226.webp"
   },
   {
-    "id": "star-rewards",
-    "eyebrow": "Members Only",
-    "title": "Private Access: Early Drops",
-    "subtitle": "Join our inner circle for first looks at new arrivals and exclusive styling appointments.",
-    "ctaLabel": "Join the List",
-    "ctaHref": "/#newsletter"
+    "id": "bf-denim",
+    "eyebrow": "Jeans & Denim",
+    "title": "The Denim Guide",
+    "subtitle": "Wide-leg, straight, barrel, flare & bootcut, and skinny — find your fit.",
+    "ctaLabel": "Shop Denim",
+    "ctaHref": "/category/womens-jeans-denim",
+    "image": "/uploads/cms/mrjjwq5w-36fe848ffd416220.webp"
   }
 ]

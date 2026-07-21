@@ -45,8 +45,10 @@ export type Page = {
   title: string;
   eyebrow?: string;
   hero?: string;
-  /** Full-width banner image shown above the page header. */
+  /** Full-width banner image shown behind the page hero header. */
   bannerImage?: string;
+  /** When false, hide the top hero/title banner strip on the storefront. */
+  showHeroBanner?: boolean;
   /** Route template — contact (map/form), shop (category index), sale (sale grid). */
   pageKind?: PageKind;
   /** Google Maps iframe embed HTML — used when pageKind is contact. */
@@ -115,6 +117,7 @@ function normalizePage(raw: Partial<Page>): Page {
     hero: raw.hero,
     bannerImage:
       typeof raw.bannerImage === "string" ? raw.bannerImage : undefined,
+    showHeroBanner: raw.showHeroBanner !== false,
     pageKind,
     mapEmbed: typeof raw.mapEmbed === "string" ? raw.mapEmbed : undefined,
     contactDetails: normalizeContactDetails(raw.contactDetails),

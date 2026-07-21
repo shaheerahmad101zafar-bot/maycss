@@ -21,7 +21,9 @@ export default function CmsPageView({
   categories,
   children,
 }: Props) {
-  const showHeader = Boolean(page.eyebrow || page.hero || page.title);
+  const showHeader =
+    page.showHeroBanner !== false &&
+    Boolean(page.eyebrow || page.hero || page.title);
   const hasHeroBg = Boolean(page.bannerImage?.trim());
   const contactAside =
     page.pageKind === "contact" && page.contactDetails ? (

@@ -1289,6 +1289,7 @@ export async function upsertPageAction(
   const footerColumn = String(formData.get("footerColumn") ?? "company").trim() as Page["footerColumn"];
   const published = formData.get("published") === "on";
   const bannerImage = String(formData.get("bannerImage") ?? "").trim();
+  const showHeroBanner = formData.get("showHeroBanner") === "on";
   const pageKind = String(formData.get("pageKind") ?? "standard").trim() as Page["pageKind"];
   const mapEmbed = String(formData.get("mapEmbed") ?? "").trim();
   const contactDetails = parseContactDetailsJson(
@@ -1337,6 +1338,7 @@ export async function upsertPageAction(
     eyebrow: eyebrow || undefined,
     hero: hero || undefined,
     bannerImage: bannerImage || undefined,
+    showHeroBanner,
     pageKind: pageKind || "standard",
     mapEmbed: mapEmbed || undefined,
     contactDetails:

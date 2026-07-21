@@ -38,6 +38,9 @@ export default function PageForm({ page, templates }: Props) {
   const [ogImage, setOgImage] = useState(page?.seo?.ogImage ?? "");
   const [keywords, setKeywords] = useState<string[]>(page?.seo?.keywords ?? []);
   const [bannerImage, setBannerImage] = useState(page?.bannerImage ?? "");
+  const [showHeroBanner, setShowHeroBanner] = useState(
+    page?.showHeroBanner !== false,
+  );
   const [pageKind, setPageKind] = useState<PageKind>(page?.pageKind ?? "standard");
   const [mapEmbed, setMapEmbed] = useState(page?.mapEmbed ?? "");
   const [contactDetails, setContactDetails] = useState<ContactDetails>(
@@ -137,6 +140,21 @@ export default function PageForm({ page, templates }: Props) {
             <p className="mc-admin__hint">
               This text sits on the hero area (title + paragraph). Add a
               background image below so it looks like a banner.
+            </p>
+          </div>
+          <div className="mc-field mc-field--full">
+            <label className="mc-check">
+              <input
+                type="checkbox"
+                name="showHeroBanner"
+                checked={showHeroBanner}
+                onChange={(e) => setShowHeroBanner(e.target.checked)}
+              />{" "}
+              Show hero banner at top of page
+            </label>
+            <p className="mc-admin__hint">
+              Turn off to hide the title / photo banner strip (Sale, Shop,
+              About, Contact often look cleaner without it).
             </p>
           </div>
           <div className="mc-field mc-field--full">

@@ -22,10 +22,13 @@ export default function CategoryGridView({
 
   let list = categories.filter((c) => !c.parentId);
   if (block.categoryIds && block.categoryIds.length > 0) {
-    const set = new Set(block.categoryIds);
-    list = list.filter((c) => set.has(c.id));
+    const byId = new Map(categories.map((c) => [c.id, c]));
+    list = block.categoryIds
+      .map((id) => byId.get(id))
+      .filter((c): c is Category => Boolean(c));
+  } else {
+    list = list.sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
   }
-  list = list.sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
   const limit = block.limit ?? 5;
   const items = list.slice(0, limit);
   if (items.length === 0) return null;

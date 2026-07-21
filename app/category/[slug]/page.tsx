@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import CategoryPage from "@/components/products/CategoryPage";
+import CategoryPromoBanner from "@/components/products/CategoryPromoBanner";
 import {
   getCategoryBySlug,
   getProductsByCategoryId,
@@ -28,8 +29,21 @@ export default async function CategoryRoute({ params }: Props) {
     getSubcategories(category.id),
   ]);
 
+  const showHeroBanner =
+    !category.parentId ||
+    category.slug === "womens-clothing" ||
+    category.slug === "womens-dresses" ||
+    category.slug === "womens-jeans-denim";
+
   return (
     <>
+      {showHeroBanner && (
+        <CategoryPromoBanner
+          categoryName={category.name}
+          categorySlug={category.slug}
+        />
+      )}
+
       <nav className="mc-crumbs mc-container" aria-label="Breadcrumb">
         <Link href="/">Home</Link>
         <span aria-hidden> / </span>
@@ -39,7 +53,7 @@ export default async function CategoryRoute({ params }: Props) {
       {subs.length > 0 && (
         <section className="mc-section mc-cat-index">
           <div className="mc-container">
-            <p className="mc-category__eyebrow">Explore</p>
+            <p className="mc-category__eyebrow">Shop by style</p>
             <h1 className="mc-category__title">{category.name}</h1>
             {category.description && (
               <p className="mc-category__subtitle">{category.description}</p>
@@ -52,9 +66,11 @@ export default async function CategoryRoute({ params }: Props) {
                   className="mc-cat-tile"
                 >
                   <div className="mc-cat-tile__media">
-                    {c.image && (
+                    {c.image ? (
                       /* eslint-disable-next-line @next/next/no-img-element */
-                      <img src={c.image} alt="" loading="lazy" />
+                      <img src={c.image} alt={c.name} loading="lazy" />
+                    ) : (
+                      <span className="mc-cat-tile__fallback" aria-hidden />
                     )}
                   </div>
                   <div className="mc-cat-tile__body">

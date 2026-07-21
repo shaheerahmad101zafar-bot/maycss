@@ -47,7 +47,7 @@
         "Shop MayCSS Online Store"
       ]
     },
-    "image": "https://slimages.macysassets.com/is/image/MCY/products/3/optimized/37913773_fpx.tif?op_sharpen=1&wid=1200&fmt=jpeg"
+    "image": "https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=1200&q=80"
   },
   {
     "id": "cat_womens_dresses",
@@ -97,7 +97,7 @@
         "Shop MayCSS Online Store"
       ]
     },
-    "image": "https://slimages.macysassets.com/is/image/MCY/products/4/optimized/38194204_fpx.tif?op_sharpen=1&wid=1200&fmt=jpeg"
+    "image": "https://images.unsplash.com/photo-1496747611176-843222e1e57c?auto=format&fit=crop&w=1200&q=80"
   },
   {
     "id": "cat_formal",
@@ -292,7 +292,8 @@
         "Black Friday",
         "Shop MayCSS Online Store"
       ]
-    }
+    },
+    "image": "https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?auto=format&fit=crop&w=900&q=80"
   },
   {
     "id": "cat_casual",
@@ -438,7 +439,7 @@
         "Shop MayCSS Online Store"
       ]
     },
-    "image": "https://slimages.macysassets.com/is/image/MCY/products/3/optimized/37642313_fpx.tif?op_sharpen=1&wid=1200&fmt=jpeg"
+    "image": "https://images.unsplash.com/photo-1541099649105-f69ad21f3246?auto=format&fit=crop&w=1200&q=80"
   },
   {
     "id": "cat_jeans_wide_leg",
@@ -486,7 +487,8 @@
         "Black Friday",
         "Shop MayCSS Online Store"
       ]
-    }
+    },
+    "image": "https://slimages.macysassets.com/is/image/MCY/products/2/optimized/37431202_fpx.tif?op_sharpen=1&wid=1200&fmt=jpeg"
   },
   {
     "id": "cat_jeans_straight",
@@ -533,7 +535,8 @@
         "Black Friday",
         "Shop MayCSS Online Store"
       ]
-    }
+    },
+    "image": "https://slimages.macysassets.com/is/image/MCY/products/8/optimized/38002698_fpx.tif?op_sharpen=1&wid=1200&fmt=jpeg"
   },
   {
     "id": "cat_jeans_barrel",
@@ -581,7 +584,8 @@
         "Black Friday",
         "Shop MayCSS Online Store"
       ]
-    }
+    },
+    "image": "https://slimages.macysassets.com/is/image/MCY/products/3/optimized/36224443_fpx.tif?op_sharpen=1&wid=1200&fmt=jpeg"
   },
   {
     "id": "cat_jeans_flare_bootcut",
@@ -630,7 +634,8 @@
         "Black Friday",
         "Shop MayCSS Online Store"
       ]
-    }
+    },
+    "image": "https://images.unsplash.com/photo-1582418702059-97febea5001f?auto=format&fit=crop&w=900&q=80"
   },
   {
     "id": "cat_jeans_skinny",
@@ -677,6 +682,7 @@
         "Black Friday",
         "Shop MayCSS Online Store"
       ]
-    }
+    },
+    "image": "https://slimages.macysassets.com/is/image/MCY/products/3/optimized/38022363_fpx.tif?op_sharpen=1&wid=1200&fmt=jpeg"
   }
 ]

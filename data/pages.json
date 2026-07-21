@@ -579,7 +579,7 @@
         },
         "eyebrow": "Browse",
         "heading": "Shop by Category",
-        "subheading": "Women's Clothing, Women's Dresses, and Women's Jeans & Denim — organised the way you shop.",
+        "subheading": "Shop what we carry now — Women's Clothing, Women's Dresses, and Women's Jeans & Denim.",
         "limit": 3,
         "categoryIds": [
           "cat_womens_clothing",
@@ -601,7 +601,7 @@
         "body": "At Shop MayCSS Online Store, we partner with makers who share our values — fair wages, responsible sourcing, and techniques passed down through generations. Every MayCSS edit is chosen for quality, provenance, and the kind of quiet luxury that never needs to announce itself. From sculptural outerwear to refined finishing pieces, our collection is built for wardrobes that last beyond a single season. Browse new arrivals, discover heritage houses, and find investment clothing designed to elevate everyday dressing with intention and ease.",
         "ctaLabel": "Read our story",
         "ctaHref": "/about",
-        "image": "/uploads/cms/mrjjvu9f-a7927dcf34fe5e25.webp",
+        "image": "https://images.unsplash.com/photo-1469334031218-e382a71b716b?auto=format&fit=crop&w=1600&q=80",
         "imageAlt": "Editorial fashion photography"
       },
       {

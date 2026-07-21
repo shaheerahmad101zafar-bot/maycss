@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import CategoryPage from "@/components/products/CategoryPage";
+import CategoryPromoBanner from "@/components/products/CategoryPromoBanner";
 import {
   getCategoryById,
   getCategoryBySlug,
@@ -25,7 +26,6 @@ export default async function SubcategoryRoute({ params }: Props) {
     getCategoryBySlug(subslug),
   ]);
   if (!parent || !sub) notFound();
-  // Ensure the sub actually descends from the parent.
   if (sub.parentId !== parent.id) {
     const parentOfSub = sub.parentId
       ? await getCategoryById(sub.parentId)
@@ -37,6 +37,11 @@ export default async function SubcategoryRoute({ params }: Props) {
 
   return (
     <>
+      <CategoryPromoBanner
+        categoryName={sub.name}
+        categorySlug={parent.slug}
+      />
+
       <nav className="mc-crumbs mc-container" aria-label="Breadcrumb">
         <Link href="/">Home</Link>
         <span aria-hidden> / </span>

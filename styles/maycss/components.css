@@ -383,10 +383,10 @@
 
 /* ── Padding sizes → vertical spacing ── */
 .mc-block-wrap.is-pad-none { padding-block: 0; }
-.mc-block-wrap.is-pad-sm { padding-block: 12px; }
-.mc-block-wrap.is-pad-md { padding-block: 32px; }
-.mc-block-wrap.is-pad-lg { padding-block: 56px; }
-.mc-block-wrap.is-pad-xl { padding-block: 88px; }
+.mc-block-wrap.is-pad-sm { padding-block: 8px; }
+.mc-block-wrap.is-pad-md { padding-block: 20px; }
+.mc-block-wrap.is-pad-lg { padding-block: 36px; }
+.mc-block-wrap.is-pad-xl { padding-block: 56px; }
 
 /* New block types */
 .mc-block--banner {

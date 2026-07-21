@@ -26,7 +26,16 @@ export default async function Home() {
     getBannerSlides(),
     getCategories(),
   ]);
-  const listingProducts = products.slice(0, 12);
+  // Prefer New Arrivals for grids so CMS filterTag=new has enough stock.
+  const newArrivals = products.filter((p) => p.isNew).slice(0, 16);
+  const fallback = products.slice(0, 12);
+  const seen = new Set<string>();
+  const listingProducts = [...newArrivals, ...fallback].filter((p) => {
+    const id = String(p.id);
+    if (seen.has(id)) return false;
+    seen.add(id);
+    return true;
+  }).slice(0, 24);
 
   if (homePage && homePage.blocks.length > 0) {
     const jsonLd = PageFactory.toJsonLd(homePage);

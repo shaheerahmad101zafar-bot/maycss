@@ -50,23 +50,40 @@ export default function CategoryGridView({
           </header>
         )}
         <div className="mc-cat-showcase__grid">
-          {items.map((cat) => (
-            <Link
-              key={cat.id}
-              href={`/category/${cat.slug}`}
-              className="mc-cat-showcase__tile"
-            >
-              <span className="mc-cat-showcase__media">
-                {cat.image ? (
-                  /* eslint-disable-next-line @next/next/no-img-element */
-                  <img src={cat.image} alt="" loading="lazy" />
-                ) : (
-                  <span className="mc-cat-showcase__fallback" aria-hidden />
+          {items.map((cat) => {
+            const subs = categories
+              .filter((c) => c.parentId === cat.id)
+              .sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+            return (
+              <div key={cat.id} className="mc-cat-showcase__card">
+                <Link
+                  href={`/category/${cat.slug}`}
+                  className="mc-cat-showcase__tile"
+                >
+                  <span className="mc-cat-showcase__media">
+                    {cat.image ? (
+                      /* eslint-disable-next-line @next/next/no-img-element */
+                      <img src={cat.image} alt="" loading="lazy" />
+                    ) : (
+                      <span className="mc-cat-showcase__fallback" aria-hidden />
+                    )}
+                  </span>
+                  <span className="mc-cat-showcase__label">{cat.name}</span>
+                </Link>
+                {subs.length > 0 && (
+                  <ul className="mc-cat-showcase__subs">
+                    {subs.map((s) => (
+                      <li key={s.id}>
+                        <Link href={`/category/${cat.slug}/${s.slug}`}>
+                          {s.name}
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
                 )}
-              </span>
-              <span className="mc-cat-showcase__label">{cat.name}</span>
-            </Link>
-          ))}
+              </div>
+            );
+          })}
         </div>
       </div>
     </section>

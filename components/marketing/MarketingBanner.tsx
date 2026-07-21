@@ -33,7 +33,9 @@ export default function MarketingBanner({
   slideInterval = 5000,
   countdownTo,
 }: MarketingBannerProps) {
-  const [visible, setVisible] = useState(false);
+  // SSR + first paint must show the hero when there is no delay — otherwise the
+  // homepage flashes text/products first and looks like the old order on live.
+  const [visible, setVisible] = useState(() => showDelay <= 0);
   const [active, setActive] = useState(0);
   const [paused, setPaused] = useState(false);
 
@@ -47,8 +49,12 @@ export default function MarketingBanner({
 
   const [timeLeft, setTimeLeft] = useState<TimeLeft>(() => getTimeLeft(targetTs));
 
-  // 5-second reveal delay
+  // Optional reveal delay (skip timer when already visible / delay is 0)
   useEffect(() => {
+    if (showDelay <= 0) {
+      setVisible(true);
+      return;
+    }
     const t = setTimeout(() => setVisible(true), showDelay);
     return () => clearTimeout(t);
   }, [showDelay]);

@@ -11,23 +11,6 @@ const nextConfig: NextConfig = {
   serverExternalPackages: ["@auth/core"],
 
   /**
-   * Keep CMS/catalog JSON in serverless traces so local fallback works when
-   * Vercel Blob is suspended or unreachable.
-   */
-  outputFileTracingIncludes: {
-    "/*": [
-      "./data/pages.json",
-      "./data/products.json",
-      "./data/products-listing.json",
-      "./data/categories.json",
-      "./data/banner-slides.json",
-      "./data/footer-pages.json",
-      "./data/menus.json",
-      "./data/app-config.json",
-    ],
-  },
-
-  /**
    * Allow-list for remote images fed into `<Image>` / `<img>`. Scrapers
    * pull hero shots from Macy's, Unsplash, etc. — add any new host you
    * import from.
@@ -70,6 +53,16 @@ const nextConfig: NextConfig = {
           {
             key: "Permissions-Policy",
             value: "camera=(), microphone=(), geolocation=()",
+          },
+        ],
+      },
+      // Hashed build assets — long cache; HTML stays must-revalidate via platform.
+      {
+        source: "/_next/static/:path*",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=31536000, immutable",
           },
         ],
       },

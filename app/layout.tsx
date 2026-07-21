@@ -14,7 +14,9 @@ import CartDrawerLoader from "@/components/cart/CartDrawerLoader";
 import SessionProviderWrapper from "@/components/auth/SessionProviderWrapper";
 import ChatWidgetLoader from "@/components/public/ChatWidgetLoader";
 import Analytics from "@/components/Analytics";
+import ChunkLoadRecovery from "@/components/ChunkLoadRecovery";
 import { getAppConfig } from "@/lib/app-config";
+import { getSiteOrigin } from "@/lib/site-url";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -33,6 +35,7 @@ const playfair = Playfair_Display({
 export async function generateMetadata(): Promise<Metadata> {
   const cfg = await getAppConfig();
   return {
+    metadataBase: new URL(getSiteOrigin()),
     title: `${cfg.siteName} — ${cfg.tagline}`,
     description: cfg.tagline,
   };
@@ -48,6 +51,7 @@ export default async function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} ${playfair.variable}`}
     >
       <body className="mc-body">
+        <ChunkLoadRecovery />
         <SessionProviderWrapper>
           <CartProvider>
             <PromoBar />

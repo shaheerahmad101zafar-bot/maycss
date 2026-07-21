@@ -5,14 +5,14 @@
 
 /* ── Refined tokens ── */
 :root {
-  --mc-cream: #f8f6f3;
-  --mc-ivory: #fdfcfa;
-  --mc-black: #0f0f0f;
-  --mc-accent: #0f0f0f;
-  --mc-accent-hover: #3d3d3d;
+  --mc-cream: #ffffff;
+  --mc-ivory: #ffffff;
+  --mc-black: #111111;
+  --mc-accent: #e21a2c;
+  --mc-accent-hover: #b8121f;
   --mc-gold: #b8956b;
   --mc-gold-dark: #96784f;
-  --mc-border: rgba(15, 15, 15, 0.08);
+  --mc-border: rgba(17, 17, 17, 0.1);
   --mc-space-section: clamp(64px, 8vw, 112px);
   --mc-space-block: clamp(32px, 4vw, 56px);
   --mc-container-max: 1280px;
@@ -23,10 +23,51 @@ html {
 }
 
 body {
-  background: var(--mc-ivory);
+  background: #ffffff;
   color: var(--mc-black);
   font-size: 1rem;
   line-height: 1.6;
+}
+
+/* Black Friday promo strip (Macy's-inspired) */
+.mc-promo-bar {
+  background: var(--mc-bf-bar, #111111);
+  color: #fff;
+  font-size: 0.8125rem;
+  letter-spacing: 0.04em;
+}
+.mc-promo-bar__inner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 10px 16px;
+  flex-wrap: wrap;
+  text-align: center;
+}
+.mc-promo-bar__text {
+  margin: 0;
+  color: #fff;
+}
+.mc-promo-bar__text strong {
+  color: #ff4d5a;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+.mc-promo-bar__cta {
+  color: #fff;
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.mc-promo-bar__cta:hover {
+  color: #ff4d5a;
+}
+
+.mc-navbar__links a[href="/sale"],
+.mc-navbar__link[href="/sale"] {
+  color: var(--mc-red) !important;
+  font-weight: 700;
 }
 
 .mc-container {

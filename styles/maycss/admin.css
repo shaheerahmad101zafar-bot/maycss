@@ -837,12 +837,16 @@ a.mc-admin__stat:hover {
 .mc-admin__table--orders { min-width: 1080px; }
 
 /* ---------- Tabs (Orders list filter) ---------- */
-.mc-admin__tabs {
-  display: flex;
-  gap: 8px;
-  border-bottom: 1px solid var(--mc-gray-100);
-  margin-bottom: 4px;
-  flex-wrap: wrap;
+.mc-admin__th-check {
+  width: 64px;
+  white-space: nowrap;
+}
+.mc-admin__th-check-label {
+  margin-left: 6px;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--mc-gray-600);
 }
 .mc-admin__tabs--secondary {
   margin-bottom: 16px;

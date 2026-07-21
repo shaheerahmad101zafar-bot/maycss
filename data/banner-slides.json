@@ -3,27 +3,27 @@
     "id": "bf-main",
     "eyebrow": "Black Friday Sale",
     "title": "Black Friday Starts Now",
-    "subtitle": "Limited-time savings on women's clothing, dresses, and denim — curated brands, high-quality edits.",
+    "subtitle": "Limited-time savings on women's clothing, dresses for women, and jeans and denim — curated MAYCSS fashion products.",
     "ctaLabel": "Shop Black Friday",
     "ctaHref": "/sale",
-    "image": "/uploads/cms/mrkwp1c3-69538bb97150baf8.webp"
+    "image": "https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=2000&q=80"
   },
   {
     "id": "bf-dresses",
     "eyebrow": "Women's Dresses",
-    "title": "Formal to Everyday Dressing",
-    "subtitle": "Wedding guest, cocktail, work, and casual dresses — shop the MAYCSS dress edit.",
+    "title": "Formal, Party & Wedding Guest",
+    "subtitle": "Cocktail, casual, work, and evening looks — shop dresses for women with Black Friday deals.",
     "ctaLabel": "Shop Dresses",
     "ctaHref": "/category/womens-dresses",
-    "image": "/uploads/cms/mrjjx6ir-cc868794b5f4e226.webp"
+    "image": "https://images.unsplash.com/photo-1496747611176-843222e1e57c?auto=format&fit=crop&w=2000&q=80"
   },
   {
     "id": "bf-denim",
     "eyebrow": "Jeans & Denim",
     "title": "The Denim Guide",
-    "subtitle": "Wide-leg, straight, barrel, flare & bootcut, and skinny — find your fit.",
+    "subtitle": "Wide-leg, straight leg jeans, barrel, flare & bootcut, skinny — find your fit.",
     "ctaLabel": "Shop Denim",
     "ctaHref": "/category/womens-jeans-denim",
-    "image": "/uploads/cms/mrjjwq5w-36fe848ffd416220.webp"
+    "image": "https://images.unsplash.com/photo-1541099649105-f69ad21f3246?auto=format&fit=crop&w=2000&q=80"
   }
 ]

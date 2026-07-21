@@ -434,14 +434,22 @@
     "showInFooter": false,
     "lastUpdated": "2026-07-19",
     "seo": {
-      "metaTitle": "Shop MayCSS Online Store | Luxury Fashion",
-      "metaDescription": "Shop MayCSS Online Store for curated luxury fashion. Discover premium apparel, timeless design, free shipping over $75, and authenticity you can trust.",
-      "ogImage": "/uploads/cms/mrjo0pkj-b303b84ea3634104.webp",
+      "metaTitle": "Shop MAYCSS Online Store | Black Friday Fashion",
+      "metaDescription": "Shop MAYCSS Online Store for women's clothing, dresses for women, jeans and denim. Wholesale clothing energy, fashion products, Black Friday friday sale deals.",
+      "ogImage": "https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=1200&q=80",
       "keywords": [
+        "MAYCSS",
         "Shop MayCSS Online Store",
-        "luxury fashion",
-        "curated clothing",
-        "designer fashion online"
+        "wholesale clothing",
+        "fashion products",
+        "dresses for women",
+        "jeans and denim",
+        "womens clothes sale",
+        "friday sale",
+        "Black Friday",
+        "wedding guest",
+        "party",
+        "cheap online clothing"
       ]
     },
     "blocks": [
@@ -456,14 +464,14 @@
         },
         "eyebrow": "Black Friday Sale",
         "heading": "MayCSS Black Friday Edit",
-        "subheading": "Shop women's clothing, dresses, and denim — curated brands with limited-time savings.",
-        "backgroundImage": "/uploads/cms/mrkwp1c3-69538bb97150baf8.webp",
+        "subheading": "Shop women's clothing, dresses for women, and jeans and denim — curated fashion products with limited-time savings.",
+        "backgroundImage": "https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=2000&q=80",
         "imageFocus": {
           "x": 50,
           "y": 28,
           "fit": "cover"
         },
-        "overlayStrength": 48,
+        "overlayStrength": 52,
         "ctaLabel": "Shop Black Friday",
         "ctaHref": "/sale",
         "secondaryCtaLabel": "Women's Clothing",

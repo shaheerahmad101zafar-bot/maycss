@@ -8,6 +8,7 @@ import "@/styles/maycss/responsive.css";
 import "@/styles/maycss/storefront.css";
 import { CartProvider } from "@/context/CartContext";
 import Navbar from "@/components/layout/Navbar";
+import PromoBar from "@/components/layout/PromoBar";
 import Footer from "@/components/layout/Footer";
 import CartDrawerLoader from "@/components/cart/CartDrawerLoader";
 import SessionProviderWrapper from "@/components/auth/SessionProviderWrapper";
@@ -49,6 +50,7 @@ export default async function RootLayout({
       <body className="mc-body">
         <SessionProviderWrapper>
           <CartProvider>
+            <PromoBar />
             <Navbar />
             <main className="mc-main">{children}</main>
             <Footer />

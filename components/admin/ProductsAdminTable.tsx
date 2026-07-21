@@ -57,6 +57,7 @@ export default function ProductsAdminTable({
         <div className="mc-admin__bulkbar" role="region" aria-label="Bulk actions">
           <p>
             <strong>{selected.length}</strong> selected
+            {allSelected ? " (all in this list)" : ""}
           </p>
           <div className="mc-admin__bulkbar-actions">
             {!confirmBulk ? (
@@ -115,9 +116,11 @@ export default function ProductsAdminTable({
                 type="checkbox"
                 checked={allSelected}
                 onChange={toggleAll}
-                aria-label="Select all products"
+                aria-label="Select all products in this list"
+                title="Select all"
                 disabled={products.length === 0 || pending}
               />
+              <span className="mc-admin__th-check-label">All</span>
             </th>
             <th scope="col">Product</th>
             <th scope="col">Category</th>

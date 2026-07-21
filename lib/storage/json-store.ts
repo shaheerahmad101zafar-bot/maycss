@@ -49,7 +49,18 @@ async function readBlobJson<T>(
     });
     if (!result || result.statusCode !== 200 || !result.stream) return null;
     const text = await new Response(result.stream).text();
-    return JSON.parse(text) as T;
+    if (
+      !text ||
+      /^\s*Your store is blocked/i.test(text) ||
+      /store has been suspended/i.test(text)
+    ) {
+      return null;
+    }
+    try {
+      return JSON.parse(text) as T;
+    } catch {
+      return null;
+    }
   } catch {
     return null;
   }

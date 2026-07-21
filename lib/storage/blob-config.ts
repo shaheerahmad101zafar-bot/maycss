@@ -22,6 +22,14 @@ export function getBlobAccess(): BlobAccessType {
 }
 
 export function usesBlobStorage(): boolean {
+  // Temporary escape hatch when the Blob store is suspended / blocked —
+  // storefront then reads bundled data/*.json from the deployment.
+  if (
+    process.env.BLOB_DISABLED === "1" ||
+    process.env.BLOB_FORCE_LOCAL === "1"
+  ) {
+    return false;
+  }
   return Boolean(
     process.env.BLOB_READ_WRITE_TOKEN?.trim() ||
       process.env.BLOB_STORE_ID?.trim(),

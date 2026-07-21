@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import CmsPageView from "@/components/cms/CmsPageView";
 import FeaturesStrip from "@/components/marketing/FeaturesStrip";
+import BlackFridayHero from "@/components/marketing/BlackFridayHero";
 import { PageFactory } from "@/lib/pages";
 import { getListingProducts } from "@/lib/data";
 import type { Metadata } from "next";
@@ -25,6 +26,7 @@ export default async function ContactPage() {
 
   return (
     <>
+      <BlackFridayHero />
       <CmsPageView page={page} products={products.slice(0, 8)} />
       <FeaturesStrip />
     </>

@@ -1,11 +1,11 @@
 import { notFound } from "next/navigation";
 import CmsPageView from "@/components/cms/CmsPageView";
-import MarketingBanner from "@/components/marketing/MarketingBanner";
+import BlackFridayHero from "@/components/marketing/BlackFridayHero";
 import CategoryPage, {
   paginateProducts,
 } from "@/components/products/CategoryPage";
 import { PageFactory } from "@/lib/pages";
-import { getBannerSlides, getSaleItems } from "@/lib/data";
+import { getSaleItems } from "@/lib/data";
 import type { Metadata } from "next";
 
 /** Sale page shows denser grids so shoppers can browse the full markdown edit. */
@@ -28,10 +28,9 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function SalePage({ searchParams }: Props) {
   const { page: pageRaw } = await searchParams;
   const pageNum = Math.max(1, Number(pageRaw) || 1);
-  const [page, saleProducts, slides] = await Promise.all([
+  const [page, saleProducts] = await Promise.all([
     PageFactory.getBySlug("sale"),
     getSaleItems(),
-    getBannerSlides(),
   ]);
 
   if (!page) notFound();
@@ -50,14 +49,7 @@ export default async function SalePage({ searchParams }: Props) {
 
   return (
     <>
-      {slides.length > 0 && (
-        <MarketingBanner
-          slides={slides}
-          showDelay={0}
-          slideInterval={4500}
-          countdownTo="2026-12-01T00:00:00.000Z"
-        />
-      )}
+      <BlackFridayHero />
       <CmsPageView page={cmsPage} products={[]} />
       <CategoryPage
         eyebrow="Black Friday"

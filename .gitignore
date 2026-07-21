@@ -37,3 +37,8 @@ yarn-error.log*
 .vercel
 
 # typescript
+*.tsbuildinfo
+next-env.d.ts
+
+# regenerated per-product blob mirrors (products.json is source of truth)
+/data/products/by-id/

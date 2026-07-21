@@ -57,19 +57,19 @@ export async function getProductById(
   const deleted = await readDeletedIds(productDeletedIdsFile);
   if (deleted.includes(String(id))) return undefined;
 
-  // Prefer the per-id record. Overwriting data/products.json can leave the Blob
-  // CDN serving a pre-import snapshot for up to ~60s; a brand-new by-id path
-  // has no stale cache entry, so "Review draft" stops 404ing.
-  const fromRecord = await readJson<Product | null>(
-    productRecordPath(id),
-    null,
-  );
-  if (fromRecord && String(fromRecord.id) === String(id)) {
-    return fromRecord;
-  }
+  const [fromRecord, list] = await Promise.all([
+    readJson<Product | null>(productRecordPath(id), null),
+    getProducts(),
+  ]);
+  const fromList = list.find((p) => String(p.id) === String(id));
 
-  const list = await getProducts();
-  return list.find((p) => String(p.id) === String(id));
+  // products.json is the catalog source of truth when the id is present —
+  // prevents stale by-id records (old product at same id) from winning on
+  // the PDP after a bulk catalog sync. Per-id records still cover the brief
+  // CDN window after import when the new id is not in the list yet.
+  if (fromList) return fromList;
+  if (fromRecord && String(fromRecord.id) === String(id)) return fromRecord;
+  return undefined;
 }
 
 export async function getRelatedProducts(

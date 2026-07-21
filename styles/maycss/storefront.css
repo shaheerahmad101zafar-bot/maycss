@@ -564,6 +564,96 @@ body {
     display: none;
   }
 }
+
+/* Home — every category as its own Black Friday banner */
+.mc-home-cat-banners {
+  padding-bottom: clamp(24px, 4vw, 40px);
+}
+.mc-home-cat-banners__intro {
+  text-align: center;
+  padding: clamp(28px, 4vw, 40px) 0 clamp(8px, 2vw, 16px);
+  max-width: 40rem;
+  margin-inline: auto;
+}
+.mc-home-cat-banners__intro .mc-section-title {
+  margin-bottom: 10px;
+}
+.mc-home-cat-banners__group {
+  margin-bottom: clamp(20px, 3vw, 32px);
+}
+.mc-home-cat-banners__subs {
+  padding-top: 16px;
+  padding-bottom: 8px;
+}
+.mc-home-cat-banners__subs-label {
+  margin: 0 0 12px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--mc-muted, #666);
+}
+.mc-home-cat-banners__subgrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+.mc-home-cat-banners__subcard {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  min-height: 180px;
+  padding: 16px;
+  border-radius: 12px;
+  overflow: hidden;
+  background-size: cover;
+  background-position: center;
+  text-decoration: none;
+  color: #fff;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+.mc-home-cat-banners__subcard:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.18);
+}
+.mc-home-cat-banners__sub-eyebrow {
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #ffb4ba;
+  margin-bottom: 6px;
+}
+.mc-home-cat-banners__sub-title {
+  font-family: var(--mc-font-serif, Georgia, serif);
+  font-size: 1.2rem;
+  font-weight: 600;
+  line-height: 1.2;
+}
+.mc-home-cat-banners__sub-desc {
+  margin-top: 6px;
+  font-size: 0.78rem;
+  line-height: 1.35;
+  color: rgba(255, 255, 255, 0.85);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+@media (max-width: 900px) {
+  .mc-home-cat-banners__subgrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 520px) {
+  .mc-home-cat-banners__subgrid {
+    grid-template-columns: 1fr;
+  }
+  .mc-home-cat-banners__subcard {
+    min-height: 150px;
+  }
+}
 @media (max-width: 900px) {
   .mc-navbar__dept-top {
     grid-template-columns: 1fr auto;

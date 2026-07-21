@@ -1,4 +1,5 @@
 import MarketingBanner from "@/components/marketing/MarketingBanner";
+import HomeCategoryBanners from "@/components/marketing/HomeCategoryBanners";
 import FeaturesStrip from "@/components/marketing/FeaturesStrip";
 import EditorialSection from "@/components/marketing/EditorialSection";
 import ProductCard from "@/components/products/ProductCard";
@@ -26,36 +27,30 @@ export default async function Home() {
     getBannerSlides(),
     getCategories(),
   ]);
-  // Prefer New Arrivals for grids so CMS filterTag=new has enough stock.
   const newArrivals = products.filter((p) => p.isNew).slice(0, 16);
   const fallback = products.slice(0, 12);
   const seen = new Set<string>();
-  const listingProducts = [...newArrivals, ...fallback].filter((p) => {
-    const id = String(p.id);
-    if (seen.has(id)) return false;
-    seen.add(id);
-    return true;
-  }).slice(0, 24);
+  const listingProducts = [...newArrivals, ...fallback]
+    .filter((p) => {
+      const id = String(p.id);
+      if (seen.has(id)) return false;
+      seen.add(id);
+      return true;
+    })
+    .slice(0, 24);
 
   if (homePage && homePage.blocks.length > 0) {
     const jsonLd = PageFactory.toJsonLd(homePage);
     const hasFeaturesBlock = homePage.blocks.some((b) => b.type === "features");
+    // Category banners render first — skip duplicate categorygrid block.
+    const blocks = homePage.blocks.filter((b) => b.type !== "categorygrid");
+
     return (
       <>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: jsonLd }}
         />
-        {homePage.bannerImage && (
-          <div
-            className="mc-page-banner mc-page-banner--home"
-            style={{ backgroundImage: `url(${homePage.bannerImage})` }}
-            role="img"
-            aria-label="Home banner"
-          >
-            <div className="mc-page-banner__overlay" />
-          </div>
-        )}
         {slides.length > 0 && (
           <MarketingBanner
             slides={slides}
@@ -63,8 +58,9 @@ export default async function Home() {
             countdownTo="2026-12-01T00:00:00.000Z"
           />
         )}
+        <HomeCategoryBanners categories={categories} />
         <BlockRenderer
-          blocks={homePage.blocks}
+          blocks={blocks}
           products={listingProducts}
           categories={categories}
         />
@@ -76,6 +72,7 @@ export default async function Home() {
   return (
     <>
       <MarketingBanner slides={slides} />
+      <HomeCategoryBanners categories={categories} />
       <FeaturesStrip />
 
       <section id="featured" className="mc-section">

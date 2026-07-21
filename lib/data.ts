@@ -1,5 +1,6 @@
 import "server-only";
 
+import { unstable_cache } from "next/cache";
 import type { BannerSlide, Category, Product } from "./utils";
 import {
   deleteStoreJson,
@@ -18,8 +19,12 @@ function productRecordPath(id: string | number): string {
   return `data/products/by-id/${String(id)}.json`;
 }
 
-async function readJson<T>(relativePath: string, fallback: T): Promise<T> {
-  return readStoreJson(relativePath, fallback);
+async function readJson<T>(
+  relativePath: string,
+  fallback: T,
+  bypassCache = false,
+): Promise<T> {
+  return readStoreJson(relativePath, fallback, { bypassCache });
 }
 
 async function writeJson(relativePath: string, data: unknown): Promise<void> {
@@ -37,11 +42,7 @@ async function writeDeletedIds(file: string, ids: string[]): Promise<void> {
   await writeJson(file, unique);
 }
 
-/* -------------------------------------------------------------------------- */
-/*  Products                                                                  */
-/* -------------------------------------------------------------------------- */
-
-export async function getProducts(): Promise<Product[]> {
+async function loadProductsRaw(): Promise<Product[]> {
   const [list, deleted] = await Promise.all([
     readJson<Product[]>(productsFile, []),
     readDeletedIds(productDeletedIdsFile),
@@ -51,32 +52,111 @@ export async function getProducts(): Promise<Product[]> {
   return list.filter((p) => !banned.has(String(p.id)));
 }
 
+const getProductsCached = unstable_cache(
+  loadProductsRaw,
+  ["catalog-products-v1"],
+  { revalidate: 60, tags: ["catalog-products"] },
+);
+
+const getCategoriesCached = unstable_cache(
+  async () => {
+    const [list, deleted] = await Promise.all([
+      readJson<Category[]>(categoriesFile, []),
+      readDeletedIds(categoryDeletedIdsFile),
+    ]);
+    const filtered =
+      deleted.length === 0
+        ? list
+        : list.filter((c) => !new Set(deleted).has(String(c.id)));
+    return [...filtered].sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+  },
+  ["catalog-categories-v1"],
+  { revalidate: 60, tags: ["catalog-categories"] },
+);
+
+/* -------------------------------------------------------------------------- */
+/*  Products                                                                  */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * @param opts.fresh — bypass Next/Blob caches (admin mutations).
+ */
+export async function getProducts(opts?: {
+  fresh?: boolean;
+}): Promise<Product[]> {
+  if (opts?.fresh) {
+    const [list, deleted] = await Promise.all([
+      readJson<Product[]>(productsFile, [], true),
+      readJson<unknown>(productDeletedIdsFile, [], true),
+    ]);
+    const banned = new Set(
+      Array.isArray(deleted) ? deleted.map((id) => String(id)) : [],
+    );
+    if (banned.size === 0) return list;
+    return list.filter((p) => !banned.has(String(p.id)));
+  }
+  return getProductsCached();
+}
+
+/** Listing-safe product fields only — shrinks RSC/HTML payloads. */
+export function toListingProduct(p: Product): Product {
+  return {
+    id: p.id,
+    name: p.name,
+    brand: p.brand,
+    image: p.image,
+    price: p.price,
+    originalPrice: p.originalPrice,
+    badge: p.badge,
+    isNew: p.isNew,
+    category: p.category,
+    categoryId: p.categoryId,
+    rating: p.rating,
+    reviews: p.reviews,
+    status: p.status,
+  };
+}
+
+const getListingProductsCached = unstable_cache(
+  async () => (await loadProductsRaw()).map(toListingProduct),
+  ["catalog-listing-products-v1"],
+  { revalidate: 60, tags: ["catalog-products"] },
+);
+
+/** Lean catalog for grids/search — cached without contentBlocks/SEO blobs. */
+export async function getListingProducts(opts?: {
+  fresh?: boolean;
+}): Promise<Product[]> {
+  if (opts?.fresh) {
+    return (await getProducts({ fresh: true })).map(toListingProduct);
+  }
+  return getListingProductsCached();
+}
+
 export async function getProductById(
   id: string | number,
 ): Promise<Product | undefined> {
   const deleted = await readDeletedIds(productDeletedIdsFile);
   if (deleted.includes(String(id))) return undefined;
 
-  const [fromRecord, list] = await Promise.all([
-    readJson<Product | null>(productRecordPath(id), null),
-    getProducts(),
-  ]);
-  const fromList = list.find((p) => String(p.id) === String(id));
+  // Prefer per-id record — avoids downloading the full multi-MB catalog on PDP.
+  const fromRecord = await readJson<Product | null>(
+    productRecordPath(id),
+    null,
+  );
+  if (fromRecord && String(fromRecord.id) === String(id)) {
+    return fromRecord;
+  }
 
-  // products.json is the catalog source of truth when the id is present —
-  // prevents stale by-id records (old product at same id) from winning on
-  // the PDP after a bulk catalog sync. Per-id records still cover the brief
-  // CDN window after import when the new id is not in the list yet.
-  if (fromList) return fromList;
-  if (fromRecord && String(fromRecord.id) === String(id)) return fromRecord;
-  return undefined;
+  const list = await getProducts();
+  return list.find((p) => String(p.id) === String(id));
 }
 
 export async function getRelatedProducts(
   product: Product,
   limit = 4,
 ): Promise<Product[]> {
-  const list = await getProducts();
+  const list = await getListingProducts();
   const others = list.filter((p) => p.id !== product.id);
   const scored = others
     .map((p) => {
@@ -91,12 +171,12 @@ export async function getRelatedProducts(
 }
 
 export async function getNewArrivals(): Promise<Product[]> {
-  const list = await getProducts();
+  const list = await getListingProducts();
   return list.filter((p) => p.isNew);
 }
 
 export async function getSaleItems(): Promise<Product[]> {
-  const list = await getProducts();
+  const list = await getListingProducts();
   return list.filter(
     (p) => typeof p.originalPrice === "number" && p.originalPrice > p.price,
   );
@@ -105,7 +185,7 @@ export async function getSaleItems(): Promise<Product[]> {
 export async function getBrands(): Promise<
   { brand: string; sample: Product; count: number }[]
 > {
-  const list = await getProducts();
+  const list = await getListingProducts();
   const map = new Map<string, { sample: Product; count: number }>();
   for (const p of list) {
     if (!p.brand) continue;
@@ -121,7 +201,7 @@ export async function getBrands(): Promise<
 }
 
 export async function getProductsByBrand(brand: string): Promise<Product[]> {
-  const list = await getProducts();
+  const list = await getListingProducts();
   return list.filter(
     (p) => p.brand && p.brand.toLowerCase() === brand.toLowerCase(),
   );
@@ -204,16 +284,24 @@ export function nextProductId(products: Product[]): number {
 /*  Categories                                                                */
 /* -------------------------------------------------------------------------- */
 
-export async function getCategories(): Promise<Category[]> {
-  const [list, deleted] = await Promise.all([
-    readJson<Category[]>(categoriesFile, []),
-    readDeletedIds(categoryDeletedIdsFile),
-  ]);
-  const filtered =
-    deleted.length === 0
-      ? list
-      : list.filter((c) => !new Set(deleted).has(String(c.id)));
-  return [...filtered].sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+export async function getCategories(opts?: {
+  fresh?: boolean;
+}): Promise<Category[]> {
+  if (opts?.fresh) {
+    const [list, deleted] = await Promise.all([
+      readJson<Category[]>(categoriesFile, [], true),
+      readJson<unknown>(categoryDeletedIdsFile, [], true),
+    ]);
+    const banned = new Set(
+      Array.isArray(deleted) ? deleted.map((id) => String(id)) : [],
+    );
+    const filtered =
+      banned.size === 0
+        ? list
+        : list.filter((c) => !banned.has(String(c.id)));
+    return [...filtered].sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+  }
+  return getCategoriesCached();
 }
 
 const CATEGORY_SLUG_ALIASES: Record<string, string> = {
@@ -254,7 +342,7 @@ export async function getProductsByCategoryId(
   categoryId: string,
 ): Promise<Product[]> {
   const [products, categories] = await Promise.all([
-    getProducts(),
+    getListingProducts(),
     getCategories(),
   ]);
   const descendantIds = new Set<string>([categoryId]);

@@ -27,8 +27,8 @@ export default async function AdminProductsPage({ searchParams }: Props) {
   noStore();
   const { filter, category, deleted, error } = await searchParams;
   const [all, categories] = await Promise.all([
-    getProducts(),
-    getCategories(),
+    getProducts({ fresh: true }),
+    getCategories({ fresh: true }),
   ]);
   const drafts = all.filter((p) => p.status === "draft");
   const published = all.filter((p) => p.status !== "draft");

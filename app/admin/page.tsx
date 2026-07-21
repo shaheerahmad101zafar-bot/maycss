@@ -8,7 +8,7 @@ export const metadata = { title: "Dashboard · Admin · MayCSS" };
 
 export default async function AdminDashboardPage() {
   const [products, orders, homePage] = await Promise.all([
-    getProducts(),
+    getProducts({ fresh: true }),
     getOrders(),
     PageFactory.getBySlug("home"),
   ]);

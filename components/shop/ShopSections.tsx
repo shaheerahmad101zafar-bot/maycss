@@ -1,11 +1,8 @@
 import Link from "next/link";
 import ProductCard from "@/components/products/ProductCard";
-import {
-  getProducts,
-  getSubcategories,
-  getTopLevelCategories,
-} from "@/lib/data";
+import { getSubcategories, getTopLevelCategories } from "@/lib/data";
 import type { Category, Product } from "@/lib/utils";
+import { STOREFRONT_PAGE_SIZE } from "@/components/products/CategoryPage";
 
 export default async function ShopCategoryIndex() {
   const topCats = await getTopLevelCategories();
@@ -39,7 +36,13 @@ export default async function ShopCategoryIndex() {
               >
                 {cat.image && (
                   /* eslint-disable-next-line @next/next/no-img-element */
-                  <img src={cat.image} alt="" loading="lazy" width={400} height={500} />
+                  <img
+                    src={cat.image}
+                    alt=""
+                    loading="lazy"
+                    width={400}
+                    height={500}
+                  />
                 )}
               </Link>
               <div className="mc-cat-tile__body">
@@ -68,12 +71,25 @@ export default async function ShopCategoryIndex() {
 }
 
 export async function ShopCatalogSection({
-  products: incoming,
+  products,
+  totalCount,
+  page = 1,
+  basePath = "/shop",
+  pageSize = STOREFRONT_PAGE_SIZE,
 }: {
-  products?: Product[];
-} = {}) {
-  const products = incoming ?? (await getProducts());
-  if (products.length === 0) return null;
+  /** Current page of products only. */
+  products: Product[];
+  totalCount: number;
+  page?: number;
+  basePath?: string;
+  pageSize?: number;
+}) {
+  if (totalCount === 0) return null;
+
+  const totalPages = Math.max(1, Math.ceil(totalCount / pageSize));
+  const safePage = Math.min(Math.max(1, page), totalPages);
+  const start = (safePage - 1) * pageSize;
+  const joiner = basePath.includes("?") ? "&" : "?";
 
   return (
     <section className="mc-section mc-category">
@@ -81,12 +97,44 @@ export async function ShopCatalogSection({
         <header className="mc-section-header">
           <p className="mc-section-subtitle">The Collection</p>
           <h2 className="mc-section-title">Every Piece</h2>
+          <p className="mc-section-header__lead">
+            {totalCount} products · showing {start + 1}–{start + products.length}
+          </p>
         </header>
         <div className="mc-product-grid">
           {products.map((p) => (
             <ProductCard key={p.id} product={p} />
           ))}
         </div>
+        {totalPages > 1 && (
+          <nav className="mc-pager" aria-label="Product pages">
+            {safePage > 1 ? (
+              <Link
+                href={`${basePath}${joiner}page=${safePage - 1}`}
+                className="mc-pager__btn"
+                rel="prev"
+              >
+                Previous
+              </Link>
+            ) : (
+              <span className="mc-pager__btn is-disabled">Previous</span>
+            )}
+            <span className="mc-pager__status">
+              Page {safePage} of {totalPages}
+            </span>
+            {safePage < totalPages ? (
+              <Link
+                href={`${basePath}${joiner}page=${safePage + 1}`}
+                className="mc-pager__btn"
+                rel="next"
+              >
+                Next
+              </Link>
+            ) : (
+              <span className="mc-pager__btn is-disabled">Next</span>
+            )}
+          </nav>
+        )}
       </div>
     </section>
   );

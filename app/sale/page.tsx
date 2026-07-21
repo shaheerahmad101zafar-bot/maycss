@@ -1,9 +1,16 @@
 import { notFound } from "next/navigation";
 import CmsPageView from "@/components/cms/CmsPageView";
-import CategoryPage from "@/components/products/CategoryPage";
+import CategoryPage, {
+  paginateProducts,
+  STOREFRONT_PAGE_SIZE,
+} from "@/components/products/CategoryPage";
 import { PageFactory } from "@/lib/pages";
-import { getProducts, getSaleItems } from "@/lib/data";
+import { getSaleItems } from "@/lib/data";
 import type { Metadata } from "next";
+
+type Props = {
+  searchParams: Promise<{ page?: string }>;
+};
 
 export async function generateMetadata(): Promise<Metadata> {
   const page = await PageFactory.getBySlug("sale");
@@ -14,27 +21,36 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-export default async function SalePage() {
-  const [page, products, saleProducts] = await Promise.all([
+export default async function SalePage({ searchParams }: Props) {
+  const { page: pageRaw } = await searchParams;
+  const pageNum = Math.max(1, Number(pageRaw) || 1);
+  const [page, saleProducts] = await Promise.all([
     PageFactory.getBySlug("sale"),
-    getProducts(),
     getSaleItems(),
   ]);
 
   if (!page) notFound();
 
   const hasProductGrid = page.blocks.some((b) => b.type === "productgrid");
+  const { pageItems, totalCount, safePage } = paginateProducts(
+    saleProducts,
+    pageNum,
+    STOREFRONT_PAGE_SIZE,
+  );
 
   return (
     <>
-      <CmsPageView page={page} products={products} />
+      <CmsPageView page={page} products={saleProducts.slice(0, 8)} />
       {page.pageKind === "sale" && !hasProductGrid && (
         <CategoryPage
           eyebrow="Limited Time"
           title="Sale"
           subtitle="Investment pieces at investment-friendly prices."
-          products={saleProducts}
+          products={pageItems}
+          totalCount={totalCount}
           emptyLabel="No sale items right now."
+          page={safePage}
+          basePath="/sale"
         />
       )}
     </>

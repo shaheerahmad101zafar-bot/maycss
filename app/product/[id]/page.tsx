@@ -3,7 +3,7 @@ import Link from "next/link";
 import ProductDetail from "@/components/products/ProductDetail";
 import ProductCard from "@/components/products/ProductCard";
 import BlockRenderer from "@/components/cms/BlockRenderer";
-import { getProductById, getProducts, getRelatedProducts } from "@/lib/data";
+import { getProductById, getRelatedProducts } from "@/lib/data";
 
 type PageProps = { params: Promise<{ id: string }> };
 
@@ -147,13 +147,13 @@ async function ProductContentSection({
 }: {
   blocks: NonNullable<Awaited<ReturnType<typeof getProductById>>>["contentBlocks"];
 }) {
-  const products = await getProducts();
+  // Avoid loading the full catalog just to render product content blocks.
   return (
     <section
       className="mc-section mc-container mc-product-content"
       aria-label="More about this product"
     >
-      <BlockRenderer blocks={blocks ?? []} products={products} />
+      <BlockRenderer blocks={blocks ?? []} products={[]} />
     </section>
   );
 }

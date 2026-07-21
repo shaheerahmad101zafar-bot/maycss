@@ -6,27 +6,27 @@ const BANNER_BY_SLUG: Record<
 > = {
   "womens-clothing": {
     image:
-      "https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=2000&q=80",
+      "https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=1400&q=65",
     line: "Dresses, denim, and everyday essentials — Black Friday savings now on.",
   },
   "womens-dresses": {
     image:
-      "https://images.unsplash.com/photo-1496747611176-843222e1e57c?auto=format&fit=crop&w=2000&q=80",
+      "https://images.unsplash.com/photo-1496747611176-843222e1e57c?auto=format&fit=crop&w=1400&q=65",
     line: "Formal, wedding guest, cocktail, casual & work — shop dresses for women.",
   },
   "womens-jeans-denim": {
     image:
-      "https://images.unsplash.com/photo-1541099649105-f69ad21f3246?auto=format&fit=crop&w=2000&q=80",
+      "https://images.unsplash.com/photo-1541099649105-f69ad21f3246?auto=format&fit=crop&w=1400&q=65",
     line: "Wide-leg, straight, barrel, flare & skinny — find your denim fit.",
   },
   formal: {
     image:
-      "https://images.unsplash.com/photo-1566174053879-31528523f8ae?auto=format&fit=crop&w=2000&q=80",
+      "https://images.unsplash.com/photo-1566174053879-31528523f8ae?auto=format&fit=crop&w=1400&q=65",
     line: "Evening gowns and formal looks for every occasion.",
   },
   default: {
     image:
-      "https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&w=2000&q=80",
+      "https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&w=1400&q=65",
     line: "Limited-time Black Friday savings across the MAYCSS edit.",
   },
 };

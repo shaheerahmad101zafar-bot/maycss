@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 import CmsPageView from "@/components/cms/CmsPageView";
 import FeaturesStrip from "@/components/marketing/FeaturesStrip";
 import { PageFactory } from "@/lib/pages";
-import { getProducts } from "@/lib/data";
+import { getListingProducts } from "@/lib/data";
 import type { Metadata } from "next";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -18,14 +18,14 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function ContactPage() {
   const [page, products] = await Promise.all([
     PageFactory.getBySlug("contact"),
-    getProducts(),
+    getListingProducts(),
   ]);
 
   if (!page) notFound();
 
   return (
     <>
-      <CmsPageView page={page} products={products} />
+      <CmsPageView page={page} products={products.slice(0, 8)} />
       <FeaturesStrip />
     </>
   );

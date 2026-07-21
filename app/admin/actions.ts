@@ -2,7 +2,7 @@
 
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, updateTag } from "next/cache";
 import {
   ADMIN_COOKIE,
   getAdminPassword,
@@ -50,6 +50,11 @@ import { generateProductContent } from "@/lib/ai/product-content-writer";
 import { MenuFactory, type MenuLink } from "@/lib/menus";
 import { rethrowIfNavigationError } from "@/lib/navigation-errors";
 import { StoreWriteError } from "@/lib/storage/json-store";
+
+function bustCatalogCache() {
+  updateTag("catalog-products");
+  updateTag("catalog-categories");
+}
 
 /* -------------------------------------------------------------------------- */
 /*  Auth                                                                      */
@@ -257,7 +262,7 @@ export async function upsertProductAction(
   }
   if (Object.keys(errors).length > 0) return { ok: false, errors };
 
-  const products = await getProducts();
+  const products = await getProducts({ fresh: true });
   const existing = idField
     ? products.find((p) => String(p.id) === idField)
     : undefined;
@@ -346,6 +351,7 @@ export async function upsertProductAction(
           : "Could not save product.";
     return { ok: false, errors: { _form: message } };
   }
+  bustCatalogCache();
   revalidatePath("/", "layout");
   redirect("/admin/products");
 }
@@ -383,7 +389,10 @@ export async function importProductFromUrlAction(
     if (!scraped.ok) return { ok: false, error: scraped.error };
 
     const p = scraped.product;
-    const [products, cfg] = await Promise.all([getProducts(), getAppConfig()]);
+    const [products, cfg] = await Promise.all([
+      getProducts({ fresh: true }),
+      getAppConfig(),
+    ]);
     const additionalKeywords = additionalKeywordsRaw
       .split(",")
       .map((k) => k.trim())
@@ -468,6 +477,7 @@ export async function importProductFromUrlAction(
     }
 
     const editPath = `/admin/products/${String(newProduct.id)}/edit`;
+    bustCatalogCache();
     revalidatePath("/admin/products");
     revalidatePath(editPath);
     // Land on the edit screen (publish / save) — same flow as manual product create.
@@ -494,6 +504,7 @@ export async function deleteProductAction(formData: FormData): Promise<void> {
   }
   try {
     await removeProductsByIds([id]);
+    bustCatalogCache();
     revalidatePath("/", "layout");
     revalidatePath("/admin/products");
     redirect("/admin/products?deleted=1");
@@ -517,6 +528,7 @@ export async function deleteProductsBulkAction(
   }
   try {
     await removeProductsByIds(ids);
+    bustCatalogCache();
     revalidatePath("/", "layout");
     revalidatePath("/admin/products");
     redirect(`/admin/products?deleted=${ids.length}`);
@@ -645,6 +657,7 @@ async function upsertCategoryCore(
     ? cats.map((c) => (c.id === existing.id ? newCategory : c))
     : [...cats, newCategory];
   await saveCategories(next);
+  bustCatalogCache();
   revalidatePath("/", "layout");
   redirect("/admin/categories");
 }
@@ -668,7 +681,7 @@ export async function deleteCategoryAction(formData: FormData): Promise<void> {
   try {
     const [cats, products] = await Promise.all([
       getCategories(),
-      getProducts(),
+      getProducts({ fresh: true }),
     ]);
     const hasChildren = cats.some((c) => c.parentId === id);
 
@@ -689,6 +702,7 @@ export async function deleteCategoryAction(formData: FormData): Promise<void> {
         await saveProductsWithRecords(nextProducts, touched);
       }
       await removeCategoriesByIds([id]);
+      bustCatalogCache();
       revalidatePath("/", "layout");
       revalidatePath("/admin/categories");
       redirect("/admin/categories?deleted=1");
@@ -738,6 +752,7 @@ export async function deleteCategoryAction(formData: FormData): Promise<void> {
       await saveCategories(nextCats);
     }
 
+    bustCatalogCache();
     revalidatePath("/", "layout");
     revalidatePath("/admin/categories");
     redirect("/admin/categories?deleted=1");

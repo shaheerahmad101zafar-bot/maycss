@@ -4,11 +4,15 @@ import ShopCategoryIndex, {
   ShopCatalogSection,
 } from "@/components/shop/ShopSections";
 import { PageFactory } from "@/lib/pages";
-import { getCategories, getProducts } from "@/lib/data";
+import { getCategories, getListingProducts } from "@/lib/data";
+import {
+  paginateProducts,
+  STOREFRONT_PAGE_SIZE,
+} from "@/components/products/CategoryPage";
 import type { Metadata } from "next";
 
 type Props = {
-  searchParams: Promise<{ q?: string }>;
+  searchParams: Promise<{ q?: string; page?: string }>;
 };
 
 export async function generateMetadata({
@@ -30,25 +34,20 @@ export async function generateMetadata({
 }
 
 export default async function ShopPage({ searchParams }: Props) {
-  const { q } = await searchParams;
+  const { q, page: pageRaw } = await searchParams;
   const query = q?.trim().toLowerCase() || "";
+  const pageNum = Math.max(1, Number(pageRaw) || 1);
   const [page, allProducts, categories] = await Promise.all([
     PageFactory.getBySlug("shop"),
-    getProducts(),
+    getListingProducts(),
     getCategories(),
   ]);
 
   if (!page) notFound();
 
-  const products = query
+  const filtered = query
     ? allProducts.filter((p) => {
-        const hay = [
-          p.name,
-          p.brand,
-          p.category,
-          p.description,
-          ...(p.seo?.keywords || []),
-        ]
+        const hay = [p.name, p.brand, p.category]
           .filter(Boolean)
           .join(" ")
           .toLowerCase();
@@ -56,12 +55,24 @@ export default async function ShopPage({ searchParams }: Props) {
       })
     : allProducts;
 
+  const { pageItems, totalCount, safePage } = paginateProducts(
+    filtered,
+    pageNum,
+    STOREFRONT_PAGE_SIZE,
+  );
   const hasProductGrid = page.blocks.some((b) => b.type === "productgrid");
+  const basePath = query
+    ? `/shop?q=${encodeURIComponent(q!.trim())}`
+    : "/shop";
 
   return (
     <>
       {!query && (
-        <CmsPageView page={page} products={products} categories={categories} />
+        <CmsPageView
+          page={page}
+          products={allProducts.slice(0, 8)}
+          categories={categories}
+        />
       )}
       {query && (
         <section className="mc-section">
@@ -70,7 +81,7 @@ export default async function ShopPage({ searchParams }: Props) {
               <p className="mc-section-subtitle">Search</p>
               <h1 className="mc-section-title">Results for “{q?.trim()}”</h1>
               <p className="mc-section-header__lead">
-                {products.length} product{products.length === 1 ? "" : "s"} found
+                {totalCount} product{totalCount === 1 ? "" : "s"} found
               </p>
             </header>
           </div>
@@ -79,7 +90,13 @@ export default async function ShopPage({ searchParams }: Props) {
       {page.pageKind === "shop" && !query && <ShopCategoryIndex />}
       {(page.pageKind === "shop" || query) &&
         (!hasProductGrid || query) && (
-          <ShopCatalogSection products={products} />
+          <ShopCatalogSection
+            products={pageItems}
+            totalCount={totalCount}
+            page={safePage}
+            basePath={basePath}
+            pageSize={STOREFRONT_PAGE_SIZE}
+          />
         )}
     </>
   );

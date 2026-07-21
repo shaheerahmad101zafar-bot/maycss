@@ -3,7 +3,7 @@ import FeaturesStrip from "@/components/marketing/FeaturesStrip";
 import EditorialSection from "@/components/marketing/EditorialSection";
 import ProductCard from "@/components/products/ProductCard";
 import BlockRenderer from "@/components/cms/BlockRenderer";
-import { getBannerSlides, getCategories, getProducts } from "@/lib/data";
+import { getBannerSlides, getCategories, getListingProducts } from "@/lib/data";
 import { PageFactory } from "@/lib/pages";
 import type { Metadata } from "next";
 
@@ -22,10 +22,11 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function Home() {
   const [homePage, products, slides, categories] = await Promise.all([
     PageFactory.getBySlug("home"),
-    getProducts(),
+    getListingProducts(),
     getBannerSlides(),
     getCategories(),
   ]);
+  const listingProducts = products.slice(0, 12);
 
   if (homePage && homePage.blocks.length > 0) {
     const jsonLd = PageFactory.toJsonLd(homePage);
@@ -55,7 +56,7 @@ export default async function Home() {
         )}
         <BlockRenderer
           blocks={homePage.blocks}
-          products={products}
+          products={listingProducts}
           categories={categories}
         />
         {!hasFeaturesBlock && <FeaturesStrip />}
@@ -81,7 +82,7 @@ export default async function Home() {
           </header>
 
           <div className="mc-product-grid">
-            {products.map((product) => (
+            {listingProducts.map((product) => (
               <ProductCard key={product.id} product={product} />
             ))}
           </div>

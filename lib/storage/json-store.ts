@@ -10,6 +10,11 @@ export type StorePath = string;
 
 export { usesBlobStorage };
 
+export type ReadStoreOptions = {
+  /** Bypass Blob CDN cache (admin writes / review-draft). Default false. */
+  bypassCache?: boolean;
+};
+
 function resolveLocal(relativePath: StorePath): string {
   return path.join(process.cwd(), relativePath);
 }
@@ -27,19 +32,20 @@ async function readLocalJson<T>(
   }
 }
 
-async function readBlobJson<T>(relativePath: StorePath): Promise<T | null> {
+async function readBlobJson<T>(
+  relativePath: StorePath,
+  bypassCache = false,
+): Promise<T | null> {
   const auth = getBlobAuth();
   if (!auth.enabled) return null;
 
   try {
-    // CMS JSON files are overwritten in place. Default CDN caching can serve a
-    // stale products/pages snapshot for up to ~60s after save — which makes
-    // "Review draft" 404 right after import. Always bypass cache for reads.
     const result = await get(relativePath, {
       access: auth.access,
       token: auth.token,
       storeId: auth.storeId,
-      useCache: false,
+      // Storefront should hit CDN cache. Admin passes bypassCache after writes.
+      useCache: !bypassCache,
     });
     if (!result || result.statusCode !== 200 || !result.stream) return null;
     const text = await new Response(result.stream).text();
@@ -52,9 +58,13 @@ async function readBlobJson<T>(relativePath: StorePath): Promise<T | null> {
 export async function readStoreJson<T>(
   relativePath: StorePath,
   fallback: T,
+  options?: ReadStoreOptions,
 ): Promise<T> {
   if (usesBlobStorage()) {
-    const fromBlob = await readBlobJson<T>(relativePath);
+    const fromBlob = await readBlobJson<T>(
+      relativePath,
+      options?.bypassCache === true,
+    );
     if (fromBlob !== null) return fromBlob;
   }
   return readLocalJson(relativePath, fallback);
@@ -87,7 +97,6 @@ async function writeBlobJson(
     addRandomSuffix: false,
     allowOverwrite: true,
     contentType: "application/json",
-    // Minimum allowed by Blob; keeps overwrite windows short for CMS JSON.
     cacheControlMaxAge: 60,
   });
 }

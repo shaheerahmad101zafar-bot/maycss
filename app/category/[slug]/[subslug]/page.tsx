@@ -1,6 +1,9 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import CategoryPage from "@/components/products/CategoryPage";
+import CategoryPage, {
+  paginateProducts,
+  STOREFRONT_PAGE_SIZE,
+} from "@/components/products/CategoryPage";
 import CategoryPromoBanner from "@/components/products/CategoryPromoBanner";
 import {
   getCategoryById,
@@ -8,7 +11,10 @@ import {
   getProductsByCategoryId,
 } from "@/lib/data";
 
-type Props = { params: Promise<{ slug: string; subslug: string }> };
+type Props = {
+  params: Promise<{ slug: string; subslug: string }>;
+  searchParams: Promise<{ page?: string }>;
+};
 
 export async function generateMetadata({ params }: Props) {
   const { subslug } = await params;
@@ -19,8 +25,10 @@ export async function generateMetadata({ params }: Props) {
   };
 }
 
-export default async function SubcategoryRoute({ params }: Props) {
+export default async function SubcategoryRoute({ params, searchParams }: Props) {
   const { slug, subslug } = await params;
+  const { page: pageRaw } = await searchParams;
+  const page = Math.max(1, Number(pageRaw) || 1);
   const [parent, sub] = await Promise.all([
     getCategoryBySlug(slug),
     getCategoryBySlug(subslug),
@@ -33,7 +41,12 @@ export default async function SubcategoryRoute({ params }: Props) {
     if (parentOfSub?.slug !== parent.slug) notFound();
   }
 
-  const products = await getProductsByCategoryId(sub.id);
+  const rawProducts = await getProductsByCategoryId(sub.id);
+  const { pageItems, totalCount, safePage } = paginateProducts(
+    rawProducts,
+    page,
+    STOREFRONT_PAGE_SIZE,
+  );
 
   return (
     <>
@@ -54,8 +67,11 @@ export default async function SubcategoryRoute({ params }: Props) {
         eyebrow={parent.name}
         title={sub.name}
         subtitle={sub.description}
-        products={products}
+        products={pageItems}
+        totalCount={totalCount}
         emptyLabel={`No pieces in ${sub.name} right now.`}
+        page={safePage}
+        basePath={`/category/${parent.slug}/${sub.slug}`}
       />
     </>
   );

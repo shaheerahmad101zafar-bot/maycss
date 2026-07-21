@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import CmsPageView from "@/components/cms/CmsPageView";
 import { PageFactory } from "@/lib/pages";
-import { getProducts } from "@/lib/data";
+import { getListingProducts } from "@/lib/data";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -17,7 +17,7 @@ export default async function CmsPageRoute({ params }: Props) {
   const page = await PageFactory.getBySlug(slug);
   if (!page) notFound();
   const jsonLd = PageFactory.toJsonLd(page);
-  const products = await getProducts();
+  const products = (await getListingProducts()).slice(0, 24);
 
   return (
     <>

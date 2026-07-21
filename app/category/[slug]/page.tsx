@@ -1,6 +1,9 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import CategoryPage from "@/components/products/CategoryPage";
+import CategoryPage, {
+  paginateProducts,
+  STOREFRONT_PAGE_SIZE,
+} from "@/components/products/CategoryPage";
 import CategoryPromoBanner from "@/components/products/CategoryPromoBanner";
 import {
   getCategoryBySlug,
@@ -8,7 +11,10 @@ import {
   getSubcategories,
 } from "@/lib/data";
 
-type Props = { params: Promise<{ slug: string }> };
+type Props = {
+  params: Promise<{ slug: string }>;
+  searchParams: Promise<{ page?: string }>;
+};
 
 export async function generateMetadata({ params }: Props) {
   const { slug } = await params;
@@ -19,15 +25,22 @@ export async function generateMetadata({ params }: Props) {
   };
 }
 
-export default async function CategoryRoute({ params }: Props) {
+export default async function CategoryRoute({ params, searchParams }: Props) {
   const { slug } = await params;
+  const { page: pageRaw } = await searchParams;
+  const page = Math.max(1, Number(pageRaw) || 1);
   const category = await getCategoryBySlug(slug);
   if (!category) notFound();
 
-  const [products, subs] = await Promise.all([
+  const [rawProducts, subs] = await Promise.all([
     getProductsByCategoryId(category.id),
     getSubcategories(category.id),
   ]);
+  const { pageItems, totalCount, safePage } = paginateProducts(
+    rawProducts,
+    page,
+    STOREFRONT_PAGE_SIZE,
+  );
 
   const showHeroBanner =
     !category.parentId ||
@@ -93,8 +106,11 @@ export default async function CategoryRoute({ params }: Props) {
             ? "Every piece across every sub-category."
             : category.description
         }
-        products={products}
+        products={pageItems}
+        totalCount={totalCount}
         emptyLabel={`No pieces in ${category.name} right now.`}
+        page={safePage}
+        basePath={`/category/${category.slug}`}
       />
     </>
   );

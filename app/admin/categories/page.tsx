@@ -14,8 +14,8 @@ export default async function AdminCategoriesPage({ searchParams }: Props) {
   noStore();
   const { deleted, error } = await searchParams;
   const [categories, products] = await Promise.all([
-    getCategories(),
-    getProducts(),
+    getCategories({ fresh: true }),
+    getProducts({ fresh: true }),
   ]);
 
   const roots = categories

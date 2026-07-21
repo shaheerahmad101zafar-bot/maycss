@@ -224,53 +224,70 @@ export default function NavbarClient({
         onClick={() => setMenuOpen(false)}
       />
       <nav
-        className={cx("mc-mnav", menuOpen && "is-open")}
+        className={cx("mc-mnav", "mc-mnav--luxe", menuOpen && "is-open")}
         aria-label="Mobile navigation"
         aria-hidden={!menuOpen}
         style={navStyle}
       >
-        <div className="mc-mnav__header">
-          <span className="mc-mnav__brand">{siteName}</span>
-          <button
-            type="button"
-            className="mc-mnav__close"
-            aria-label="Close menu"
-            onClick={() => setMenuOpen(false)}
-          >
-            &times;
-          </button>
+        <div className="mc-mnav__bg" aria-hidden="true" />
+        <div className="mc-mnav__panel">
+          <div className="mc-mnav__header">
+            <div className="mc-mnav__brand-wrap">
+              <span className="mc-mnav__eyebrow">MAYCSS</span>
+              <span className="mc-mnav__brand">{siteName}</span>
+            </div>
+            <button
+              type="button"
+              className="mc-mnav__close"
+              aria-label="Close menu"
+              onClick={() => setMenuOpen(false)}
+            >
+              &times;
+            </button>
+          </div>
+          <form className="mc-mnav__search" onSubmit={onSearch}>
+            <input
+              type="search"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="Search products"
+            />
+            <button type="submit">Search</button>
+          </form>
+          <p className="mc-mnav__promo">
+            Black Friday — <strong>20% OFF</strong> sitewide
+          </p>
+          <ul className="mc-mnav__links">
+            {links.map((l, i) => {
+              const active = !l.external && isActive(pathname, l.href);
+              const sale = isSaleLink(l.href, l.label);
+              return (
+                <li
+                  key={l.href}
+                  style={{ ["--mc-mnav-i" as string]: String(i) }}
+                >
+                  {l.external ? (
+                    <a href={l.href} target="_blank" rel="noopener noreferrer">
+                      {l.label}
+                    </a>
+                  ) : (
+                    <Link
+                      href={l.href}
+                      className={cx(active && "is-active", sale && "is-sale")}
+                    >
+                      {l.label}
+                    </Link>
+                  )}
+                </li>
+              );
+            })}
+          </ul>
+          <div className="mc-mnav__footer">
+            <Link href="/sale" className="mc-mnav__cta" onClick={() => setMenuOpen(false)}>
+              Shop Black Friday
+            </Link>
+          </div>
         </div>
-        <form className="mc-mnav__search" onSubmit={onSearch}>
-          <input
-            type="search"
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            placeholder="Search products"
-          />
-          <button type="submit">Search</button>
-        </form>
-        <ul className="mc-mnav__links">
-          {links.map((l) => {
-            const active = !l.external && isActive(pathname, l.href);
-            const sale = isSaleLink(l.href, l.label);
-            return (
-              <li key={l.href}>
-                {l.external ? (
-                  <a href={l.href} target="_blank" rel="noopener noreferrer">
-                    {l.label}
-                  </a>
-                ) : (
-                  <Link
-                    href={l.href}
-                    className={cx(active && "is-active", sale && "is-sale")}
-                  >
-                    {l.label}
-                  </Link>
-                )}
-              </li>
-            );
-          })}
-        </ul>
       </nav>
     </header>
   );

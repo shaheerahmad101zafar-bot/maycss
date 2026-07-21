@@ -16,6 +16,8 @@ interface CategoryPageProps {
   page?: number;
   basePath?: string;
   pageSize?: number;
+  /** Optional anchor id for promo banner CTAs. */
+  sectionId?: string;
 }
 
 export default function CategoryPage({
@@ -28,6 +30,7 @@ export default function CategoryPage({
   page = 1,
   basePath,
   pageSize = STOREFRONT_PAGE_SIZE,
+  sectionId,
 }: CategoryPageProps) {
   const total = totalCount;
   const totalPages = Math.max(1, Math.ceil(total / pageSize));
@@ -35,7 +38,7 @@ export default function CategoryPage({
   const start = (safePage - 1) * pageSize;
 
   return (
-    <section className="mc-section mc-category">
+    <section id={sectionId} className="mc-section mc-category">
       <div className="mc-container">
         <header className="mc-category__header">
           {eyebrow && <p className="mc-category__eyebrow">{eyebrow}</p>}

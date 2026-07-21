@@ -41,6 +41,14 @@ export default function PageForm({ page, templates }: Props) {
   const [showHeroBanner, setShowHeroBanner] = useState(
     page?.showHeroBanner !== false,
   );
+  const [heroCtaLabel, setHeroCtaLabel] = useState(page?.heroCtaLabel ?? "");
+  const [heroCtaHref, setHeroCtaHref] = useState(page?.heroCtaHref ?? "");
+  const [heroSecondaryCtaLabel, setHeroSecondaryCtaLabel] = useState(
+    page?.heroSecondaryCtaLabel ?? "",
+  );
+  const [heroSecondaryCtaHref, setHeroSecondaryCtaHref] = useState(
+    page?.heroSecondaryCtaHref ?? "",
+  );
   const [pageKind, setPageKind] = useState<PageKind>(page?.pageKind ?? "standard");
   const [mapEmbed, setMapEmbed] = useState(page?.mapEmbed ?? "");
   const [contactDetails, setContactDetails] = useState<ContactDetails>(
@@ -153,8 +161,7 @@ export default function PageForm({ page, templates }: Props) {
               Show hero banner at top of page
             </label>
             <p className="mc-admin__hint">
-              Turn off to hide the title / photo banner strip (Sale, Shop,
-              About, Contact often look cleaner without it).
+              Turn off to hide the promo banner at the top of the page.
             </p>
           </div>
           <div className="mc-field mc-field--full">
@@ -165,9 +172,49 @@ export default function PageForm({ page, templates }: Props) {
               onChange={setBannerImage}
               subdir="cms"
               label=""
-              helpText="Upload, paste a URL, replace, or remove. Shows behind the title + hero paragraph on the live page."
+              helpText="Full-bleed promo banner image (same style as category Black Friday banners)."
             />
             {err("bannerImage")}
+          </div>
+          <div className="mc-field">
+            <label htmlFor="heroCtaLabel">Primary button label</label>
+            <input
+              id="heroCtaLabel"
+              name="heroCtaLabel"
+              value={heroCtaLabel}
+              onChange={(e) => setHeroCtaLabel(e.target.value)}
+              placeholder="Shop Black Friday"
+            />
+          </div>
+          <div className="mc-field">
+            <label htmlFor="heroCtaHref">Primary button link</label>
+            <input
+              id="heroCtaHref"
+              name="heroCtaHref"
+              value={heroCtaHref}
+              onChange={(e) => setHeroCtaHref(e.target.value)}
+              placeholder="/sale"
+            />
+          </div>
+          <div className="mc-field">
+            <label htmlFor="heroSecondaryCtaLabel">Secondary button label</label>
+            <input
+              id="heroSecondaryCtaLabel"
+              name="heroSecondaryCtaLabel"
+              value={heroSecondaryCtaLabel}
+              onChange={(e) => setHeroSecondaryCtaLabel(e.target.value)}
+              placeholder="Browse the collection"
+            />
+          </div>
+          <div className="mc-field">
+            <label htmlFor="heroSecondaryCtaHref">Secondary button link</label>
+            <input
+              id="heroSecondaryCtaHref"
+              name="heroSecondaryCtaHref"
+              value={heroSecondaryCtaHref}
+              onChange={(e) => setHeroSecondaryCtaHref(e.target.value)}
+              placeholder="/shop"
+            />
           </div>
         </div>
       </fieldset>

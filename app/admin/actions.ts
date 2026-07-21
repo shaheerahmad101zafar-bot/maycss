@@ -1290,6 +1290,14 @@ export async function upsertPageAction(
   const published = formData.get("published") === "on";
   const bannerImage = String(formData.get("bannerImage") ?? "").trim();
   const showHeroBanner = formData.get("showHeroBanner") === "on";
+  const heroCtaLabel = String(formData.get("heroCtaLabel") ?? "").trim();
+  const heroCtaHref = String(formData.get("heroCtaHref") ?? "").trim();
+  const heroSecondaryCtaLabel = String(
+    formData.get("heroSecondaryCtaLabel") ?? "",
+  ).trim();
+  const heroSecondaryCtaHref = String(
+    formData.get("heroSecondaryCtaHref") ?? "",
+  ).trim();
   const pageKind = String(formData.get("pageKind") ?? "standard").trim() as Page["pageKind"];
   const mapEmbed = String(formData.get("mapEmbed") ?? "").trim();
   const contactDetails = parseContactDetailsJson(
@@ -1339,6 +1347,10 @@ export async function upsertPageAction(
     hero: hero || undefined,
     bannerImage: bannerImage || undefined,
     showHeroBanner,
+    heroCtaLabel: heroCtaLabel || undefined,
+    heroCtaHref: heroCtaHref || undefined,
+    heroSecondaryCtaLabel: heroSecondaryCtaLabel || undefined,
+    heroSecondaryCtaHref: heroSecondaryCtaHref || undefined,
     pageKind: pageKind || "standard",
     mapEmbed: mapEmbed || undefined,
     contactDetails:

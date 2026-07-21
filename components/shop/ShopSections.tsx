@@ -16,7 +16,10 @@ export default async function ShopCategoryIndex() {
   if (withSubs.length === 0) return null;
 
   return (
-    <section className="mc-section mc-cat-index mc-cat-index--cms">
+    <section
+      id="shop-categories"
+      className="mc-section mc-cat-index mc-cat-index--cms"
+    >
       <div className="mc-container">
         <header className="mc-section-header">
           <p className="mc-section-subtitle">Browse</p>

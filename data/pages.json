@@ -4,12 +4,18 @@
     "slug": "about",
     "title": "About MayCSS",
     "eyebrow": "Our Story",
-    "hero": "Shop MayCSS Online Store to experience our mission: timeless design, uncompromising quality, and fashion for people who care about the difference between good and exceptional.",
+    "hero": "Timeless design, uncompromising quality, and fashion for people who care about the difference between good and exceptional.",
+    "bannerImage": "https://images.unsplash.com/photo-1469334031218-e382a71b716b?auto=format&fit=crop&w=1600&q=80",
+    "showHeroBanner": true,
+    "heroCtaLabel": "Shop the Collection",
+    "heroCtaHref": "/shop",
+    "heroSecondaryCtaLabel": "Contact Us",
+    "heroSecondaryCtaHref": "/contact",
     "pageKind": "standard",
     "published": true,
     "showInFooter": true,
     "footerColumn": "company",
-    "lastUpdated": "2026-07-19",
+    "lastUpdated": "2026-07-21",
     "seo": {
       "metaTitle": "Shop MayCSS Online Store | About Us",
       "metaDescription": "Shop MayCSS Online Store and discover our story — curated premium fashion, uncompromising quality, and a vision built on craft, integrity, and quiet luxury.",
@@ -19,7 +25,7 @@
         "curated fashion",
         "luxury boutique"
       ],
-      "ogImage": "https://tse2.mm.bing.net/th/id/OIP.XNlA91gBjte9NrlTSgILoAAAAA?r=0&rs=1&pid=ImgDetMain&o=7&rm=3"
+      "ogImage": "https://images.unsplash.com/photo-1469334031218-e382a71b716b?auto=format&fit=crop&w=1200&q=80"
     },
     "blocks": [
       {
@@ -96,8 +102,7 @@
         "ctaHref": "/contact",
         "variant": "dark"
       }
-    ],
-    "showHeroBanner": false
+    ]
   },
   {
     "id": "faq",
@@ -657,7 +662,13 @@
     "slug": "contact",
     "title": "We're Here to Help",
     "eyebrow": "Contact Us",
-    "hero": "Thank you for choosing to Shop MayCSS Online Store — our concierge team is ready to help within one business day.",
+    "hero": "Sizing, orders, styling, or a quick question — our concierge team responds with care, usually within one business day.",
+    "bannerImage": "https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&w=1600&q=80",
+    "showHeroBanner": true,
+    "heroCtaLabel": "Send a Message",
+    "heroCtaHref": "#contact-form",
+    "heroSecondaryCtaLabel": "Shop the Collection",
+    "heroSecondaryCtaHref": "/shop",
     "pageKind": "contact",
     "mapEmbed": "<iframe src=\"https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3022.215!2d-73.974!3d40.761!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNDDCsDQ1JzM5LjYiTiA3M8KwNTgnMjAuNCJX!5e0!3m2!1sen!2sus!4v1\" width=\"600\" height=\"450\" style=\"border:0;\" allowfullscreen=\"\" loading=\"lazy\" referrerpolicy=\"no-referrer-when-downgrade\"></iframe>",
     "contactDetails": {
@@ -689,7 +700,7 @@
     "published": true,
     "showInFooter": true,
     "footerColumn": "company",
-    "lastUpdated": "2026-07-19",
+    "lastUpdated": "2026-07-21",
     "seo": {
       "metaTitle": "Shop MayCSS Online Store | Support",
       "metaDescription": "Shop MayCSS Online Store with dedicated customer care. Our concierge helps with orders, sizing, styling, and satisfaction — usually within one business day.",
@@ -699,7 +710,7 @@
         "contact",
         "concierge"
       ],
-      "ogImage": ""
+      "ogImage": "https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&w=1200&q=80"
     },
     "blocks": [
       {
@@ -742,29 +753,35 @@
         "heading": "Send a Message",
         "subheading": "Share your enquiry and a member of our team will follow up personally. We are here to help you Shop MayCSS Online Store with confidence."
       }
-    ],
-    "showHeroBanner": false
+    ]
   },
   {
     "id": "shop",
     "slug": "shop",
-    "title": "Shop the Collection",
-    "eyebrow": "The Edit",
-    "hero": "Welcome to Shop MayCSS Online Store — curated premium fashion and minimalist luxury apparel, organised the way we shop.",
+    "title": "Shop All",
+    "eyebrow": "The Full Edit",
+    "hero": "Curated premium fashion organised the way we shop — clothing, dresses, denim, and every elevated essential in one place.",
+    "bannerImage": "https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=1600&q=80",
+    "showHeroBanner": true,
+    "heroCtaLabel": "Browse Categories",
+    "heroCtaHref": "#shop-categories",
+    "heroSecondaryCtaLabel": "Shop New Arrivals",
+    "heroSecondaryCtaHref": "/new",
     "pageKind": "shop",
     "published": true,
     "showInFooter": false,
-    "lastUpdated": "2026-07-19",
+    "lastUpdated": "2026-07-21",
     "seo": {
-      "metaTitle": "Shop MayCSS Online Store | Premium Edit",
+      "metaTitle": "Shop MayCSS Online Store | Shop All",
       "metaDescription": "Shop MayCSS Online Store for curated premium fashion and minimalist luxury apparel — high-quality pieces chosen for craft, fit, and lasting style.",
       "keywords": [
         "Shop MayCSS Online Store",
+        "shop all",
         "shop luxury fashion",
         "designer clothing online",
         "MayCSS collection"
       ],
-      "ogImage": "/uploads/cms/mrjjx6ir-cc868794b5f4e226.webp"
+      "ogImage": "https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=1200&q=80"
     },
     "blocks": [
       {
@@ -810,29 +827,35 @@
         "limit": 5,
         "categoryIds": []
       }
-    ],
-    "showHeroBanner": false
+    ]
   },
   {
     "id": "sale",
     "slug": "sale",
-    "title": "The Sale Edit",
-    "eyebrow": "Limited Time",
-    "hero": "Discover exclusive savings when you Shop MayCSS Online Store — limited-time luxury markdowns, while they last.",
+    "title": "Shop the Sale Edit",
+    "eyebrow": "Black Friday Sale",
+    "hero": "Limited-time markdowns on curated luxury — dresses, denim, and elevated essentials while they last.",
+    "bannerImage": "https://images.unsplash.com/photo-1541099649105-f69ad21f3246?auto=format&fit=crop&w=1600&q=80",
+    "showHeroBanner": true,
+    "heroCtaLabel": "Shop Black Friday",
+    "heroCtaHref": "#sale-grid",
+    "heroSecondaryCtaLabel": "Browse Shop All",
+    "heroSecondaryCtaHref": "/shop",
     "pageKind": "sale",
     "published": true,
     "showInFooter": false,
-    "lastUpdated": "2026-07-19",
+    "lastUpdated": "2026-07-21",
     "seo": {
-      "metaTitle": "Shop MayCSS Online Store | Sale Edit",
+      "metaTitle": "Shop MayCSS Online Store | Black Friday Sale",
       "metaDescription": "Shop MayCSS Online Store for exclusive luxury sale discounts. Limited-time markdowns on curated fashion — elegant pieces at investment-friendly prices.",
       "keywords": [
         "Shop MayCSS Online Store",
+        "Black Friday",
         "sale",
         "luxury fashion sale",
         "markdowns"
       ],
-      "ogImage": "/uploads/cms/mrjjwq5w-36fe848ffd416220.webp"
+      "ogImage": "https://images.unsplash.com/photo-1541099649105-f69ad21f3246?auto=format&fit=crop&w=1200&q=80"
     },
     "blocks": [
       {
@@ -877,7 +900,6 @@
         "filterTag": "sale",
         "limit": 12
       }
-    ],
-    "showHeroBanner": false
+    ]
   }
 ]

@@ -58,6 +58,7 @@ export default async function SalePage({ searchParams }: Props) {
         page={safePage}
         basePath="/sale"
         pageSize={SALE_PAGE_SIZE}
+        sectionId="sale-grid"
       />
     </>
   );

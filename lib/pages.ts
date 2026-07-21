@@ -49,6 +49,12 @@ export type Page = {
   bannerImage?: string;
   /** When false, hide the top hero/title banner strip on the storefront. */
   showHeroBanner?: boolean;
+  /** Primary CTA on the promo hero banner. */
+  heroCtaLabel?: string;
+  heroCtaHref?: string;
+  /** Secondary CTA on the promo hero banner. */
+  heroSecondaryCtaLabel?: string;
+  heroSecondaryCtaHref?: string;
   /** Route template — contact (map/form), shop (category index), sale (sale grid). */
   pageKind?: PageKind;
   /** Google Maps iframe embed HTML — used when pageKind is contact. */
@@ -118,6 +124,18 @@ function normalizePage(raw: Partial<Page>): Page {
     bannerImage:
       typeof raw.bannerImage === "string" ? raw.bannerImage : undefined,
     showHeroBanner: raw.showHeroBanner !== false,
+    heroCtaLabel:
+      typeof raw.heroCtaLabel === "string" ? raw.heroCtaLabel : undefined,
+    heroCtaHref:
+      typeof raw.heroCtaHref === "string" ? raw.heroCtaHref : undefined,
+    heroSecondaryCtaLabel:
+      typeof raw.heroSecondaryCtaLabel === "string"
+        ? raw.heroSecondaryCtaLabel
+        : undefined,
+    heroSecondaryCtaHref:
+      typeof raw.heroSecondaryCtaHref === "string"
+        ? raw.heroSecondaryCtaHref
+        : undefined,
     pageKind,
     mapEmbed: typeof raw.mapEmbed === "string" ? raw.mapEmbed : undefined,
     contactDetails: normalizeContactDetails(raw.contactDetails),

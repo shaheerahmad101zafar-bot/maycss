@@ -1,3 +1,4 @@
+import Link from "next/link";
 import BlockRenderer from "@/components/cms/BlockRenderer";
 import ContactDetailsAside from "@/components/cms/ContactDetailsAside";
 import type { Page } from "@/lib/pages";
@@ -12,8 +13,9 @@ type Props = {
 };
 
 /**
- * Universal CMS page shell — hero header (optional background image), blocks.
- * Admin fields: title, eyebrow, hero paragraph, bannerImage (hero BG).
+ * Universal CMS page shell — promo-style hero (mc-cat-promo) when a
+ * banner image is set, then CMS blocks. Admin: title, eyebrow, hero,
+ * bannerImage, CTAs, showHeroBanner.
  */
 export default function CmsPageView({
   page,
@@ -25,6 +27,10 @@ export default function CmsPageView({
     page.showHeroBanner !== false &&
     Boolean(page.eyebrow || page.hero || page.title);
   const hasHeroBg = Boolean(page.bannerImage?.trim());
+  const hasPrimaryCta = Boolean(page.heroCtaLabel?.trim() && page.heroCtaHref?.trim());
+  const hasSecondaryCta = Boolean(
+    page.heroSecondaryCtaLabel?.trim() && page.heroSecondaryCtaHref?.trim(),
+  );
   const contactAside =
     page.pageKind === "contact" && page.contactDetails ? (
       <ContactDetailsAside details={page.contactDetails} />
@@ -32,36 +38,52 @@ export default function CmsPageView({
 
   return (
     <article className={cx("mc-page", page.pageKind && `mc-page--${page.pageKind}`)}>
-      {showHeader && (
-        <header
-          className={cx(
-            "mc-page__header",
-            hasHeroBg && "mc-page__header--hero-bg",
-          )}
-          style={
-            hasHeroBg
-              ? {
-                  backgroundImage: `linear-gradient(90deg, rgba(0,0,0,.66), rgba(0,0,0,.32)), url(${page.bannerImage})`,
-                }
-              : undefined
-          }
+      {showHeader && hasHeroBg && (
+        <section
+          className="mc-cat-promo"
+          aria-label={`${page.title} banner`}
+          style={{
+            backgroundImage: `linear-gradient(90deg, rgba(0,0,0,.62), rgba(0,0,0,.28)), url(${page.bannerImage})`,
+          }}
         >
+          <div className="mc-container mc-cat-promo__inner">
+            {page.eyebrow && (
+              <p className="mc-cat-promo__eyebrow">{page.eyebrow}</p>
+            )}
+            <h1 className="mc-cat-promo__title">{page.title}</h1>
+            {page.hero && <p className="mc-cat-promo__body">{page.hero}</p>}
+            {(hasPrimaryCta || hasSecondaryCta) && (
+              <div className="mc-cat-promo__actions">
+                {hasPrimaryCta && (
+                  <Link
+                    href={page.heroCtaHref!}
+                    className="mc-btn mc-btn--primary mc-btn--hero"
+                  >
+                    {page.heroCtaLabel}
+                  </Link>
+                )}
+                {hasSecondaryCta && (
+                  <Link
+                    href={page.heroSecondaryCtaHref!}
+                    className="mc-btn mc-btn--ghost mc-btn--hero"
+                  >
+                    {page.heroSecondaryCtaLabel}
+                  </Link>
+                )}
+              </div>
+            )}
+          </div>
+        </section>
+      )}
+
+      {showHeader && !hasHeroBg && (
+        <header className="mc-page__header">
           <div className="mc-container mc-page__header-inner">
             {page.eyebrow && (
               <p className="mc-page__eyebrow">{page.eyebrow}</p>
             )}
             <h1 className="mc-page__title">{page.title}</h1>
             {page.hero && <p className="mc-page__hero">{page.hero}</p>}
-            {page.lastUpdated && (
-              <p className="mc-page__meta">
-                Last updated{" "}
-                {new Date(page.lastUpdated).toLocaleDateString(undefined, {
-                  year: "numeric",
-                  month: "long",
-                  day: "numeric",
-                })}
-              </p>
-            )}
           </div>
         </header>
       )}

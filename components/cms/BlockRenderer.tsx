@@ -511,7 +511,10 @@ function MapRender({ block }: { block: MapBlock }) {
 
 function ContactFormRender({ block }: { block: ContactFormBlock }) {
   return (
-    <section className="mc-block mc-block--contactform">
+    <section
+      id="contact-form"
+      className="mc-block mc-block--contactform"
+    >
       {block.heading && <h2 className="mc-block__heading">{block.heading}</h2>}
       {block.subheading && (
         <p className="mc-block--contactform__lead">{block.subheading}</p>

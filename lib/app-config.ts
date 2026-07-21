@@ -101,7 +101,7 @@ async function loadAppConfig(fresh = false): Promise<AppConfig> {
 const getAppConfigCached = unstable_cache(
   () => loadAppConfig(false),
   ["app-config-v1"],
-  { revalidate: 60, tags: ["app-config"] },
+  { revalidate: 10, tags: ["app-config"] },
 );
 
 export const getAppConfig = cache(async function getAppConfigInner(): Promise<AppConfig> {

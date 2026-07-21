@@ -106,6 +106,8 @@ export type HeroBlock = BaseBlock & {
   ctaHref?: string;
   secondaryCtaLabel?: string;
   secondaryCtaHref?: string;
+  /** Ghost buttons for top categories next to the primary CTA. */
+  showCategoryLinks?: boolean;
   height?: HeroHeight;
 };
 
@@ -377,6 +379,7 @@ export const BlockFactory = {
           ctaHref: "/shop",
           secondaryCtaLabel: "Explore the edit",
           secondaryCtaHref: "/shop",
+          showCategoryLinks: true,
           height: "medium",
         };
       case "cta":
@@ -608,6 +611,7 @@ export function normalizeBlock(raw: unknown): ContentBlock | null {
           typeof b.secondaryCtaLabel === "string" ? b.secondaryCtaLabel : "",
         secondaryCtaHref:
           typeof b.secondaryCtaHref === "string" ? b.secondaryCtaHref : "",
+        showCategoryLinks: b.showCategoryLinks !== false,
         height: (b.height as HeroHeight | undefined) ?? "medium",
       };
     case "cta":

@@ -169,21 +169,44 @@ function RenderBlock({
             {block.subheading && (
               <p className="mc-hero-subtitle">{block.subheading}</p>
             )}
-            {block.ctaLabel && block.ctaHref && (
+            {(block.ctaLabel && block.ctaHref) ||
+            (block.showCategoryLinks !== false &&
+              (categories?.some((c) => !c.parentId) ?? false)) ||
+            (block.secondaryCtaLabel && block.secondaryCtaHref) ? (
               <div className="mc-hero-actions">
-                <Link href={block.ctaHref} className="mc-btn mc-btn--primary mc-btn--hero">
-                  {block.ctaLabel}
-                </Link>
-                {block.secondaryCtaLabel && block.secondaryCtaHref && (
+                {block.ctaLabel && block.ctaHref && (
                   <Link
-                    href={block.secondaryCtaHref}
-                    className="mc-btn mc-btn--ghost mc-btn--hero"
+                    href={block.ctaHref}
+                    className="mc-btn mc-btn--primary mc-btn--hero"
                   >
-                    {block.secondaryCtaLabel}
+                    {block.ctaLabel}
                   </Link>
                 )}
+                {block.showCategoryLinks !== false &&
+                  (categories ?? [])
+                    .filter((c) => !c.parentId)
+                    .sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
+                    .map((cat) => (
+                      <Link
+                        key={cat.id}
+                        href={`/category/${cat.slug}`}
+                        className="mc-btn mc-btn--ghost mc-btn--hero"
+                      >
+                        {cat.name}
+                      </Link>
+                    ))}
+                {block.showCategoryLinks === false &&
+                  block.secondaryCtaLabel &&
+                  block.secondaryCtaHref && (
+                    <Link
+                      href={block.secondaryCtaHref}
+                      className="mc-btn mc-btn--ghost mc-btn--hero"
+                    >
+                      {block.secondaryCtaLabel}
+                    </Link>
+                  )}
               </div>
-            )}
+            ) : null}
           </div>
         </section>
       );

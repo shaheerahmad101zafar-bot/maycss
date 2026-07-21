@@ -104,13 +104,13 @@ async function loadListingRaw(bypassCache = false): Promise<Product[]> {
 const getProductsCached = unstable_cache(
   () => loadProductsRaw(false),
   ["catalog-products-v2"],
-  { revalidate: 30, tags: ["catalog-products"] },
+  { revalidate: 5, tags: ["catalog-products"] },
 );
 
 const getListingProductsCached = unstable_cache(
   () => loadListingRaw(false),
   ["catalog-listing-products-v2"],
-  { revalidate: 30, tags: ["catalog-products"] },
+  { revalidate: 5, tags: ["catalog-products"] },
 );
 
 const getCategoriesCached = unstable_cache(
@@ -126,7 +126,7 @@ const getCategoriesCached = unstable_cache(
     return [...filtered].sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
   },
   ["catalog-categories-v2"],
-  { revalidate: 30, tags: ["catalog-categories"] },
+  { revalidate: 5, tags: ["catalog-categories"] },
 );
 
 /* -------------------------------------------------------------------------- */
@@ -229,8 +229,14 @@ export async function getProductsByBrand(brand: string): Promise<Product[]> {
   );
 }
 
+const getBannerSlidesCached = unstable_cache(
+  () => readJson<BannerSlide[]>(slidesFile, []),
+  ["banner-slides-v1"],
+  { revalidate: 5, tags: ["banner-slides"] },
+);
+
 export async function getBannerSlides(): Promise<BannerSlide[]> {
-  return readJson<BannerSlide[]>(slidesFile, []);
+  return getBannerSlidesCached();
 }
 
 export async function saveProductRecord(product: Product): Promise<void> {

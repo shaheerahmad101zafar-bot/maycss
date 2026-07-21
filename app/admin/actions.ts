@@ -2,7 +2,7 @@
 
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import { revalidatePath, updateTag } from "next/cache";
+import { revalidatePath, revalidateTag, updateTag, refresh } from "next/cache";
 import {
   ADMIN_COOKIE,
   getAdminPassword,
@@ -52,12 +52,20 @@ import { rethrowIfNavigationError } from "@/lib/navigation-errors";
 import { StoreWriteError } from "@/lib/storage/json-store";
 
 function bustCatalogCache() {
+  // updateTag = read-your-writes in this request; revalidateTag = purge ISR.
   updateTag("catalog-products");
   updateTag("catalog-categories");
+  revalidateTag("catalog-products", "max");
+  revalidateTag("catalog-categories", "max");
+  refresh();
 }
 
 function bustCmsCache() {
   updateTag("cms-pages");
+  updateTag("banner-slides");
+  revalidateTag("cms-pages", "max");
+  revalidateTag("banner-slides", "max");
+  refresh();
 }
 
 /* -------------------------------------------------------------------------- */
@@ -1102,7 +1110,9 @@ export async function updateAppConfigAction(
 
   await saveAppConfig(next);
   updateTag("app-config");
+  revalidateTag("app-config", "max");
   revalidatePath("/", "layout");
+  refresh();
   return { ok: true, message: "Site settings saved." };
 }
 

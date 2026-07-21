@@ -601,21 +601,43 @@ function HeroFields({
           placeholder="/shop or https://…"
         />
       </div>
-      <div className="mc-field">
-        <label>Secondary CTA label</label>
-        <input
-          value={block.secondaryCtaLabel ?? ""}
-          onChange={(e) => onChange({ secondaryCtaLabel: e.target.value })}
-        />
+      <div className="mc-field mc-field--full">
+        <label className="mc-check">
+          <input
+            type="checkbox"
+            checked={block.showCategoryLinks !== false}
+            onChange={(e) =>
+              onChange({ showCategoryLinks: e.target.checked })
+            }
+          />{" "}
+          Show all top categories as buttons (next to primary CTA)
+        </label>
+        <p className="mc-admin__hint">
+          Pulls live category names/links from your catalog — add or rename
+          categories in Admin → Categories and they appear here after save.
+        </p>
       </div>
-      <div className="mc-field">
-        <label>Secondary CTA link</label>
-        <input
-          value={block.secondaryCtaHref ?? ""}
-          onChange={(e) => onChange({ secondaryCtaHref: e.target.value })}
-          placeholder="/shop"
-        />
-      </div>
+      {block.showCategoryLinks === false && (
+        <>
+          <div className="mc-field">
+            <label>Secondary CTA label</label>
+            <input
+              value={block.secondaryCtaLabel ?? ""}
+              onChange={(e) =>
+                onChange({ secondaryCtaLabel: e.target.value })
+              }
+            />
+          </div>
+          <div className="mc-field">
+            <label>Secondary CTA link</label>
+            <input
+              value={block.secondaryCtaHref ?? ""}
+              onChange={(e) => onChange({ secondaryCtaHref: e.target.value })}
+              placeholder="/shop"
+            />
+          </div>
+        </>
+      )}
       <div className="mc-field">
         <label>Height</label>
         <select

@@ -1273,16 +1273,22 @@
 .mc-hero-actions {
   display: flex;
   flex-wrap: wrap;
-  gap: 14px;
+  gap: 12px;
   justify-content: center;
   margin-top: 8px;
+  max-width: 52rem;
+  margin-inline: auto;
 }
 .mc-btn--hero {
-  min-width: 180px;
-  padding: 14px 32px;
-  font-size: 0.72rem;
-  letter-spacing: 0.18em;
+  min-width: 0;
+  padding: 12px 22px;
+  font-size: 0.68rem;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
+}
+.mc-btn--hero.mc-btn--primary {
+  min-width: 160px;
+  padding: 14px 28px;
 }
 .mc-btn--ghost {
   background: transparent;

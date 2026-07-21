@@ -476,6 +476,7 @@
         "ctaHref": "/sale",
         "secondaryCtaLabel": "Women's Clothing",
         "secondaryCtaHref": "/category/womens-clothing",
+        "showCategoryLinks": true,
         "height": "large"
       },
       {

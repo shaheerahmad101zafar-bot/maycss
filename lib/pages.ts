@@ -156,7 +156,7 @@ async function readAll(fresh = false): Promise<Page[]> {
 const getPagesCached = unstable_cache(
   () => readAll(false),
   ["cms-pages-v1"],
-  { revalidate: 30, tags: ["cms-pages"] },
+  { revalidate: 5, tags: ["cms-pages"] },
 );
 
 const getFooterLinksCached = unstable_cache(
@@ -172,7 +172,7 @@ const getFooterLinksCached = unstable_cache(
     return all.filter((p) => p.published && p.showInFooter).map(toFooterLink);
   },
   ["cms-footer-links-v1"],
-  { revalidate: 30, tags: ["cms-pages"] },
+  { revalidate: 5, tags: ["cms-pages"] },
 );
 
 async function writeAll(list: Page[]): Promise<void> {

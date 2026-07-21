@@ -55,33 +55,48 @@ export default function CategoryGridView({
               .filter((c) => c.parentId === cat.id)
               .sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
             return (
-              <div key={cat.id} className="mc-cat-showcase__card">
+              <article key={cat.id} className="mc-cat-block">
                 <Link
                   href={`/category/${cat.slug}`}
-                  className="mc-cat-showcase__tile"
+                  className="mc-cat-block__media"
+                  aria-label={`Shop ${cat.name}`}
                 >
-                  <span className="mc-cat-showcase__media">
-                    {cat.image ? (
-                      /* eslint-disable-next-line @next/next/no-img-element */
-                      <img src={cat.image} alt="" loading="lazy" />
-                    ) : (
-                      <span className="mc-cat-showcase__fallback" aria-hidden />
-                    )}
-                  </span>
-                  <span className="mc-cat-showcase__label">{cat.name}</span>
+                  {cat.image ? (
+                    /* eslint-disable-next-line @next/next/no-img-element */
+                    <img src={cat.image} alt="" loading="lazy" />
+                  ) : (
+                    <span className="mc-cat-block__fallback" aria-hidden />
+                  )}
                 </Link>
-                {subs.length > 0 && (
-                  <ul className="mc-cat-showcase__subs">
-                    {subs.map((s) => (
-                      <li key={s.id}>
-                        <Link href={`/category/${cat.slug}/${s.slug}`}>
-                          {s.name}
-                        </Link>
-                      </li>
-                    ))}
-                  </ul>
-                )}
-              </div>
+                <div className="mc-cat-block__body">
+                  <h3 className="mc-cat-block__title">
+                    <Link href={`/category/${cat.slug}`}>{cat.name}</Link>
+                  </h3>
+                  {cat.description && (
+                    <p className="mc-cat-block__desc">{cat.description}</p>
+                  )}
+                  {subs.length > 0 && (
+                    <ul className="mc-cat-block__pills" aria-label={`${cat.name} subcategories`}>
+                      {subs.map((s) => (
+                        <li key={s.id}>
+                          <Link
+                            href={`/category/${cat.slug}/${s.slug}`}
+                            className="mc-cat-block__pill"
+                          >
+                            {s.name}
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                  <Link
+                    href={`/category/${cat.slug}`}
+                    className="mc-cat-block__all"
+                  >
+                    Shop all {cat.name}
+                  </Link>
+                </div>
+              </article>
             );
           })}
         </div>

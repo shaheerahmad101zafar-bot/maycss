@@ -22,47 +22,61 @@ export default async function ShopCategoryIndex() {
           <p className="mc-section-subtitle">Browse</p>
           <h2 className="mc-section-title">Shop by Category</h2>
           <p className="mc-section-header__lead">
-            Every piece, organised the way we shop.
+            Every piece, organised the way we shop — open a category or jump
+            straight to a style.
           </p>
         </header>
 
-        <div className="mc-cat-grid">
+        <div className="mc-cat-showcase__grid">
           {withSubs.map((cat) => (
-            <div key={cat.id} className="mc-cat-tile mc-cat-tile--parent">
+            <article key={cat.id} className="mc-cat-block">
               <Link
                 href={`/category/${cat.slug}`}
-                className="mc-cat-tile__media"
-                aria-label={cat.name}
+                className="mc-cat-block__media"
+                aria-label={`Shop ${cat.name}`}
               >
-                {cat.image && (
+                {cat.image ? (
                   /* eslint-disable-next-line @next/next/no-img-element */
                   <img
                     src={cat.image}
                     alt=""
                     loading="lazy"
-                    width={400}
-                    height={500}
+                    width={560}
+                    height={420}
                   />
+                ) : (
+                  <span className="mc-cat-block__fallback" aria-hidden />
                 )}
               </Link>
-              <div className="mc-cat-tile__body">
-                <h3>
+              <div className="mc-cat-block__body">
+                <h3 className="mc-cat-block__title">
                   <Link href={`/category/${cat.slug}`}>{cat.name}</Link>
                 </h3>
-                {cat.description && <p>{cat.description}</p>}
+                {cat.description && (
+                  <p className="mc-cat-block__desc">{cat.description}</p>
+                )}
                 {cat.subs.length > 0 && (
-                  <ul className="mc-cat-tile__subs">
+                  <ul
+                    className="mc-cat-block__pills"
+                    aria-label={`${cat.name} subcategories`}
+                  >
                     {cat.subs.map((s) => (
                       <li key={s.id}>
-                        <Link href={`/category/${cat.slug}/${s.slug}`}>
+                        <Link
+                          href={`/category/${cat.slug}/${s.slug}`}
+                          className="mc-cat-block__pill"
+                        >
                           {s.name}
                         </Link>
                       </li>
                     ))}
                   </ul>
                 )}
+                <Link href={`/category/${cat.slug}`} className="mc-cat-block__all">
+                  Shop all {cat.name}
+                </Link>
               </div>
-            </div>
+            </article>
           ))}
         </div>
       </div>

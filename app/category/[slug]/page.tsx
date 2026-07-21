@@ -71,27 +71,50 @@ export default async function CategoryRoute({ params, searchParams }: Props) {
             {category.description && (
               <p className="mc-category__subtitle">{category.description}</p>
             )}
-            <div className="mc-cat-grid">
+            <ul className="mc-cat-block__pills mc-cat-block__pills--page" aria-label="Subcategories">
               {subs.map((c) => (
-                <Link
-                  key={c.id}
-                  href={`/category/${category.slug}/${c.slug}`}
-                  className="mc-cat-tile"
-                >
-                  <div className="mc-cat-tile__media">
+                <li key={c.id}>
+                  <Link
+                    href={`/category/${category.slug}/${c.slug}`}
+                    className="mc-cat-block__pill"
+                  >
+                    {c.name}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+            <div className="mc-cat-showcase__grid" style={{ marginTop: "1.25rem" }}>
+              {subs.map((c) => (
+                <article key={c.id} className="mc-cat-block">
+                  <Link
+                    href={`/category/${category.slug}/${c.slug}`}
+                    className="mc-cat-block__media"
+                    aria-label={c.name}
+                  >
                     {c.image ? (
                       /* eslint-disable-next-line @next/next/no-img-element */
                       <img src={c.image} alt={c.name} loading="lazy" />
                     ) : (
-                      <span className="mc-cat-tile__fallback" aria-hidden />
+                      <span className="mc-cat-block__fallback" aria-hidden />
                     )}
+                  </Link>
+                  <div className="mc-cat-block__body">
+                    <h2 className="mc-cat-block__title">
+                      <Link href={`/category/${category.slug}/${c.slug}`}>
+                        {c.name}
+                      </Link>
+                    </h2>
+                    {c.description && (
+                      <p className="mc-cat-block__desc">{c.description}</p>
+                    )}
+                    <Link
+                      href={`/category/${category.slug}/${c.slug}`}
+                      className="mc-cat-block__all"
+                    >
+                      Shop {c.name}
+                    </Link>
                   </div>
-                  <div className="mc-cat-tile__body">
-                    <h2>{c.name}</h2>
-                    {c.description && <p>{c.description}</p>}
-                    <span className="mc-cat-tile__cta">Shop {c.name} &rarr;</span>
-                  </div>
-                </Link>
+                </article>
               ))}
             </div>
           </div>

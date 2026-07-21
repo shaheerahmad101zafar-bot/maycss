@@ -3,7 +3,8 @@ import SignInButtons from "@/components/auth/SignInButtons";
 
 export const metadata = {
   title: "Sign in · MayCSS",
-  description: "Sign in to your MayCSS account to view orders and manage details.",
+  description:
+    "Sign in or create your MayCSS account to view orders and manage details.",
 };
 
 type Props = {
@@ -13,7 +14,7 @@ type Props = {
 // Map Auth.js error codes to friendly messages.
 const ERROR_MESSAGES: Record<string, string> = {
   Configuration:
-    "Auth is not fully configured yet — check your .env.local for AUTH_SECRET.",
+    "Sign-in is temporarily unavailable. Please try again in a moment.",
   AccessDenied: "Access was denied. Please try again.",
   Verification: "That sign-in link has expired. Request a new one.",
   CredentialsSignin: "Those credentials didn't work. Please try again.",
@@ -25,7 +26,7 @@ const ERROR_MESSAGES: Record<string, string> = {
 export default async function SignInPage({ searchParams }: Props) {
   const { callbackUrl, error } = await searchParams;
   const friendly = error
-    ? ERROR_MESSAGES[error] ?? ERROR_MESSAGES.Default
+    ? (ERROR_MESSAGES[error] ?? ERROR_MESSAGES.Default)
     : null;
 
   const providers = {
@@ -33,7 +34,8 @@ export default async function SignInPage({ searchParams }: Props) {
     facebook: Boolean(
       process.env.AUTH_FACEBOOK_ID && process.env.AUTH_FACEBOOK_SECRET,
     ),
-    devEmail: process.env.NODE_ENV !== "production",
+    // Always on — email creates / resumes a storefront account session.
+    email: true,
   };
 
   return (
@@ -48,7 +50,8 @@ export default async function SignInPage({ searchParams }: Props) {
         </div>
         <h1>Welcome back</h1>
         <p className="mc-signin__desc">
-          Sign in to view your orders, save favorites, and check out faster.
+          Sign in or create an account to view orders, save favorites, and check
+          out faster.
         </p>
 
         {friendly && (
@@ -63,8 +66,8 @@ export default async function SignInPage({ searchParams }: Props) {
         />
 
         <p className="mc-signin__foot">
-          New to MayCSS? Signing in also creates your account.{" "}
-          <Link href="/">Return home</Link>
+          New here? Enter your email above — we&apos;ll create your account
+          automatically. <Link href="/">Return home</Link>
         </p>
       </div>
     </section>

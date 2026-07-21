@@ -8,12 +8,16 @@ interface Props {
   providers: {
     google: boolean;
     facebook: boolean;
-    devEmail: boolean;
+    email: boolean;
   };
 }
 
-export default function SignInButtons({ callbackUrl = "/account", providers }: Props) {
+export default function SignInButtons({
+  callbackUrl = "/account",
+  providers,
+}: Props) {
   const [email, setEmail] = useState("");
+  const [name, setName] = useState("");
   const [pending, setPending] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
@@ -28,21 +32,22 @@ export default function SignInButtons({ callbackUrl = "/account", providers }: P
     }
   };
 
-  const doDevEmail = async (e: FormEvent) => {
+  const doEmail = async (e: FormEvent) => {
     e.preventDefault();
     if (!/^\S+@\S+\.\S+$/.test(email)) {
       setError("Enter a valid email address.");
       return;
     }
-    setPending("dev-email");
+    setPending("email");
     setError(null);
-    const res = await signIn("dev-email", {
+    const res = await signIn("email", {
       email,
+      name: name.trim() || undefined,
       callbackUrl,
       redirect: false,
     });
     if (res?.error) {
-      setError("Could not sign in. " + res.error);
+      setError("Could not sign in. Please try again.");
       setPending(null);
     } else if (res?.url) {
       window.location.href = res.url;
@@ -82,17 +87,25 @@ export default function SignInButtons({ callbackUrl = "/account", providers }: P
         </button>
       )}
 
-      {providers.devEmail && anySocial && (
+      {providers.email && anySocial && (
         <div className="mc-signin__divider">
           <span>or</span>
         </div>
       )}
 
-      {providers.devEmail && (
-        <form onSubmit={doDevEmail} className="mc-signin__email">
-          <p className="mc-signin__note">
-            Dev mode: sign in with just an email (no password).
-          </p>
+      {providers.email && (
+        <form onSubmit={doEmail} className="mc-signin__email">
+          <div className="mc-field">
+            <label htmlFor="signinName">Name (optional)</label>
+            <input
+              id="signinName"
+              type="text"
+              autoComplete="name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="Your name"
+            />
+          </div>
           <div className="mc-field">
             <label htmlFor="signinEmail">Email address</label>
             <input
@@ -110,7 +123,7 @@ export default function SignInButtons({ callbackUrl = "/account", providers }: P
             className="mc-btn mc-btn--primary mc-btn--block"
             disabled={pending !== null}
           >
-            {pending === "dev-email" ? "Signing in…" : "Continue"}
+            {pending === "email" ? "Signing in…" : "Sign in / Create account"}
           </button>
         </form>
       )}
@@ -118,14 +131,6 @@ export default function SignInButtons({ callbackUrl = "/account", providers }: P
       {error && (
         <p className="mc-signin__error" role="alert">
           {error}
-        </p>
-      )}
-
-      {!providers.google && !providers.facebook && !providers.devEmail && (
-        <p className="mc-signin__empty">
-          No sign-in providers are configured. Set{" "}
-          <code>AUTH_GOOGLE_ID</code>/<code>AUTH_GOOGLE_SECRET</code> or run in
-          development to enable dev email.
         </p>
       )}
     </div>

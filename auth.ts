@@ -2,14 +2,13 @@ import NextAuth from "next-auth";
 import Google from "next-auth/providers/google";
 import Facebook from "next-auth/providers/facebook";
 import Credentials from "next-auth/providers/credentials";
-
-const isDev = process.env.NODE_ENV !== "production";
+import type { Provider } from "next-auth/providers";
 
 /**
- * Only enable providers that have credentials configured.
- * This lets the site boot cleanly even before you set up OAuth apps.
+ * Providers that have credentials configured.
+ * Email login is always available so storefront accounts work without OAuth apps.
  */
-const providers = [];
+const providers: Provider[] = [];
 
 if (process.env.AUTH_GOOGLE_ID && process.env.AUTH_GOOGLE_SECRET) {
   providers.push(
@@ -29,28 +28,28 @@ if (process.env.AUTH_FACEBOOK_ID && process.env.AUTH_FACEBOOK_SECRET) {
   );
 }
 
-// Dev-only email-only credentials provider so the account flow can be
-// tested without setting up any OAuth app.
-if (isDev) {
-  providers.push(
-    Credentials({
-      id: "dev-email",
-      name: "Dev email (no password)",
-      credentials: {
-        email: { label: "Email", type: "email", placeholder: "you@example.com" },
-      },
-      authorize: async (creds) => {
-        const email = (creds?.email as string | undefined)?.trim().toLowerCase();
-        if (!email || !/^\S+@\S+\.\S+$/.test(email)) return null;
-        return {
-          id: email,
-          email,
-          name: email.split("@")[0],
-        };
-      },
-    }),
-  );
-}
+// Email sign-in / register — creates a JWT session keyed by email (orders match on email).
+providers.push(
+  Credentials({
+    id: "email",
+    name: "Email",
+    credentials: {
+      email: { label: "Email", type: "email", placeholder: "you@example.com" },
+      name: { label: "Name", type: "text", placeholder: "Your name" },
+    },
+    authorize: async (creds) => {
+      const email = (creds?.email as string | undefined)?.trim().toLowerCase();
+      if (!email || !/^\S+@\S+\.\S+$/.test(email)) return null;
+      const nameRaw = (creds?.name as string | undefined)?.trim();
+      const name = nameRaw || email.split("@")[0] || "Guest";
+      return {
+        id: email,
+        email,
+        name,
+      };
+    },
+  }),
+);
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers,
@@ -65,9 +64,17 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     newUser: "/account",
   },
   callbacks: {
+    async jwt({ token, user }) {
+      if (user?.email) {
+        token.email = user.email;
+        token.name = user.name ?? token.name;
+      }
+      return token;
+    },
     async session({ session, token }) {
-      if (session.user && token?.email) {
-        session.user.email = token.email as string;
+      if (session.user) {
+        if (token?.email) session.user.email = token.email as string;
+        if (token?.name) session.user.name = token.name as string;
       }
       return session;
     },

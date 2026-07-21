@@ -44,7 +44,7 @@ async function readBlobJson<T>(
       access: auth.access,
       token: auth.token,
       storeId: auth.storeId,
-      // Storefront should hit CDN cache. Admin passes bypassCache after writes.
+      // Storefront can use CDN; admin / post-write reads pass bypassCache.
       useCache: !bypassCache,
     });
     if (!result || result.statusCode !== 200 || !result.stream) return null;
@@ -90,6 +90,16 @@ async function writeBlobJson(
     );
   }
 
+  // Delete-then-put so the same pathname cannot stick on CDN after admin saves.
+  try {
+    await del(relativePath, {
+      token: auth.token,
+      storeId: auth.storeId,
+    });
+  } catch {
+    // Missing blob is fine.
+  }
+
   await put(relativePath, JSON.stringify(data, null, 2) + "\n", {
     access: auth.access,
     token: auth.token,
@@ -97,7 +107,8 @@ async function writeBlobJson(
     addRandomSuffix: false,
     allowOverwrite: true,
     contentType: "application/json",
-    cacheControlMaxAge: 60,
+    // Mutable catalog/CMS JSON must not linger on CDN after overwrite.
+    cacheControlMaxAge: 0,
   });
 }
 

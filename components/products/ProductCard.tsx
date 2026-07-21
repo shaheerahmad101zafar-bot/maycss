@@ -10,6 +10,18 @@ interface ProductCardProps {
   onToggleWishlist?: (product: Product, saved: boolean) => void;
 }
 
+/** Prefer smaller derivatives for grid cards (faster paint). */
+function cardImageSrc(src: string | undefined): string {
+  if (!src) return "";
+  if (src.includes("macysassets.com") && !/[?&]wid=/.test(src)) {
+    return `${src}${src.includes("?") ? "&" : "?"}wid=400&fmt=jpeg&qlt=75`;
+  }
+  if (src.includes("images.unsplash.com") && !/[?&]w=/.test(src)) {
+    return `${src}${src.includes("?") ? "&" : "?"}auto=format&fit=crop&w=400&q=70`;
+  }
+  return src;
+}
+
 function Stars({ value = 0 }: { value?: number }) {
   const full = Math.round(value);
   return (
@@ -70,7 +82,7 @@ export default function ProductCard({
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           className="mc-card__img"
-          src={product.image}
+          src={cardImageSrc(product.image)}
           alt={product.name}
           loading="lazy"
           width={400}

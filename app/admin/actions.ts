@@ -56,6 +56,10 @@ function bustCatalogCache() {
   updateTag("catalog-categories");
 }
 
+function bustCmsCache() {
+  updateTag("cms-pages");
+}
+
 /* -------------------------------------------------------------------------- */
 /*  Auth                                                                      */
 /* -------------------------------------------------------------------------- */
@@ -140,6 +144,7 @@ export async function saveMenusAction(
     .filter((l): l is MenuLink => l !== null);
 
   await MenuFactory.replaceAll(links);
+  bustCmsCache();
   revalidatePath("/", "layout");
   return {
     ok: true,
@@ -1096,6 +1101,7 @@ export async function updateAppConfigAction(
   }
 
   await saveAppConfig(next);
+  updateTag("app-config");
   revalidatePath("/", "layout");
   return { ok: true, message: "Site settings saved." };
 }
@@ -1341,6 +1347,7 @@ export async function upsertPageAction(
   };
 
   await PageFactory.upsert(nextPage);
+  bustCmsCache();
   revalidatePath("/", "layout");
   revalidatePath(`/${slug}`);
   if (slug === "home") revalidatePath("/");
@@ -1460,6 +1467,7 @@ export async function createOrEditHomePageAction(): Promise<void> {
   };
 
   await PageFactory.upsert(seed);
+  bustCmsCache();
   revalidatePath("/", "layout");
   redirect(`/admin/pages/${seed.id}/edit`);
 }
@@ -1468,6 +1476,7 @@ export async function deletePageAction(formData: FormData): Promise<void> {
   const id = String(formData.get("id") ?? "").trim();
   if (!id) return;
   await PageFactory.delete(id);
+  bustCmsCache();
   revalidatePath("/", "layout");
   redirect("/admin/pages");
 }
@@ -1477,6 +1486,7 @@ export async function duplicatePageAction(formData: FormData): Promise<void> {
   if (!id) return;
   const copy = await PageFactory.duplicate(id);
   if (!copy) redirect("/admin/pages");
+  bustCmsCache();
   revalidatePath("/", "layout");
   redirect(`/admin/pages/${copy.id}/edit`);
 }

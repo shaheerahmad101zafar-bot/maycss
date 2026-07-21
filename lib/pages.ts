@@ -1,5 +1,7 @@
 import "server-only";
 
+import { cache } from "react";
+import { unstable_cache } from "next/cache";
 import type { Metadata } from "next";
 import {
   normalizeBlock,
@@ -9,6 +11,7 @@ import {
 import { readStoreJson, writeStoreJson } from "./storage/json-store";
 
 const file = "data/pages.json";
+const footerIndexFile = "data/footer-pages.json";
 
 export type PageSeo = {
   metaTitle?: string;
@@ -56,6 +59,16 @@ export type Page = {
   lastUpdated?: string;
   seo?: PageSeo;
   blocks: ContentBlock[];
+};
+
+/** Lean footer nav row — avoids loading full CMS blocks on every page. */
+export type FooterPageLink = {
+  id: string;
+  slug: string;
+  title: string;
+  showInFooter?: boolean;
+  footerColumn?: Page["footerColumn"];
+  published: boolean;
 };
 
 export type { ContentBlock } from "./blocks/types";
@@ -118,17 +131,53 @@ function normalizePage(raw: Partial<Page>): Page {
   };
 }
 
-async function readAll(): Promise<Page[]> {
+function toFooterLink(p: Page): FooterPageLink {
+  return {
+    id: p.id,
+    slug: p.slug,
+    title: p.title,
+    showInFooter: p.showInFooter,
+    footerColumn: p.footerColumn,
+    published: p.published,
+  };
+}
+
+async function readAll(fresh = false): Promise<Page[]> {
   try {
-    const parsed = await readStoreJson<Partial<Page>[]>(file, []);
+    const parsed = await readStoreJson<Partial<Page>[]>(file, [], {
+      bypassCache: fresh,
+    });
     return parsed.map(normalizePage);
   } catch {
     return [];
   }
 }
 
+const getPagesCached = unstable_cache(
+  () => readAll(false),
+  ["cms-pages-v1"],
+  { revalidate: 30, tags: ["cms-pages"] },
+);
+
+const getFooterLinksCached = unstable_cache(
+  async () => {
+    const indexed = await readStoreJson<FooterPageLink[] | null>(
+      footerIndexFile,
+      null,
+    );
+    if (Array.isArray(indexed) && indexed.length > 0) {
+      return indexed.filter((p) => p.published && p.showInFooter);
+    }
+    const all = await readAll(false);
+    return all.filter((p) => p.published && p.showInFooter).map(toFooterLink);
+  },
+  ["cms-footer-links-v1"],
+  { revalidate: 30, tags: ["cms-pages"] },
+);
+
 async function writeAll(list: Page[]): Promise<void> {
   await writeStoreJson(file, list);
+  await writeStoreJson(footerIndexFile, list.map(toFooterLink));
 }
 
 /**
@@ -136,23 +185,33 @@ async function writeAll(list: Page[]): Promise<void> {
  * Block CRUD helpers are pure — they return a new Page; caller persists.
  */
 export const PageFactory = {
-  async list(opts?: { publishedOnly?: boolean }): Promise<Page[]> {
-    const all = await readAll();
+  async list(opts?: {
+    publishedOnly?: boolean;
+    fresh?: boolean;
+  }): Promise<Page[]> {
+    const all = opts?.fresh ? await readAll(true) : await getPagesCached();
     return opts?.publishedOnly ? all.filter((p) => p.published) : all;
   },
 
-  async getBySlug(slug: string): Promise<Page | null> {
-    const all = await readAll();
+  /** Tiny footer nav — does not download full pages.json blocks. */
+  listFooterLinks: cache(async function listFooterLinks(): Promise<
+    FooterPageLink[]
+  > {
+    return getFooterLinksCached();
+  }),
+
+  getBySlug: cache(async function getBySlug(slug: string): Promise<Page | null> {
+    const all = await getPagesCached();
     return all.find((p) => p.slug === slug && p.published) ?? null;
-  },
+  }),
 
   async getById(id: string): Promise<Page | null> {
-    const all = await readAll();
+    const all = await readAll(true);
     return all.find((p) => p.id === id) ?? null;
   },
 
   async upsert(page: Page): Promise<Page> {
-    const all = await readAll();
+    const all = await readAll(true);
     const idx = all.findIndex((p) => p.id === page.id);
     const withTimestamp: Page = {
       ...page,
@@ -165,7 +224,7 @@ export const PageFactory = {
   },
 
   async delete(id: string): Promise<void> {
-    const all = await readAll();
+    const all = await readAll(true);
     await writeAll(all.filter((p) => p.id !== id));
   },
 
@@ -173,7 +232,7 @@ export const PageFactory = {
   async duplicate(id: string): Promise<Page | null> {
     const source = await PageFactory.getById(id);
     if (!source) return null;
-    const all = await readAll();
+    const all = await readAll(true);
     let n = 1;
     let slug = `${source.slug}-copy`;
     while (all.some((p) => p.slug === slug)) {

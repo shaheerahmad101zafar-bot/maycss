@@ -1,4 +1,6 @@
 import "server-only";
+import { cache } from "react";
+import { unstable_cache } from "next/cache";
 import type { CurrencyCode } from "./currency";
 import { readStoreJson, writeStoreJson } from "./storage/json-store";
 
@@ -79,9 +81,11 @@ function normalizeActiveLinkStyle(
 
 const file = "data/app-config.json";
 
-export async function getAppConfig(): Promise<AppConfig> {
+async function loadAppConfig(fresh = false): Promise<AppConfig> {
   try {
-    const parsed = await readStoreJson<Partial<AppConfig>>(file, DEFAULT);
+    const parsed = await readStoreJson<Partial<AppConfig>>(file, DEFAULT, {
+      bypassCache: fresh,
+    });
     return {
       ...DEFAULT,
       ...parsed,
@@ -93,6 +97,16 @@ export async function getAppConfig(): Promise<AppConfig> {
     return DEFAULT;
   }
 }
+
+const getAppConfigCached = unstable_cache(
+  () => loadAppConfig(false),
+  ["app-config-v1"],
+  { revalidate: 60, tags: ["app-config"] },
+);
+
+export const getAppConfig = cache(async function getAppConfigInner(): Promise<AppConfig> {
+  return getAppConfigCached();
+});
 
 export async function saveAppConfig(cfg: AppConfig): Promise<void> {
   await writeStoreJson(file, cfg);

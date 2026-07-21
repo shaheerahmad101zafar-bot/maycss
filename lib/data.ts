@@ -1,5 +1,6 @@
 import "server-only";
 
+import { cache } from "react";
 import { unstable_cache } from "next/cache";
 import type { BannerSlide, Category, Product } from "./utils";
 import {
@@ -9,6 +10,8 @@ import {
 } from "./storage/json-store";
 
 const productsFile = "data/products.json";
+/** Lean catalog for grids — no contentBlocks/SEO (much smaller Blob download). */
+const listingFile = "data/products-listing.json";
 const productDeletedIdsFile = "data/products/deleted-ids.json";
 const slidesFile = "data/banner-slides.json";
 const categoriesFile = "data/categories.json";
@@ -42,62 +45,6 @@ async function writeDeletedIds(file: string, ids: string[]): Promise<void> {
   await writeJson(file, unique);
 }
 
-async function loadProductsRaw(): Promise<Product[]> {
-  const [list, deleted] = await Promise.all([
-    readJson<Product[]>(productsFile, []),
-    readDeletedIds(productDeletedIdsFile),
-  ]);
-  if (deleted.length === 0) return list;
-  const banned = new Set(deleted);
-  return list.filter((p) => !banned.has(String(p.id)));
-}
-
-const getProductsCached = unstable_cache(
-  loadProductsRaw,
-  ["catalog-products-v1"],
-  { revalidate: 60, tags: ["catalog-products"] },
-);
-
-const getCategoriesCached = unstable_cache(
-  async () => {
-    const [list, deleted] = await Promise.all([
-      readJson<Category[]>(categoriesFile, []),
-      readDeletedIds(categoryDeletedIdsFile),
-    ]);
-    const filtered =
-      deleted.length === 0
-        ? list
-        : list.filter((c) => !new Set(deleted).has(String(c.id)));
-    return [...filtered].sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
-  },
-  ["catalog-categories-v1"],
-  { revalidate: 60, tags: ["catalog-categories"] },
-);
-
-/* -------------------------------------------------------------------------- */
-/*  Products                                                                  */
-/* -------------------------------------------------------------------------- */
-
-/**
- * @param opts.fresh — bypass Next/Blob caches (admin mutations).
- */
-export async function getProducts(opts?: {
-  fresh?: boolean;
-}): Promise<Product[]> {
-  if (opts?.fresh) {
-    const [list, deleted] = await Promise.all([
-      readJson<Product[]>(productsFile, [], true),
-      readJson<unknown>(productDeletedIdsFile, [], true),
-    ]);
-    const banned = new Set(
-      Array.isArray(deleted) ? deleted.map((id) => String(id)) : [],
-    );
-    if (banned.size === 0) return list;
-    return list.filter((p) => !banned.has(String(p.id)));
-  }
-  return getProductsCached();
-}
-
 /** Listing-safe product fields only — shrinks RSC/HTML payloads. */
 export function toListingProduct(p: Product): Product {
   return {
@@ -117,21 +64,96 @@ export function toListingProduct(p: Product): Product {
   };
 }
 
-const getListingProductsCached = unstable_cache(
-  async () => (await loadProductsRaw()).map(toListingProduct),
-  ["catalog-listing-products-v1"],
-  { revalidate: 60, tags: ["catalog-products"] },
+async function writeListingFile(products: Product[]): Promise<void> {
+  await writeJson(listingFile, products.map(toListingProduct));
+}
+
+async function loadProductsRaw(bypassCache = false): Promise<Product[]> {
+  const [list, deleted] = await Promise.all([
+    readJson<Product[]>(productsFile, [], bypassCache),
+    readDeletedIds(productDeletedIdsFile),
+  ]);
+  if (deleted.length === 0) return list;
+  const banned = new Set(deleted);
+  return list.filter((p) => !banned.has(String(p.id)));
+}
+
+async function loadListingRaw(bypassCache = false): Promise<Product[]> {
+  const [listing, deleted] = await Promise.all([
+    readJson<Product[] | null>(listingFile, null, bypassCache),
+    readDeletedIds(productDeletedIdsFile),
+  ]);
+  const banned = new Set(deleted);
+  if (Array.isArray(listing) && listing.length > 0) {
+    const lean = listing.map(toListingProduct);
+    if (banned.size === 0) return lean;
+    return lean.filter((p) => !banned.has(String(p.id)));
+  }
+  // First deploy / missing listing file — fall back then self-heal.
+  const full = await loadProductsRaw(bypassCache);
+  const lean = full.map(toListingProduct);
+  try {
+    await writeListingFile(full);
+  } catch {
+    // Read paths must not fail if listing write is unavailable.
+  }
+  if (banned.size === 0) return lean;
+  return lean.filter((p) => !banned.has(String(p.id)));
+}
+
+const getProductsCached = unstable_cache(
+  () => loadProductsRaw(false),
+  ["catalog-products-v2"],
+  { revalidate: 30, tags: ["catalog-products"] },
 );
 
-/** Lean catalog for grids/search — cached without contentBlocks/SEO blobs. */
-export async function getListingProducts(opts?: {
+const getListingProductsCached = unstable_cache(
+  () => loadListingRaw(false),
+  ["catalog-listing-products-v2"],
+  { revalidate: 30, tags: ["catalog-products"] },
+);
+
+const getCategoriesCached = unstable_cache(
+  async () => {
+    const [list, deleted] = await Promise.all([
+      readJson<Category[]>(categoriesFile, []),
+      readDeletedIds(categoryDeletedIdsFile),
+    ]);
+    const filtered =
+      deleted.length === 0
+        ? list
+        : list.filter((c) => !new Set(deleted).has(String(c.id)));
+    return [...filtered].sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+  },
+  ["catalog-categories-v2"],
+  { revalidate: 30, tags: ["catalog-categories"] },
+);
+
+/* -------------------------------------------------------------------------- */
+/*  Products                                                                  */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * @param opts.fresh — bypass Next/Blob caches (admin mutations).
+ */
+export async function getProducts(opts?: {
   fresh?: boolean;
 }): Promise<Product[]> {
   if (opts?.fresh) {
-    return (await getProducts({ fresh: true })).map(toListingProduct);
+    return loadProductsRaw(true);
+  }
+  return getProductsCached();
+}
+
+/** Lean catalog for grids/search — prefers small listing Blob. */
+export const getListingProducts = cache(async function getListingProductsInner(opts?: {
+  fresh?: boolean;
+}): Promise<Product[]> {
+  if (opts?.fresh) {
+    return loadListingRaw(true);
   }
   return getListingProductsCached();
-}
+});
 
 export async function getProductById(
   id: string | number,
@@ -242,6 +264,7 @@ export async function removeProductsByIds(
 
   const next = rawList.filter((p) => !banned.has(String(p.id)));
   await writeJson(productsFile, next);
+  await writeListingFile(next);
   await Promise.all(wanted.map((id) => deleteProductRecord(id)));
 
   const pruned = [...new Set([...existingDeleted, ...wanted])].filter(
@@ -254,6 +277,7 @@ export async function removeProductsByIds(
 
 export async function saveProducts(products: Product[]): Promise<void> {
   await writeJson(productsFile, products);
+  await writeListingFile(products);
   // Creating/saving products clears their tombstones if they were re-added.
   const deleted = await readDeletedIds(productDeletedIdsFile);
   if (deleted.length === 0) return;
@@ -284,7 +308,7 @@ export function nextProductId(products: Product[]): number {
 /*  Categories                                                                */
 /* -------------------------------------------------------------------------- */
 
-export async function getCategories(opts?: {
+export const getCategories = cache(async function getCategoriesInner(opts?: {
   fresh?: boolean;
 }): Promise<Category[]> {
   if (opts?.fresh) {
@@ -302,7 +326,7 @@ export async function getCategories(opts?: {
     return [...filtered].sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
   }
   return getCategoriesCached();
-}
+});
 
 const CATEGORY_SLUG_ALIASES: Record<string, string> = {
   "women-clothing": "womens-clothing",

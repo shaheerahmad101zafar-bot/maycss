@@ -18,15 +18,13 @@ const SOCIAL_LABELS: Array<{ key: string; label: string; icon: string }> = [
 export default async function Footer() {
   const [cfg, pages] = await Promise.all([
     getAppConfig(),
-    PageFactory.list({ publishedOnly: true }),
+    PageFactory.listFooterLinks(),
   ]);
 
   const companyPages = pages.filter(
-    (p) => p.showInFooter && (p.footerColumn === "company" || !p.footerColumn),
+    (p) => p.footerColumn === "company" || !p.footerColumn,
   );
-  const legalPages = pages.filter(
-    (p) => p.showInFooter && p.footerColumn === "legal",
-  );
+  const legalPages = pages.filter((p) => p.footerColumn === "legal");
   const activeSocials = SOCIAL_LABELS.filter(
     (s) => cfg.socials[s.key] && String(cfg.socials[s.key]).length > 0,
   );

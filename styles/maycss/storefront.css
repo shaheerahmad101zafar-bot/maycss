@@ -496,10 +496,14 @@ body {
   }
 }
 
-/* Page-level promo banner (Sale / Shop / About / Contact) — full bleed */
-.mc-page > .mc-cat-promo {
-  width: 100%;
-  margin: 0 0 var(--mc-space-block, 2rem);
+/* Category Black Friday promo banner */
+.mc-cat-promo {
+  min-height: clamp(220px, 38vw, 360px);
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  align-items: center;
+  color: #fff;
 }
 .mc-cat-promo__inner {
   padding: clamp(28px, 5vw, 56px) 0;
@@ -532,6 +536,36 @@ body {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
+}
+.mc-cat-promo__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 18px;
+  max-width: 42rem;
+}
+.mc-cat-promo__chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 14px;
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-decoration: none;
+  line-height: 1.2;
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease,
+    color 0.15s ease;
+}
+.mc-cat-promo__chip:hover {
+  background: #fff;
+  border-color: #fff;
+  color: #111;
 }
 .mc-cat-tile__fallback {
   display: block;

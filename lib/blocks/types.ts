@@ -144,6 +144,15 @@ export type BannerBlock = BaseBlock & {
   body?: string;
   ctaLabel?: string;
   ctaHref?: string;
+  secondaryCtaLabel?: string;
+  secondaryCtaHref?: string;
+  /** Category chips under the CTAs — customers click through to each style. */
+  categoryIds?: string[];
+  /**
+   * `promo` = left-aligned shop banner with optional category chips
+   * (matches category promo strips). Default `overlay` keeps classic centered banner.
+   */
+  variant?: "overlay" | "promo";
   overlay?: "none" | "light" | "dark";
 };
 
@@ -427,11 +436,15 @@ export const BlockFactory = {
           type,
           layout,
           image: "",
-          eyebrow: "New collection",
-          heading: "Bold banner headline",
-          body: "One-line supporting copy.",
-          ctaLabel: "Explore",
-          ctaHref: "/shop",
+          eyebrow: "Black Friday Sale",
+          heading: "Shop Women's Clothing",
+          body: "Dresses, denim, and everyday essentials — Black Friday savings now on.",
+          ctaLabel: "Shop Black Friday",
+          ctaHref: "/sale",
+          secondaryCtaLabel: "Browse Women's Clothing",
+          secondaryCtaHref: "/category/womens-clothing",
+          categoryIds: [],
+          variant: "promo",
           overlay: "dark",
         };
       case "slider":
@@ -684,6 +697,14 @@ export function normalizeBlock(raw: unknown): ContentBlock | null {
         body: typeof b.body === "string" ? b.body : "",
         ctaLabel: typeof b.ctaLabel === "string" ? b.ctaLabel : "",
         ctaHref: typeof b.ctaHref === "string" ? b.ctaHref : "",
+        secondaryCtaLabel:
+          typeof b.secondaryCtaLabel === "string" ? b.secondaryCtaLabel : "",
+        secondaryCtaHref:
+          typeof b.secondaryCtaHref === "string" ? b.secondaryCtaHref : "",
+        categoryIds: Array.isArray(b.categoryIds)
+          ? (b.categoryIds as unknown[]).map(String)
+          : [],
+        variant: b.variant === "promo" ? "promo" : "overlay",
         overlay:
           (b.overlay as "none" | "light" | "dark" | undefined) ?? "dark",
       };

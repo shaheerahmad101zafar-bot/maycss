@@ -8,7 +8,7 @@ const BLOCK_HINTS: Partial<Record<ContentBlock["type"], string>> = {
   countdown: "Red urgency strip with live countdown timer.",
   categorygrid: "Shop by category — pulls from Admin → Categories.",
   editorial: "Split brand story — copy + image side by side.",
-  banner: "Full-bleed image banner with overlay + CTA.",
+  banner: "Image banner — promo style adds secondary CTA + clickable category chips.",
   cta: "Newsletter / dark call-to-action strip.",
   richtext: "Free-form text section.",
   slider: "Promo / image slider (marketing = store banner slides).",
@@ -33,7 +33,12 @@ function blockLabel(block: ContentBlock, index: number): string {
   } else if (block.type === "features") title = "Store benefits bar";
   else if (block.type === "cta" && block.heading) title = `Newsletter CTA — "${block.heading}"`;
   else if (block.type === "productgrid" && block.heading) title = `Products — "${block.heading}"`;
-  else if (block.type === "banner" && block.heading) title = `Banner — "${block.heading}"`;
+  else if (block.type === "banner" && block.heading) {
+    title =
+      block.variant === "promo"
+        ? `Shop promo banner — "${block.heading}"`
+        : `Banner — "${block.heading}"`;
+  }
   else if (block.type === "richtext" && block.heading) title = `Text — "${block.heading}"`;
   else if (block.type === "slider") {
     title =
@@ -59,8 +64,8 @@ export default function HomePageEditGuide({ blocks }: { blocks: ContentBlock[] }
         Blocks render <strong>top to bottom</strong> on the live site — same
         order as this list. Use <strong>↑ ↓</strong> on each block to reorder,
         edit copy/images, then <strong>Save Page</strong>. Suggested shell: (1)
-        marketing slider → (2) text + product grid → (3) banner → (4) category
-        section.
+        marketing slider → (2) shop promo with category links → (3) products →
+        (4) more sections below.
       </p>
       <ol style={{ margin: 0, paddingLeft: 20, display: "grid", gap: 8 }}>
         {blocks.map((block, i) => (

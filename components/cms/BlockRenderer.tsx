@@ -8,6 +8,7 @@ import { bgImageStyle, imgFocusStyle, overlayOpacityStyle } from "@/lib/images/f
 import CategoryGridView from "@/components/cms/blocks/CategoryGridView";
 import EditorialBlockView from "@/components/cms/blocks/EditorialBlockView";
 import SplitBannerView from "@/components/cms/blocks/SplitBannerView";
+import BannerPromoView from "@/components/cms/blocks/BannerPromoView";
 import type {
   BannerBlock,
   ContactFormBlock,
@@ -284,6 +285,13 @@ function RenderBlock({
         </section>
       );
     case "banner":
+      if (
+        block.variant === "promo" ||
+        (block.categoryIds && block.categoryIds.length > 0) ||
+        block.secondaryCtaLabel
+      ) {
+        return <BannerPromoView block={block} categories={categories} />;
+      }
       return <BannerRender block={block} />;
     case "slider":
       return (

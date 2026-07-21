@@ -23,6 +23,7 @@ import { cx } from "@/lib/utils";
 import { postAdminUpload } from "@/lib/uploads/client";
 import HybridImagePicker from "./HybridImagePicker";
 import ImageAdjustFields from "./ImageAdjustFields";
+import { BANNER_SHOP_LINK_OPTIONS } from "@/components/cms/blocks/BannerPromoView";
 
 interface Props {
   block: ContentBlock;
@@ -1183,8 +1184,46 @@ function BannerFields({
   onChange,
   seoKeyword,
 }: FieldsProps<BannerBlock> & { seoKeyword?: string }) {
+  const selected = new Set(block.categoryIds ?? []);
+  const toggleCat = (id: string) => {
+    const next = new Set(selected);
+    if (next.has(id)) next.delete(id);
+    else next.add(id);
+    onChange({ categoryIds: [...next] });
+  };
+  const fillShopLinks = () =>
+    onChange({
+      variant: "promo",
+      categoryIds: BANNER_SHOP_LINK_OPTIONS.map((o) => o.id),
+      eyebrow: block.eyebrow || "Black Friday Sale",
+      heading: block.heading || "Shop Women's Clothing",
+      body:
+        block.body ||
+        "Dresses, denim, and everyday essentials — Black Friday savings now on.",
+      ctaLabel: block.ctaLabel || "Shop Black Friday",
+      ctaHref: block.ctaHref || "/sale",
+      secondaryCtaLabel:
+        block.secondaryCtaLabel || "Browse Women's Clothing",
+      secondaryCtaHref:
+        block.secondaryCtaHref || "/category/womens-clothing",
+    });
+
   return (
     <div className="mc-admin__form-grid">
+      <div className="mc-field">
+        <label>Banner style</label>
+        <select
+          value={block.variant ?? "overlay"}
+          onChange={(e) =>
+            onChange({
+              variant: e.target.value === "promo" ? "promo" : "overlay",
+            })
+          }
+        >
+          <option value="overlay">Classic centered overlay</option>
+          <option value="promo">Shop promo + category links</option>
+        </select>
+      </div>
       <div className="mc-field mc-field--full">
         <ImageUpload
           value={block.image}
@@ -1210,7 +1249,7 @@ function BannerFields({
         <input
           value={block.eyebrow ?? ""}
           onChange={(e) => onChange({ eyebrow: e.target.value })}
-          placeholder="e.g. New collection"
+          placeholder="e.g. Black Friday Sale"
         />
       </div>
       <div className="mc-field">
@@ -1249,19 +1288,68 @@ function BannerFields({
         />
       </div>
       <div className="mc-field">
-        <label>CTA label</label>
+        <label>Primary CTA label</label>
         <input
           value={block.ctaLabel ?? ""}
           onChange={(e) => onChange({ ctaLabel: e.target.value })}
         />
       </div>
       <div className="mc-field">
-        <label>CTA link</label>
+        <label>Primary CTA link</label>
         <input
           value={block.ctaHref ?? ""}
           onChange={(e) => onChange({ ctaHref: e.target.value })}
-          placeholder="/shop"
+          placeholder="/sale"
         />
+      </div>
+      <div className="mc-field">
+        <label>Secondary CTA label</label>
+        <input
+          value={block.secondaryCtaLabel ?? ""}
+          onChange={(e) => onChange({ secondaryCtaLabel: e.target.value })}
+          placeholder="Browse Women's Clothing"
+        />
+      </div>
+      <div className="mc-field">
+        <label>Secondary CTA link</label>
+        <input
+          value={block.secondaryCtaHref ?? ""}
+          onChange={(e) => onChange({ secondaryCtaHref: e.target.value })}
+          placeholder="/category/womens-clothing"
+        />
+      </div>
+      <div className="mc-field mc-field--full">
+        <label>Category quick links (chips)</label>
+        <p className="mc-field__hint" style={{ marginBottom: 8 }}>
+          Customers click these to open each category. Tick the styles you want
+          on this banner.
+        </p>
+        <button
+          type="button"
+          className="mc-admin__link"
+          onClick={fillShopLinks}
+          style={{ marginBottom: 10 }}
+        >
+          Fill clothing + jeans styles
+        </button>
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fill, minmax(180px, 1fr))",
+            gap: 6,
+          }}
+        >
+          {BANNER_SHOP_LINK_OPTIONS.map((opt) => (
+            <label key={opt.id} style={{ fontSize: "0.85rem" }}>
+              <input
+                type="checkbox"
+                checked={selected.has(opt.id)}
+                onChange={() => toggleCat(opt.id)}
+              />{" "}
+              {opt.label}
+            </label>
+          ))}
+        </div>
       </div>
     </div>
   );

@@ -1071,6 +1071,20 @@ function CategoryGridFields({
           <option value="banners">Full category promo banners</option>
         </select>
       </div>
+      {block.variant === "banners" && (
+        <div className="mc-field">
+          <label>Show large promo banners</label>
+          <select
+            value={block.showPromoBanners === false ? "off" : "on"}
+            onChange={(e) =>
+              onChange({ showPromoBanners: e.target.value === "on" })
+            }
+          >
+            <option value="on">Yes — promo strips + style cards</option>
+            <option value="off">No — style cards only</option>
+          </select>
+        </div>
+      )}
       <div className="mc-field">
         <label>Eyebrow</label>
         <input

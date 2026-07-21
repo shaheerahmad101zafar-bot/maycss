@@ -313,6 +313,7 @@ function RenderBlock({
             eyebrow={block.eyebrow}
             heading={block.heading}
             subheading={block.subheading}
+            showPromoBanners={block.showPromoBanners !== false}
           />
         );
       }

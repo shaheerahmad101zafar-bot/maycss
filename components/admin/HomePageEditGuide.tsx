@@ -11,7 +11,7 @@ const BLOCK_HINTS: Partial<Record<ContentBlock["type"], string>> = {
   banner: "Full-bleed image banner with overlay + CTA.",
   cta: "Newsletter / dark call-to-action strip.",
   richtext: "Free-form text section.",
-  slider: "Promo / image slider.",
+  slider: "Promo / image slider (marketing = store banner slides).",
 };
 
 function blockLabel(block: ContentBlock, index: number): string {
@@ -22,13 +22,25 @@ function blockLabel(block: ContentBlock, index: number): string {
   else if (block.type === "splitbanner" && block.heading) title = `Split promo — "${block.heading}"`;
   else if (block.type === "editorial" && block.heading) title = `Editorial — "${block.heading}"`;
   else if (block.type === "countdown" && block.heading) title = `Countdown — "${block.heading}"`;
-  else if (block.type === "categorygrid") title = "Category grid — Shop by Category";
-  else if (block.type === "features") title = "Store benefits bar";
+  else if (block.type === "categorygrid") {
+    const promo =
+      block.variant === "banners" && block.showPromoBanners === false
+        ? "style cards only"
+        : block.variant === "banners"
+          ? "promo banners"
+          : "compact grid";
+    title = `Category section — ${promo}`;
+  } else if (block.type === "features") title = "Store benefits bar";
   else if (block.type === "cta" && block.heading) title = `Newsletter CTA — "${block.heading}"`;
   else if (block.type === "productgrid" && block.heading) title = `Products — "${block.heading}"`;
   else if (block.type === "banner" && block.heading) title = `Banner — "${block.heading}"`;
   else if (block.type === "richtext" && block.heading) title = `Text — "${block.heading}"`;
-  else if (block.type === "slider") title = "Slider";
+  else if (block.type === "slider") {
+    title =
+      block.variant === "marketing"
+        ? "1st — Marketing hero slider"
+        : "Slider";
+  }
 
   return hint ? `${title}. ${hint}` : title;
 }
@@ -44,10 +56,11 @@ export default function HomePageEditGuide({ blocks }: { blocks: ContentBlock[] }
     >
       <p className="mc-admin__stat-label">Homepage layout guide</p>
       <p className="mc-admin__hint" style={{ margin: "8px 0 12px" }}>
-        Live homepage order is <strong>locked</strong>: (1) hero slider → (2)
-        product grid → (3) banner → (4) shop by category, then the blocks below.
-        Edit copy/images here, then <strong>Save Page</strong>. Do not reshuffle
-        the top four sections unless you explicitly want a new layout.
+        Blocks render <strong>top to bottom</strong> on the live site — same
+        order as this list. Use <strong>↑ ↓</strong> on each block to reorder,
+        edit copy/images, then <strong>Save Page</strong>. Suggested shell: (1)
+        marketing slider → (2) text + product grid → (3) banner → (4) category
+        section.
       </p>
       <ol style={{ margin: 0, paddingLeft: 20, display: "grid", gap: 8 }}>
         {blocks.map((block, i) => (

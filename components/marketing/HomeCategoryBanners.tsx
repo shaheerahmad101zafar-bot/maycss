@@ -49,17 +49,20 @@ type Props = {
   eyebrow?: string;
   heading?: string;
   subheading?: string;
+  /** When false, hide large promo strips — style cards only. */
+  showPromoBanners?: boolean;
 };
 
 /**
- * Home: every category gets its own Black Friday banner strip,
- * so shoppers see Clothing / Dresses / Jeans (+ every subcategory) first.
+ * Home category section: optional promo banners + subcategory card grids.
+ * Toggle promo strips from Admin → category grid → “Show promo banners”.
  */
 export default function HomeCategoryBanners({
   categories,
   eyebrow = "Browse",
   heading = "Shop by Category",
-  subheading = "Every category we carry — open a banner to shop the full edit, or jump into a style below.",
+  subheading = "Every category we carry — open a style below to shop the full edit.",
+  showPromoBanners = true,
 }: Props) {
   const parents = new Map(categories.map((c) => [c.id, c]));
   const top = categories
@@ -83,58 +86,70 @@ export default function HomeCategoryBanners({
           .filter((c) => c.parentId === cat.id)
           .sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
         const href = hrefFor(cat, parents);
+        const cards = subs.length > 0 ? subs : showPromoBanners ? [] : [cat];
+
+        if (!showPromoBanners && cards.length === 0) return null;
 
         return (
           <div key={cat.id} className="mc-home-cat-banners__group">
-            <section
-              className="mc-cat-promo"
-              aria-label={`${cat.name} Black Friday banner`}
-              style={{
-                backgroundImage: `linear-gradient(90deg, rgba(0,0,0,.62), rgba(0,0,0,.28)), url(${bannerImage(cat)})`,
-              }}
-            >
-              <div className="mc-container mc-cat-promo__inner">
-                <p className="mc-cat-promo__eyebrow">Black Friday Sale</p>
-                <h2 className="mc-cat-promo__title">Shop {cat.name}</h2>
-                <p className="mc-cat-promo__body">
-                  {cat.description ||
-                    `Explore ${cat.name} with 20% off for Black Friday.`}
-                </p>
-                <div className="mc-cat-promo__actions">
-                  <Link href="/sale" className="mc-btn mc-btn--primary mc-btn--hero">
-                    Shop Black Friday
-                  </Link>
-                  <Link href={href} className="mc-btn mc-btn--ghost mc-btn--hero">
-                    Browse {cat.name}
-                  </Link>
+            {showPromoBanners && (
+              <section
+                className="mc-cat-promo"
+                aria-label={`${cat.name} Black Friday banner`}
+                style={{
+                  backgroundImage: `linear-gradient(90deg, rgba(0,0,0,.62), rgba(0,0,0,.28)), url(${bannerImage(cat)})`,
+                }}
+              >
+                <div className="mc-container mc-cat-promo__inner">
+                  <p className="mc-cat-promo__eyebrow">Black Friday Sale</p>
+                  <h2 className="mc-cat-promo__title">Shop {cat.name}</h2>
+                  <p className="mc-cat-promo__body">
+                    {cat.description ||
+                      `Explore ${cat.name} with 20% off for Black Friday.`}
+                  </p>
+                  <div className="mc-cat-promo__actions">
+                    <Link
+                      href="/sale"
+                      className="mc-btn mc-btn--primary mc-btn--hero"
+                    >
+                      Shop Black Friday
+                    </Link>
+                    <Link
+                      href={href}
+                      className="mc-btn mc-btn--ghost mc-btn--hero"
+                    >
+                      Browse {cat.name}
+                    </Link>
+                  </div>
                 </div>
-              </div>
-            </section>
+              </section>
+            )}
 
-            {subs.length > 0 && (
+            {cards.length > 0 && (
               <div className="mc-container mc-home-cat-banners__subs">
                 <p className="mc-home-cat-banners__subs-label">
-                  Shop {cat.name} by style
+                  Shop {cat.name}
+                  {subs.length > 0 ? " by style" : ""}
                 </p>
                 <div className="mc-home-cat-banners__subgrid">
-                  {subs.map((sub) => (
+                  {cards.map((card) => (
                     <Link
-                      key={sub.id}
-                      href={hrefFor(sub, parents)}
+                      key={card.id}
+                      href={hrefFor(card, parents)}
                       className="mc-home-cat-banners__subcard"
                       style={{
-                        backgroundImage: `linear-gradient(180deg, rgba(0,0,0,.15), rgba(0,0,0,.72)), url(${bannerImage(sub)})`,
+                        backgroundImage: `linear-gradient(180deg, rgba(0,0,0,.15), rgba(0,0,0,.72)), url(${bannerImage(card)})`,
                       }}
                     >
                       <span className="mc-home-cat-banners__sub-eyebrow">
                         Black Friday
                       </span>
                       <span className="mc-home-cat-banners__sub-title">
-                        {sub.name}
+                        {card.name}
                       </span>
-                      {sub.description && (
+                      {card.description && (
                         <span className="mc-home-cat-banners__sub-desc">
-                          {sub.description}
+                          {card.description}
                         </span>
                       )}
                     </Link>

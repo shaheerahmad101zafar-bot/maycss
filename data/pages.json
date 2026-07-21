@@ -533,7 +533,8 @@
         "subheading": "Every category we carry — open a banner to shop the full edit, or jump into a style below.",
         "limit": 12,
         "categoryIds": [],
-        "variant": "banners"
+        "variant": "banners",
+        "showPromoBanners": false
       },
       {
         "id": "blk_home_features",
@@ -562,32 +563,6 @@
             "body": "30-day returns on unworn items, hassle-free."
           }
         ]
-      },
-      {
-        "id": "blk_home_hero",
-        "type": "hero",
-        "layout": {
-          "alignment": "center",
-          "width": "full",
-          "columnCount": 1,
-          "padding": "none"
-        },
-        "eyebrow": "Black Friday Sale",
-        "heading": "MayCSS Black Friday Edit",
-        "subheading": "Shop women's clothing, dresses for women, and jeans and denim — curated fashion products with limited-time savings.",
-        "backgroundImage": "https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=2000&q=80",
-        "imageFocus": {
-          "x": 50,
-          "y": 28,
-          "fit": "cover"
-        },
-        "overlayStrength": 52,
-        "ctaLabel": "Shop Black Friday",
-        "ctaHref": "/sale",
-        "secondaryCtaLabel": "Women's Clothing",
-        "secondaryCtaHref": "/category/womens-clothing",
-        "showCategoryLinks": true,
-        "height": "large"
       },
       {
         "id": "blk_home_split",

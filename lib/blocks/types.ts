@@ -258,6 +258,8 @@ export type CategoryGridBlock = BaseBlock & {
   categoryIds?: string[];
   /** `banners` = full category promo strips; `grid` = compact cards. */
   variant?: "grid" | "banners";
+  /** When variant is `banners`, hide large promo strips and keep style cards. */
+  showPromoBanners?: boolean;
 };
 
 export type ContentBlock =
@@ -553,6 +555,7 @@ export const BlockFactory = {
           limit: 5,
           categoryIds: [],
           variant: "grid",
+          showPromoBanners: true,
         };
     }
   },
@@ -836,6 +839,7 @@ export function normalizeBlock(raw: unknown): ContentBlock | null {
           ? (b.categoryIds as unknown[]).map(String)
           : [],
         variant: b.variant === "banners" ? "banners" : "grid",
+        showPromoBanners: b.showPromoBanners !== false,
       };
     default:
       return null;

@@ -14,12 +14,6 @@ const FALLBACK_META: Metadata = {
     "Independent designers and heritage houses, sourced with integrity.",
 };
 
-/** Fixed homepage shell — do not reshuffle these without an explicit request. */
-const HOME_SECOND_IDS = new Set(["blk_home_seo_copy", "blk_home_grid"]);
-const HOME_THIRD_IDS = new Set(["blk_home_banner"]);
-/** Skip — MarketingBanner + HomeCategoryBanners already cover these. */
-const HOME_SKIP_IDS = new Set(["blk_home_promo_slider", "blk_home_hero", "blk_home_categories"]);
-
 export async function generateMetadata(): Promise<Metadata> {
   const page = await PageFactory.getBySlug("home");
   if (!page) return FALLBACK_META;
@@ -48,29 +42,18 @@ export default async function Home() {
   if (homePage && homePage.blocks.length > 0) {
     const jsonLd = PageFactory.toJsonLd(homePage);
     const hasFeaturesBlock = homePage.blocks.some((b) => b.type === "features");
-    const blocks = homePage.blocks.filter(
-      (b) => b.type !== "categorygrid" && !HOME_SKIP_IDS.has(b.id),
+    const hasMarketingSlider = homePage.blocks.some(
+      (b) => b.type === "slider" && b.variant === "marketing",
     );
 
-    // Locked order from your annotation:
-    // 1st  MarketingBanner (hero slider)
-    // 2nd  SEO copy + product grid
-    // 3rd  Full-bleed banner
-    // 4th  Shop-by-category banners
-    // then remaining CMS blocks
-    const secondBlocks = blocks.filter((b) => HOME_SECOND_IDS.has(b.id));
-    const thirdBlocks = blocks.filter((b) => HOME_THIRD_IDS.has(b.id));
-    const restBlocks = blocks.filter(
-      (b) => !HOME_SECOND_IDS.has(b.id) && !HOME_THIRD_IDS.has(b.id),
-    );
-
+    // Admin block order = live order (↑ ↓ in Admin → Pages → Home).
     return (
       <>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: jsonLd }}
         />
-        {slides.length > 0 && (
+        {!hasMarketingSlider && slides.length > 0 && (
           <MarketingBanner
             slides={slides}
             showDelay={0}
@@ -78,20 +61,7 @@ export default async function Home() {
           />
         )}
         <BlockRenderer
-          blocks={secondBlocks}
-          products={listingProducts}
-          categories={categories}
-          bannerSlides={slides}
-        />
-        <BlockRenderer
-          blocks={thirdBlocks}
-          products={listingProducts}
-          categories={categories}
-          bannerSlides={slides}
-        />
-        <HomeCategoryBanners categories={categories} />
-        <BlockRenderer
-          blocks={restBlocks}
+          blocks={homePage.blocks}
           products={listingProducts}
           categories={categories}
           bannerSlides={slides}
@@ -125,7 +95,10 @@ export default async function Home() {
         </div>
       </section>
 
-      <HomeCategoryBanners categories={categories} />
+      <HomeCategoryBanners
+        categories={categories}
+        showPromoBanners={false}
+      />
       <FeaturesStrip />
       <EditorialSection />
     </>

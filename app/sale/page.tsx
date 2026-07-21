@@ -1,12 +1,15 @@
 import { notFound } from "next/navigation";
 import CmsPageView from "@/components/cms/CmsPageView";
+import MarketingBanner from "@/components/marketing/MarketingBanner";
 import CategoryPage, {
   paginateProducts,
-  STOREFRONT_PAGE_SIZE,
 } from "@/components/products/CategoryPage";
 import { PageFactory } from "@/lib/pages";
-import { getSaleItems } from "@/lib/data";
+import { getBannerSlides, getSaleItems } from "@/lib/data";
 import type { Metadata } from "next";
+
+/** Sale page shows denser grids so shoppers can browse the full markdown edit. */
+const SALE_PAGE_SIZE = 48;
 
 type Props = {
   searchParams: Promise<{ page?: string }>;
@@ -16,43 +19,57 @@ export async function generateMetadata(): Promise<Metadata> {
   const page = await PageFactory.getBySlug("sale");
   if (page) return PageFactory.toMetadata(page);
   return {
-    title: "Sale · MayCSS",
-    description: "Limited-time markdowns on curated MayCSS pieces.",
+    title: "Black Friday Sale · MayCSS",
+    description:
+      "Black Friday sale — 20% off women's clothing, dresses, and denim at MAYCSS.",
   };
 }
 
 export default async function SalePage({ searchParams }: Props) {
   const { page: pageRaw } = await searchParams;
   const pageNum = Math.max(1, Number(pageRaw) || 1);
-  const [page, saleProducts] = await Promise.all([
+  const [page, saleProducts, slides] = await Promise.all([
     PageFactory.getBySlug("sale"),
     getSaleItems(),
+    getBannerSlides(),
   ]);
 
   if (!page) notFound();
 
-  const hasProductGrid = page.blocks.some((b) => b.type === "productgrid");
+  // CMS productgrid only shows a tiny slice — full sale catalog is below with pagination.
+  const cmsPage = {
+    ...page,
+    blocks: page.blocks.filter((b) => b.type !== "productgrid"),
+  };
+
   const { pageItems, totalCount, safePage } = paginateProducts(
     saleProducts,
     pageNum,
-    STOREFRONT_PAGE_SIZE,
+    SALE_PAGE_SIZE,
   );
 
   return (
     <>
-      <CmsPageView page={page} products={saleProducts.slice(0, 8)} />
-      {page.pageKind === "sale" && !hasProductGrid && (
-        <CategoryPage
-          eyebrow="Limited Time"
-          title="Sale"
-          subtitle="Investment pieces at investment-friendly prices."
-          products={pageItems}
-          totalCount={totalCount}
-          emptyLabel="No sale items right now."
-          page={safePage}
-          basePath="/sale"
+      {slides.length > 0 && (
+        <MarketingBanner
+          slides={slides}
+          showDelay={0}
+          slideInterval={4500}
+          countdownTo="2026-12-01T00:00:00.000Z"
         />
       )}
+      <CmsPageView page={cmsPage} products={[]} />
+      <CategoryPage
+        eyebrow="Black Friday"
+        title="On Sale Now"
+        subtitle={`${totalCount.toLocaleString()} pieces with 20% off — women's clothing, dresses, and denim.`}
+        products={pageItems}
+        totalCount={totalCount}
+        emptyLabel="No sale items right now."
+        page={safePage}
+        basePath="/sale"
+        pageSize={SALE_PAGE_SIZE}
+      />
     </>
   );
 }

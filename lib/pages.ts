@@ -165,8 +165,10 @@ function toFooterLink(p: Page): FooterPageLink {
 
 async function readAll(fresh = false): Promise<Page[]> {
   try {
+    // Always bypass Blob CDN for CMS pages — storefront still uses
+    // unstable_cache (5s) so pages stay fast without serving stale banners.
     const parsed = await readStoreJson<Partial<Page>[]>(file, [], {
-      bypassCache: fresh,
+      bypassCache: true,
     });
     return parsed.map(normalizePage);
   } catch {
@@ -176,7 +178,7 @@ async function readAll(fresh = false): Promise<Page[]> {
 
 const getPagesCached = unstable_cache(
   () => readAll(false),
-  ["cms-pages-v1"],
+  ["cms-pages-v2"],
   { revalidate: 5, tags: ["cms-pages"] },
 );
 

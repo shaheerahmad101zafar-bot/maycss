@@ -108,7 +108,8 @@ async function writeBlobJson(
     allowOverwrite: true,
     contentType: "application/json",
     // Mutable catalog/CMS JSON must not linger on CDN after overwrite.
-    cacheControlMaxAge: 0,
+    // Vercel minimum is 60s; storefront reads pages with useCache:false.
+    cacheControlMaxAge: 60,
   });
 }
 

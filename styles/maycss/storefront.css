@@ -496,14 +496,10 @@ body {
   }
 }
 
-/* Category Black Friday promo banner */
-.mc-cat-promo {
-  min-height: clamp(220px, 38vw, 360px);
-  background-size: cover;
-  background-position: center;
-  display: flex;
-  align-items: center;
-  color: #fff;
+/* Page-level promo banner (Sale / Shop / About / Contact) — full bleed */
+.mc-page > .mc-cat-promo {
+  width: 100%;
+  margin: 0 0 var(--mc-space-block, 2rem);
 }
 .mc-cat-promo__inner {
   padding: clamp(28px, 5vw, 56px) 0;

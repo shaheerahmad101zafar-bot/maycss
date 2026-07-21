@@ -58,6 +58,31 @@ const nextConfig: NextConfig = {
       },
     ];
   },
+
+  async redirects() {
+    return [
+      {
+        source: "/category/women-clothing",
+        destination: "/category/women",
+        permanent: false,
+      },
+      {
+        source: "/category/women-clothing/:subslug",
+        destination: "/category/women/:subslug",
+        permanent: false,
+      },
+      {
+        source: "/category/dresses/formal",
+        destination: "/category/women/formal",
+        permanent: false,
+      },
+      {
+        source: "/collections/women",
+        destination: "/category/women",
+        permanent: false,
+      },
+    ];
+  },
 };
 
 export default nextConfig;

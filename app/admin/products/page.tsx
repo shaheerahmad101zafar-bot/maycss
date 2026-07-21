@@ -1,28 +1,79 @@
 import { unstable_noStore as noStore } from "next/cache";
 import Link from "next/link";
-import { getProducts } from "@/lib/data";
+import { getCategories, getProducts } from "@/lib/data";
 import { cx } from "@/lib/utils";
 import ProductsAdminTable from "@/components/admin/ProductsAdminTable";
 
 export const metadata = { title: "Products · Admin · MayCSS" };
 
 type Props = {
-  searchParams: Promise<{ filter?: string; deleted?: string; error?: string }>;
+  searchParams: Promise<{
+    filter?: string;
+    category?: string;
+    deleted?: string;
+    error?: string;
+  }>;
 };
+
+function buildHref(opts: { filter?: string; category?: string }) {
+  const params = new URLSearchParams();
+  if (opts.filter) params.set("filter", opts.filter);
+  if (opts.category) params.set("category", opts.category);
+  const qs = params.toString();
+  return qs ? `/admin/products?${qs}` : "/admin/products";
+}
 
 export default async function AdminProductsPage({ searchParams }: Props) {
   noStore();
-  const { filter, deleted, error } = await searchParams;
-  const all = await getProducts();
+  const { filter, category, deleted, error } = await searchParams;
+  const [all, categories] = await Promise.all([
+    getProducts(),
+    getCategories(),
+  ]);
   const drafts = all.filter((p) => p.status === "draft");
   const published = all.filter((p) => p.status !== "draft");
 
-  const shown =
+  const byStatus =
     filter === "drafts"
       ? drafts
       : filter === "published"
         ? published
         : all;
+
+  const categoryMap = Object.fromEntries(
+    categories.map((c) => [c.id, c.name]),
+  );
+
+  const shown =
+    category === "none"
+      ? byStatus.filter((p) => !p.categoryId)
+      : category
+        ? byStatus.filter((p) => p.categoryId === category)
+        : byStatus;
+
+  const formalCount = all.filter((p) => p.categoryId === "cat_formal").length;
+  const uncategorizedCount = all.filter((p) => !p.categoryId).length;
+
+  const categoryTabs = [
+    ...categories
+      .slice()
+      .sort((a, b) => {
+        const aScore = a.id === "cat_formal" ? -1 : (a.order ?? 0);
+        const bScore = b.id === "cat_formal" ? -1 : (b.order ?? 0);
+        return aScore - bScore || a.name.localeCompare(b.name);
+      })
+      .map((c) => ({
+        id: c.id,
+        label: c.parentId
+          ? `${categoryMap[c.parentId] ?? ""} › ${c.name}`.replace(/^ › /, "")
+          : c.name,
+        count: all.filter((p) => p.categoryId === c.id).length,
+      }))
+      .filter((t) => t.count > 0 || t.id === "cat_formal" || t.id === "cat_jeans"),
+    ...(uncategorizedCount > 0
+      ? [{ id: "none", label: "Uncategorized", count: uncategorizedCount }]
+      : []),
+  ];
 
   return (
     <section className="mc-admin__section">
@@ -32,6 +83,18 @@ export default async function AdminProductsPage({ searchParams }: Props) {
           <p>
             {all.length} in your catalog · {published.length} published ·{" "}
             <strong>{drafts.length} drafts</strong>
+            {formalCount > 0 && (
+              <>
+                {" "}
+                ·{" "}
+                <Link
+                  href={buildHref({ category: "cat_formal", filter })}
+                  className="mc-admin__link"
+                >
+                  {formalCount} Formal
+                </Link>
+              </>
+            )}
           </p>
         </div>
         <div style={{ display: "flex", gap: 8 }}>
@@ -65,7 +128,7 @@ export default async function AdminProductsPage({ searchParams }: Props) {
 
       <div className="mc-admin__tabs" role="tablist">
         <Link
-          href="/admin/products"
+          href={buildHref({ category })}
           role="tab"
           aria-selected={!filter}
           className={cx("mc-admin__tab", !filter && "is-active")}
@@ -74,7 +137,7 @@ export default async function AdminProductsPage({ searchParams }: Props) {
           <span className="mc-admin__tab-count">{all.length}</span>
         </Link>
         <Link
-          href="/admin/products?filter=published"
+          href={buildHref({ filter: "published", category })}
           role="tab"
           aria-selected={filter === "published"}
           className={cx(
@@ -86,7 +149,7 @@ export default async function AdminProductsPage({ searchParams }: Props) {
           <span className="mc-admin__tab-count">{published.length}</span>
         </Link>
         <Link
-          href="/admin/products?filter=drafts"
+          href={buildHref({ filter: "drafts", category })}
           role="tab"
           aria-selected={filter === "drafts"}
           className={cx(
@@ -100,7 +163,38 @@ export default async function AdminProductsPage({ searchParams }: Props) {
         </Link>
       </div>
 
-      <ProductsAdminTable products={shown} filter={filter} />
+      <div className="mc-admin__tabs mc-admin__tabs--secondary" role="tablist" aria-label="Filter by category">
+        <Link
+          href={buildHref({ filter })}
+          role="tab"
+          aria-selected={!category}
+          className={cx("mc-admin__tab", !category && "is-active")}
+        >
+          Every category
+        </Link>
+        {categoryTabs.map((tab) => (
+          <Link
+            key={tab.id}
+            href={buildHref({ filter, category: tab.id })}
+            role="tab"
+            aria-selected={category === tab.id}
+            className={cx(
+              "mc-admin__tab",
+              category === tab.id && "is-active",
+              tab.id === "cat_formal" && "has-alert",
+            )}
+          >
+            {tab.label}
+            <span className="mc-admin__tab-count">{tab.count}</span>
+          </Link>
+        ))}
+      </div>
+
+      <ProductsAdminTable
+        products={shown}
+        filter={filter}
+        categoryNames={categoryMap}
+      />
     </section>
   );
 }

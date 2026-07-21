@@ -11,9 +11,14 @@ import { cx, formatPrice, type Product } from "@/lib/utils";
 type Props = {
   products: Product[];
   filter?: string;
+  categoryNames?: Record<string, string>;
 };
 
-export default function ProductsAdminTable({ products, filter }: Props) {
+export default function ProductsAdminTable({
+  products,
+  filter,
+  categoryNames = {},
+}: Props) {
   const [selected, setSelected] = useState<string[]>([]);
   const [pending, startTransition] = useTransition();
   const [confirmBulk, setConfirmBulk] = useState(false);
@@ -115,6 +120,7 @@ export default function ProductsAdminTable({ products, filter }: Props) {
               />
             </th>
             <th scope="col">Product</th>
+            <th scope="col">Category</th>
             <th scope="col">Status</th>
             <th scope="col">Brand</th>
             <th scope="col">Price</th>
@@ -126,6 +132,9 @@ export default function ProductsAdminTable({ products, filter }: Props) {
           {products.map((p) => {
             const id = String(p.id);
             const isChecked = selected.includes(id);
+            const categoryLabel = p.categoryId
+              ? categoryNames[p.categoryId] || p.category || p.categoryId
+              : p.category || "—";
             return (
               <tr key={id} className={cx(isChecked && "is-selected")}>
                 <td className="mc-admin__td-check">
@@ -146,6 +155,9 @@ export default function ProductsAdminTable({ products, filter }: Props) {
                       <p className="mc-admin__row-id">ID {p.id}</p>
                     </div>
                   </div>
+                </td>
+                <td>
+                  <span className="mc-admin__pill">{categoryLabel}</span>
                 </td>
                 <td>
                   {p.status === "draft" ? (
@@ -186,10 +198,10 @@ export default function ProductsAdminTable({ products, filter }: Props) {
           })}
           {products.length === 0 && (
             <tr>
-              <td colSpan={7} className="mc-admin__empty-cell">
+              <td colSpan={8} className="mc-admin__empty-cell">
                 {filter === "drafts"
                   ? "No drafts right now."
-                  : "No products yet. Create one or import from a URL."}
+                  : "No products in this view. Try another category filter, or import from a URL."}
               </td>
             </tr>
           )}

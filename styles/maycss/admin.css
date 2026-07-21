@@ -842,6 +842,20 @@ a.mc-admin__stat:hover {
   gap: 8px;
   border-bottom: 1px solid var(--mc-gray-100);
   margin-bottom: 4px;
+  flex-wrap: wrap;
+}
+.mc-admin__tabs--secondary {
+  margin-bottom: 16px;
+  border-bottom: none;
+  gap: 6px;
+}
+.mc-admin__tabs--secondary .mc-admin__tab {
+  text-transform: none;
+  letter-spacing: 0.02em;
+  font-size: 0.8rem;
+  padding: 8px 12px;
+  border: 1px solid var(--mc-gray-100);
+  border-radius: 999px;
 }
 .mc-admin__tab {
   display: inline-flex;

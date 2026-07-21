@@ -2,16 +2,51 @@
   {
     "id": "cat_women",
     "slug": "women",
-    "name": "Women",
+    "name": "Women Clothing",
     "parentId": null,
     "order": 0,
-    "description": "Tailoring, knitwear, and investment pieces for the modern wardrobe.",
+    "description": "Women clothing — formal gowns, jeans, and everyday pieces curated at MAYCSS.",
     "image": "/uploads/categories/mriu1xji-fdc5cdfb1a199330.webp",
     "seo": {
-      "metaTitle": "Women's Luxury Fashion · MayCSS",
-      "metaDescription": "Shop curated women's clothing — outerwear, dresses, knitwear, and accessories selected for craftsmanship and longevity.",
-      "focusKeyword": "women luxury fashion",
-      "keywords": ["women", "dresses", "outerwear", "designer clothing"]
+      "metaTitle": "Women Clothing · MayCSS",
+      "metaDescription": "Shop women clothing at MAYCSS — formal dresses, jeans, and curated fashion for every occasion.",
+      "focusKeyword": "women clothing",
+      "keywords": ["women clothing", "women", "dresses", "formal", "jeans"]
+    }
+  },
+  {
+    "id": "cat_formal",
+    "slug": "formal",
+    "name": "Formal",
+    "parentId": "cat_women",
+    "order": 0,
+    "description": "Evening gowns, ball gowns, and formal occasion dresses curated at MAYCSS.",
+    "seo": {
+      "metaTitle": "Formal Dresses for Women · MAYCSS",
+      "metaDescription": "Shop formal dresses for women at MAYCSS — evening gowns, wedding guest looks, and party dresses for every occasion.",
+      "focusKeyword": "dresses for women",
+      "keywords": [
+        "MAYCSS",
+        "wholesale clothing",
+        "fashion products",
+        "wedding guest",
+        "party",
+        "formal"
+      ]
+    }
+  },
+  {
+    "id": "cat_jeans",
+    "slug": "jeans",
+    "name": "Jeans",
+    "parentId": "cat_women",
+    "order": 1,
+    "description": "Women jeans and denim styles — shop the MAYCSS denim edit.",
+    "seo": {
+      "metaTitle": "Women Jeans · MAYCSS",
+      "metaDescription": "Shop women jeans and denim at MAYCSS — straight leg, black jeans, and everyday denim styles.",
+      "focusKeyword": "women jeans",
+      "keywords": ["jeans", "women jeans", "denim", "straight leg jeans"]
     }
   },
   {
@@ -69,27 +104,6 @@
       "metaTitle": "Luxury Accessories · MayCSS",
       "metaDescription": "Complete the look with curated accessories — bags, jewelry, and leather goods.",
       "keywords": ["accessories", "bags", "jewelry", "leather"]
-    }
-  },
-  {
-    "id": "cat_formal",
-    "slug": "formal",
-    "name": "Formal",
-    "parentId": "cat_dresses",
-    "order": 0,
-    "description": "Evening gowns, ball gowns, and formal occasion dresses curated at MAYCSS.",
-    "seo": {
-      "metaTitle": "Formal Dresses for Women · MAYCSS",
-      "metaDescription": "Shop formal dresses for women at MAYCSS — evening gowns, wedding guest looks, and party dresses for every occasion.",
-      "focusKeyword": "dresses for women",
-      "keywords": [
-        "MAYCSS",
-        "wholesale clothing",
-        "fashion products",
-        "wedding guest",
-        "party",
-        "formal"
-      ]
     }
   }
 ]

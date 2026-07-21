@@ -1073,8 +1073,30 @@ body {
   margin-bottom: var(--mc-space-block);
 }
 
+.mc-page__header--hero-bg {
+  min-height: clamp(240px, 38vw, 400px);
+  display: flex;
+  align-items: center;
+  padding-block: clamp(40px, 7vw, 80px);
+  text-align: left;
+  background-color: #111;
+  background-size: cover;
+  background-position: center;
+}
+
+.mc-page__header--hero-bg .mc-page__header-inner {
+  max-width: 720px;
+  width: 100%;
+}
+
 .mc-page__eyebrow {
   color: var(--mc-gold);
+}
+
+.mc-page__header--hero-bg .mc-page__eyebrow {
+  color: #ffb4ba;
+  letter-spacing: 0.14em;
+  font-weight: 700;
 }
 
 .mc-page__title {
@@ -1088,6 +1110,13 @@ body {
   font-weight: 300;
   font-size: 1.08rem;
   line-height: 1.75;
+}
+
+.mc-page__header--hero-bg .mc-page__hero {
+  color: rgba(255, 255, 255, 0.9);
+  max-width: 34rem;
+  margin-left: 0;
+  margin-right: 0;
 }
 
 .mc-page__meta {

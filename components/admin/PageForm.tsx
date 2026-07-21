@@ -129,10 +129,27 @@ export default function PageForm({ page, templates }: Props) {
             <textarea
               id="hero"
               name="hero"
-              rows={2}
+              rows={3}
               value={hero}
               onChange={(e) => setHero(e.target.value)}
+              placeholder="Short intro shown on the page hero…"
             />
+            <p className="mc-admin__hint">
+              This text sits on the hero area (title + paragraph). Add a
+              background image below so it looks like a banner.
+            </p>
+          </div>
+          <div className="mc-field mc-field--full">
+            <label>Hero background image</label>
+            <input type="hidden" name="bannerImage" value={bannerImage} readOnly />
+            <HybridImagePicker
+              value={bannerImage}
+              onChange={setBannerImage}
+              subdir="cms"
+              label=""
+              helpText="Upload, paste a URL, replace, or remove. Shows behind the title + hero paragraph on the live page."
+            />
+            {err("bannerImage")}
           </div>
         </div>
       </fieldset>
@@ -156,18 +173,6 @@ export default function PageForm({ page, templates }: Props) {
             <p className="mc-admin__hint">
               Controls route-specific sections on /contact, /shop, and /sale.
             </p>
-          </div>
-          <div className="mc-field mc-field--full">
-            <label>Page banner image</label>
-            <input type="hidden" name="bannerImage" value={bannerImage} readOnly />
-            <HybridImagePicker
-              value={bannerImage}
-              onChange={setBannerImage}
-              subdir="cms"
-              label=""
-              helpText="Full-width banner shown above the page title."
-            />
-            {err("bannerImage")}
           </div>
           {pageKind === "contact" && (
             <div className="mc-field mc-field--full">

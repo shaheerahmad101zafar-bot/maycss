@@ -1012,6 +1012,40 @@
   border-bottom: 1px solid var(--mc-gray-100);
   margin-bottom: 40px;
 }
+.mc-page__header--hero-bg {
+  min-height: clamp(220px, 36vw, 380px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: left;
+  padding: clamp(36px, 6vw, 72px) 0;
+  margin-bottom: 36px;
+  border-bottom: none;
+  background-color: #111;
+  background-size: cover;
+  background-position: center;
+  color: #fff;
+}
+.mc-page__header--hero-bg .mc-page__header-inner {
+  max-width: 720px;
+  margin: 0;
+  width: 100%;
+}
+.mc-page__header--hero-bg .mc-page__eyebrow {
+  color: #ffb4ba;
+}
+.mc-page__header--hero-bg .mc-page__title {
+  color: #fff;
+}
+.mc-page__header--hero-bg .mc-page__hero {
+  color: rgba(255, 255, 255, 0.9);
+  margin-left: 0;
+  margin-right: 0;
+  max-width: 34rem;
+}
+.mc-page__header--hero-bg .mc-page__meta {
+  color: rgba(255, 255, 255, 0.55);
+}
 .mc-page__eyebrow {
   font-size: 0.72rem;
   letter-spacing: 0.28em;

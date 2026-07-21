@@ -9,22 +9,20 @@ type Props = {
   products?: Product[];
   categories?: Category[];
   children?: React.ReactNode;
-  /** Hide CMS bannerImage when a page already has PagePromoBanner. */
-  hideBanner?: boolean;
 };
 
 /**
- * Universal CMS page shell — banner, header, blocks.
- * Admin-edited fields (title, hero, banner, SEO) render here on every route.
+ * Universal CMS page shell — hero header (optional background image), blocks.
+ * Admin fields: title, eyebrow, hero paragraph, bannerImage (hero BG).
  */
 export default function CmsPageView({
   page,
   products,
   categories,
   children,
-  hideBanner = false,
 }: Props) {
   const showHeader = Boolean(page.eyebrow || page.hero || page.title);
+  const hasHeroBg = Boolean(page.bannerImage?.trim());
   const contactAside =
     page.pageKind === "contact" && page.contactDetails ? (
       <ContactDetailsAside details={page.contactDetails} />
@@ -32,32 +30,37 @@ export default function CmsPageView({
 
   return (
     <article className={cx("mc-page", page.pageKind && `mc-page--${page.pageKind}`)}>
-      {!hideBanner && page.bannerImage && (
-        <div
-          className="mc-page-banner"
-          style={{ backgroundImage: `url(${page.bannerImage})` }}
-          role="img"
-          aria-label={`${page.title} banner`}
-        >
-          <div className="mc-page-banner__overlay" />
-        </div>
-      )}
-
       {showHeader && (
-        <header className="mc-page__header">
-          {page.eyebrow && <p className="mc-page__eyebrow">{page.eyebrow}</p>}
-          <h1 className="mc-page__title">{page.title}</h1>
-          {page.hero && <p className="mc-page__hero">{page.hero}</p>}
-          {page.lastUpdated && (
-            <p className="mc-page__meta">
-              Last updated{" "}
-              {new Date(page.lastUpdated).toLocaleDateString(undefined, {
-                year: "numeric",
-                month: "long",
-                day: "numeric",
-              })}
-            </p>
+        <header
+          className={cx(
+            "mc-page__header",
+            hasHeroBg && "mc-page__header--hero-bg",
           )}
+          style={
+            hasHeroBg
+              ? {
+                  backgroundImage: `linear-gradient(90deg, rgba(0,0,0,.66), rgba(0,0,0,.32)), url(${page.bannerImage})`,
+                }
+              : undefined
+          }
+        >
+          <div className="mc-container mc-page__header-inner">
+            {page.eyebrow && (
+              <p className="mc-page__eyebrow">{page.eyebrow}</p>
+            )}
+            <h1 className="mc-page__title">{page.title}</h1>
+            {page.hero && <p className="mc-page__hero">{page.hero}</p>}
+            {page.lastUpdated && (
+              <p className="mc-page__meta">
+                Last updated{" "}
+                {new Date(page.lastUpdated).toLocaleDateString(undefined, {
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric",
+                })}
+              </p>
+            )}
+          </div>
         </header>
       )}
 

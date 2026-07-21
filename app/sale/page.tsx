@@ -1,6 +1,5 @@
 import { notFound } from "next/navigation";
 import CmsPageView from "@/components/cms/CmsPageView";
-import PagePromoBanner from "@/components/marketing/PagePromoBanner";
 import CategoryPage, {
   paginateProducts,
 } from "@/components/products/CategoryPage";
@@ -48,8 +47,7 @@ export default async function SalePage({ searchParams }: Props) {
 
   return (
     <>
-      <PagePromoBanner page="sale" />
-      <CmsPageView page={cmsPage} products={[]} hideBanner />
+      <CmsPageView page={cmsPage} products={[]} />
       <CategoryPage
         eyebrow="Black Friday"
         title="On Sale Now"

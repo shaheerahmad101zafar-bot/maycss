@@ -1,7 +1,6 @@
 import { notFound } from "next/navigation";
 import CmsPageView from "@/components/cms/CmsPageView";
 import FeaturesStrip from "@/components/marketing/FeaturesStrip";
-import PagePromoBanner from "@/components/marketing/PagePromoBanner";
 import { PageFactory } from "@/lib/pages";
 import type { Metadata } from "next";
 
@@ -21,8 +20,7 @@ export default async function ContactPage() {
 
   return (
     <>
-      <PagePromoBanner page="contact" />
-      <CmsPageView page={page} products={[]} hideBanner />
+      <CmsPageView page={page} products={[]} />
       <FeaturesStrip />
     </>
   );

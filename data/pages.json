@@ -5,7 +5,7 @@
     "title": "About MayCSS",
     "eyebrow": "Our Story",
     "hero": "Shop MayCSS Online Store to experience our mission: timeless design, uncompromising quality, and fashion for people who care about the difference between good and exceptional.",
-    "bannerImage": "/uploads/cms/mriw8mec-453494ff009d897f.webp",
+    "bannerImage": "https://images.unsplash.com/photo-1469334031218-e382a71b716b?auto=format&fit=crop&w=1600&q=70",
     "pageKind": "standard",
     "published": true,
     "showInFooter": true,
@@ -728,7 +728,8 @@
         "heading": "Send a Message",
         "subheading": "Share your enquiry and a member of our team will follow up personally. We are here to help you Shop MayCSS Online Store with confidence."
       }
-    ]
+    ],
+    "bannerImage": "https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&w=1600&q=70"
   },
   {
     "id": "shop",
@@ -736,7 +737,7 @@
     "title": "Shop the Collection",
     "eyebrow": "The Edit",
     "hero": "Welcome to Shop MayCSS Online Store — curated premium fashion and minimalist luxury apparel, organised the way we shop.",
-    "bannerImage": "/uploads/cms/mrjjx6ir-cc868794b5f4e226.webp",
+    "bannerImage": "https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=1600&q=70",
     "pageKind": "shop",
     "published": true,
     "showInFooter": false,
@@ -804,7 +805,7 @@
     "title": "The Sale Edit",
     "eyebrow": "Limited Time",
     "hero": "Discover exclusive savings when you Shop MayCSS Online Store — limited-time luxury markdowns, while they last.",
-    "bannerImage": "/uploads/cms/mrjjwq5w-36fe848ffd416220.webp",
+    "bannerImage": "https://images.unsplash.com/photo-1496747611176-843222e1e57c?auto=format&fit=crop&w=1600&q=70",
     "pageKind": "sale",
     "published": true,
     "showInFooter": false,

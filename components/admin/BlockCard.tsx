@@ -21,6 +21,7 @@ import type {
 } from "@/lib/blocks/types";
 import { cx } from "@/lib/utils";
 import { postAdminUpload } from "@/lib/uploads/client";
+import HybridImagePicker from "./HybridImagePicker";
 import ImageAdjustFields from "./ImageAdjustFields";
 
 interface Props {
@@ -564,10 +565,12 @@ function HeroFields({
         />
       </div>
       <div className="mc-field mc-field--full">
-        <ImageUpload
+        <HybridImagePicker
           value={block.backgroundImage ?? ""}
           onChange={(url) => onChange({ backgroundImage: url })}
+          subdir="cms"
           label="Background image"
+          helpText="Upload, paste a URL, replace, or remove."
         />
       </div>
       {block.backgroundImage && (

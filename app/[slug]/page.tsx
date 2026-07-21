@@ -18,12 +18,7 @@ export default async function CmsPageRoute({ params }: Props) {
   if (!page) notFound();
   const jsonLd = PageFactory.toJsonLd(page);
 
-  const needsProducts = page.blocks.some(
-    (b) =>
-      b.type === "productgrid" ||
-      b.type === "featured" ||
-      b.type === "productcarousel",
-  );
+  const needsProducts = page.blocks.some((b) => b.type === "productgrid");
   const products = needsProducts
     ? (await getListingProducts()).slice(0, 12)
     : [];

@@ -1058,6 +1058,20 @@ function CategoryGridFields({
   return (
     <div className="mc-admin__form-grid">
       <div className="mc-field">
+        <label>Layout style</label>
+        <select
+          value={block.variant ?? "grid"}
+          onChange={(e) =>
+            onChange({
+              variant: e.target.value === "banners" ? "banners" : "grid",
+            })
+          }
+        >
+          <option value="grid">Compact category cards</option>
+          <option value="banners">Full category promo banners</option>
+        </select>
+      </div>
+      <div className="mc-field">
         <label>Eyebrow</label>
         <input
           value={block.eyebrow ?? ""}
@@ -1078,19 +1092,21 @@ function CategoryGridFields({
           onChange={(e) => onChange({ subheading: e.target.value })}
         />
       </div>
-      <div className="mc-field">
-        <label>Max categories</label>
-        <input
-          type="number"
-          min={1}
-          max={12}
-          value={block.limit ?? 5}
-          onChange={(e) => onChange({ limit: Number(e.target.value) || 5 })}
-        />
-      </div>
+      {block.variant !== "banners" && (
+        <div className="mc-field">
+          <label>Max categories</label>
+          <input
+            type="number"
+            min={1}
+            max={12}
+            value={block.limit ?? 5}
+            onChange={(e) => onChange({ limit: Number(e.target.value) || 5 })}
+          />
+        </div>
+      )}
       <p className="mc-field__hint mc-field--full">
-        Categories are managed under Admin → Categories. Top-level categories
-        appear here automatically.
+        Categories are managed under Admin → Categories. Use ↑ ↓ on this card to
+        move the whole section on the page. Delete the block to remove it.
       </p>
     </div>
   );
@@ -1254,9 +1270,58 @@ function SliderFields({
         { image: "", heading: "", body: "", ctaLabel: "Shop", ctaHref: "/shop" },
       ],
     });
+  const isMarketing = block.variant === "marketing";
 
   return (
     <div className="mc-admin__form-grid">
+      <div className="mc-field">
+        <label>Slider style</label>
+        <select
+          value={block.variant ?? "simple"}
+          onChange={(e) =>
+            onChange({
+              variant: e.target.value === "marketing" ? "marketing" : "simple",
+              useStoreSlides:
+                e.target.value === "marketing"
+                  ? block.useStoreSlides !== false
+                  : false,
+            })
+          }
+        >
+          <option value="simple">Simple image slider</option>
+          <option value="marketing">Marketing promo banner</option>
+        </select>
+      </div>
+      {isMarketing && (
+        <>
+          <div className="mc-field">
+            <label>Slide source</label>
+            <select
+              value={block.useStoreSlides === false ? "inline" : "store"}
+              onChange={(e) =>
+                onChange({ useStoreSlides: e.target.value === "store" })
+              }
+            >
+              <option value="store">Store banner slides (recommended)</option>
+              <option value="inline">Custom slides below</option>
+            </select>
+          </div>
+          <div className="mc-field">
+            <label>Countdown ends (ISO date)</label>
+            <input
+              type="datetime-local"
+              value={toDatetimeLocal(block.countdownTo)}
+              onChange={(e) =>
+                onChange({
+                  countdownTo: e.target.value
+                    ? new Date(e.target.value).toISOString()
+                    : "",
+                })
+              }
+            />
+          </div>
+        </>
+      )}
       <div className="mc-field">
         <label>Autoplay</label>
         <select
@@ -1281,63 +1346,88 @@ function SliderFields({
           }
         />
       </div>
-      {block.slides.map((s, i) => (
-        <div
-          key={i}
-          className="mc-field mc-field--full mc-blk-faq-item"
-          style={{ borderTop: "1px dashed #ccc", paddingTop: 12 }}
-        >
-          <div className="mc-blk-faq-item__header">
-            <span className="mc-admin__row-id">Slide #{i + 1}</span>
+      {isMarketing && block.useStoreSlides !== false ? (
+        <p className="mc-field__hint mc-field--full">
+          This block uses the storefront banner slides. Move it with ↑ ↓, or
+          delete it to remove the top promo banner from the page.
+        </p>
+      ) : (
+        <>
+          {block.slides.map((s, i) => (
+            <div
+              key={i}
+              className="mc-field mc-field--full mc-blk-faq-item"
+              style={{ borderTop: "1px dashed #ccc", paddingTop: 12 }}
+            >
+              <div className="mc-blk-faq-item__header">
+                <span className="mc-admin__row-id">Slide #{i + 1}</span>
+                <button
+                  type="button"
+                  className="mc-admin__link mc-admin__link--danger"
+                  onClick={() => removeSlide(i)}
+                  disabled={block.slides.length <= 1}
+                >
+                  Remove
+                </button>
+              </div>
+              <ImageUpload
+                value={s.image}
+                onChange={(url) => updateSlide(i, { image: url })}
+                label="Slide image *"
+              />
+              <label style={{ marginTop: 8 }}>Heading</label>
+              <input
+                value={s.heading ?? ""}
+                onChange={(e) => updateSlide(i, { heading: e.target.value })}
+              />
+              <label style={{ marginTop: 6 }}>Body</label>
+              <input
+                value={s.body ?? ""}
+                onChange={(e) => updateSlide(i, { body: e.target.value })}
+              />
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8, marginTop: 6 }}>
+                <div>
+                  <label>CTA label</label>
+                  <input
+                    value={s.ctaLabel ?? ""}
+                    onChange={(e) =>
+                      updateSlide(i, { ctaLabel: e.target.value })
+                    }
+                  />
+                </div>
+                <div>
+                  <label>CTA link</label>
+                  <input
+                    value={s.ctaHref ?? ""}
+                    onChange={(e) =>
+                      updateSlide(i, { ctaHref: e.target.value })
+                    }
+                  />
+                </div>
+              </div>
+            </div>
+          ))}
+          <div className="mc-field mc-field--full">
             <button
               type="button"
-              className="mc-admin__link mc-admin__link--danger"
-              onClick={() => removeSlide(i)}
-              disabled={block.slides.length <= 1}
+              className="mc-btn mc-btn--ghost"
+              onClick={addSlide}
             >
-              Remove
+              + Add slide
             </button>
           </div>
-          <ImageUpload
-            value={s.image}
-            onChange={(url) => updateSlide(i, { image: url })}
-            label="Slide image *"
-          />
-          <label style={{ marginTop: 8 }}>Heading</label>
-          <input
-            value={s.heading ?? ""}
-            onChange={(e) => updateSlide(i, { heading: e.target.value })}
-          />
-          <label style={{ marginTop: 6 }}>Body</label>
-          <input
-            value={s.body ?? ""}
-            onChange={(e) => updateSlide(i, { body: e.target.value })}
-          />
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8, marginTop: 6 }}>
-            <div>
-              <label>CTA label</label>
-              <input
-                value={s.ctaLabel ?? ""}
-                onChange={(e) => updateSlide(i, { ctaLabel: e.target.value })}
-              />
-            </div>
-            <div>
-              <label>CTA link</label>
-              <input
-                value={s.ctaHref ?? ""}
-                onChange={(e) => updateSlide(i, { ctaHref: e.target.value })}
-              />
-            </div>
-          </div>
-        </div>
-      ))}
-      <div className="mc-field mc-field--full">
-        <button type="button" className="mc-btn mc-btn--ghost" onClick={addSlide}>
-          + Add slide
-        </button>
-      </div>
+        </>
+      )}
     </div>
   );
+}
+
+function toDatetimeLocal(iso?: string): string {
+  if (!iso) return "";
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return "";
+  const pad = (n: number) => String(n).padStart(2, "0");
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
 }
 
 function VideoFields({

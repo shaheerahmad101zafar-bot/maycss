@@ -11,6 +11,7 @@ const BLOCK_HINTS: Partial<Record<ContentBlock["type"], string>> = {
   banner: "Full-bleed image banner with overlay + CTA.",
   cta: "Newsletter / dark call-to-action strip.",
   richtext: "Free-form text section.",
+  slider: "Promo / image slider — move or delete like any other block.",
 };
 
 function blockLabel(block: ContentBlock, index: number): string {
@@ -21,10 +22,20 @@ function blockLabel(block: ContentBlock, index: number): string {
   else if (block.type === "splitbanner" && block.heading) title = `Split promo — "${block.heading}"`;
   else if (block.type === "editorial" && block.heading) title = `Editorial — "${block.heading}"`;
   else if (block.type === "countdown" && block.heading) title = `Countdown — "${block.heading}"`;
-  else if (block.type === "categorygrid") title = "Category grid — Shop by Category";
-  else if (block.type === "features") title = "Store benefits bar";
+  else if (block.type === "categorygrid") {
+    title =
+      block.variant === "banners"
+        ? "Category banners — Shop by Category"
+        : "Category grid — Shop by Category";
+  } else if (block.type === "features") title = "Store benefits bar";
   else if (block.type === "cta" && block.heading) title = `Newsletter CTA — "${block.heading}"`;
   else if (block.type === "productgrid" && block.heading) title = `Products — "${block.heading}"`;
+  else if (block.type === "slider") {
+    title =
+      block.variant === "marketing"
+        ? "Marketing promo banner (slider)"
+        : "Image slider";
+  }
 
   return hint ? `${title}. ${hint}` : title;
 }
@@ -40,9 +51,9 @@ export default function HomePageEditGuide({ blocks }: { blocks: ContentBlock[] }
     >
       <p className="mc-admin__stat-label">Homepage layout guide</p>
       <p className="mc-admin__hint" style={{ margin: "8px 0 12px" }}>
-        Live homepage shell order: hero slider → product grid → banner → shop by
-        category, then the remaining blocks below. Edit any block, then{" "}
-        <strong>Save Page</strong>.
+        Blocks render top to bottom exactly as listed. Use ↑ ↓ to reorder, edit
+        fields to change copy, or delete a block to remove it from the live
+        site. Then <strong>Save Page</strong>.
       </p>
       <ol style={{ margin: 0, paddingLeft: 20, display: "grid", gap: 8 }}>
         {blocks.map((block, i) => (

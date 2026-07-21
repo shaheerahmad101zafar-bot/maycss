@@ -454,6 +454,22 @@
     },
     "blocks": [
       {
+        "id": "blk_home_promo_slider",
+        "type": "slider",
+        "layout": {
+          "alignment": "center",
+          "width": "full",
+          "columnCount": 1,
+          "padding": "none"
+        },
+        "slides": [],
+        "autoplay": true,
+        "intervalMs": 5000,
+        "variant": "marketing",
+        "useStoreSlides": true,
+        "countdownTo": "2026-12-01T00:00:00.000Z"
+      },
+      {
         "id": "blk_home_seo_copy",
         "type": "richtext",
         "layout": {
@@ -497,6 +513,22 @@
         "ctaLabel": "Browse new",
         "ctaHref": "/new",
         "overlay": "dark"
+      },
+      {
+        "id": "blk_home_categories",
+        "type": "categorygrid",
+        "layout": {
+          "alignment": "center",
+          "width": "full",
+          "columnCount": 1,
+          "padding": "md"
+        },
+        "eyebrow": "Browse",
+        "heading": "Shop by Category",
+        "subheading": "Every category we carry — open a banner to shop the full edit, or jump into a style below.",
+        "limit": 12,
+        "categoryIds": [],
+        "variant": "banners"
       },
       {
         "id": "blk_home_features",
@@ -585,25 +617,6 @@
         "ctaHref": "/sale",
         "targetDate": "2026-12-01T00:00:00.000Z",
         "variant": "accent"
-      },
-      {
-        "id": "blk_home_categories",
-        "type": "categorygrid",
-        "layout": {
-          "alignment": "center",
-          "width": "full",
-          "columnCount": 1,
-          "padding": "md"
-        },
-        "eyebrow": "Browse",
-        "heading": "Shop by Category",
-        "subheading": "Shop what we carry now — Women's Clothing, Women's Dresses, and Women's Jeans & Denim.",
-        "limit": 3,
-        "categoryIds": [
-          "cat_womens_clothing",
-          "cat_womens_dresses",
-          "cat_womens_jeans"
-        ]
       },
       {
         "id": "blk_home_editorial",

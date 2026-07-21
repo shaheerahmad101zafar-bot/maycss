@@ -46,13 +46,21 @@ function hrefFor(cat: Category, parents: Map<string, Category>): string {
 
 type Props = {
   categories: Category[];
+  eyebrow?: string;
+  heading?: string;
+  subheading?: string;
 };
 
 /**
  * Home: every category gets its own Black Friday banner strip,
  * so shoppers see Clothing / Dresses / Jeans (+ every subcategory) first.
  */
-export default function HomeCategoryBanners({ categories }: Props) {
+export default function HomeCategoryBanners({
+  categories,
+  eyebrow = "Browse",
+  heading = "Shop by Category",
+  subheading = "Every category we carry — open a banner to shop the full edit, or jump into a style below.",
+}: Props) {
   const parents = new Map(categories.map((c) => [c.id, c]));
   const top = categories
     .filter((c) => !c.parentId)
@@ -63,12 +71,11 @@ export default function HomeCategoryBanners({ categories }: Props) {
   return (
     <section className="mc-home-cat-banners" aria-label="Shop by category">
       <div className="mc-container mc-home-cat-banners__intro">
-        <p className="mc-section-subtitle">Browse</p>
-        <h2 className="mc-section-title">Shop by Category</h2>
-        <p className="mc-section-header__lead">
-          Every category we carry — open a banner to shop the full edit, or jump
-          into a style below.
-        </p>
+        {eyebrow && <p className="mc-section-subtitle">{eyebrow}</p>}
+        {heading && <h2 className="mc-section-title">{heading}</h2>}
+        {subheading && (
+          <p className="mc-section-header__lead">{subheading}</p>
+        )}
       </div>
 
       {top.map((cat) => {

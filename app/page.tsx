@@ -1,9 +1,9 @@
-import MarketingBanner from "@/components/marketing/MarketingBanner";
-import HomeCategoryBanners from "@/components/marketing/HomeCategoryBanners";
 import FeaturesStrip from "@/components/marketing/FeaturesStrip";
 import EditorialSection from "@/components/marketing/EditorialSection";
 import ProductCard from "@/components/products/ProductCard";
 import BlockRenderer from "@/components/cms/BlockRenderer";
+import MarketingBanner from "@/components/marketing/MarketingBanner";
+import HomeCategoryBanners from "@/components/marketing/HomeCategoryBanners";
 import { getBannerSlides, getCategories, getListingProducts } from "@/lib/data";
 import { PageFactory } from "@/lib/pages";
 import type { Metadata } from "next";
@@ -42,22 +42,6 @@ export default async function Home() {
   if (homePage && homePage.blocks.length > 0) {
     const jsonLd = PageFactory.toJsonLd(homePage);
     const hasFeaturesBlock = homePage.blocks.some((b) => b.type === "features");
-    // Skip duplicate categorygrid — HomeCategoryBanners handles shop-by-category.
-    const blocks = homePage.blocks.filter((b) => b.type !== "categorygrid");
-
-    // Annotated homepage order:
-    // 1st  MarketingBanner (hero)
-    // 2nd  SEO copy + product grid
-    // 3rd  Full-bleed banner
-    // 4th  Shop-by-category banners
-    // then remaining CMS blocks
-    const secondIds = new Set(["blk_home_seo_copy", "blk_home_grid"]);
-    const thirdIds = new Set(["blk_home_banner"]);
-    const secondBlocks = blocks.filter((b) => secondIds.has(b.id));
-    const thirdBlocks = blocks.filter((b) => thirdIds.has(b.id));
-    const restBlocks = blocks.filter(
-      (b) => !secondIds.has(b.id) && !thirdIds.has(b.id),
-    );
 
     return (
       <>
@@ -65,28 +49,11 @@ export default async function Home() {
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: jsonLd }}
         />
-        {slides.length > 0 && (
-          <MarketingBanner
-            slides={slides}
-            showDelay={0}
-            countdownTo="2026-12-01T00:00:00.000Z"
-          />
-        )}
         <BlockRenderer
-          blocks={secondBlocks}
+          blocks={homePage.blocks}
           products={listingProducts}
           categories={categories}
-        />
-        <BlockRenderer
-          blocks={thirdBlocks}
-          products={listingProducts}
-          categories={categories}
-        />
-        <HomeCategoryBanners categories={categories} />
-        <BlockRenderer
-          blocks={restBlocks}
-          products={listingProducts}
-          categories={categories}
+          bannerSlides={slides}
         />
         {!hasFeaturesBlock && <FeaturesStrip />}
       </>
@@ -95,7 +62,7 @@ export default async function Home() {
 
   return (
     <>
-      <MarketingBanner slides={slides} />
+      {slides.length > 0 && <MarketingBanner slides={slides} />}
 
       <section id="featured" className="mc-section">
         <div className="mc-container">

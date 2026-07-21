@@ -2,6 +2,8 @@ import Link from "next/link";
 import dynamic from "next/dynamic";
 import ContactForm from "@/components/contact/ContactForm";
 import FeaturesStrip from "@/components/marketing/FeaturesStrip";
+import HomeCategoryBanners from "@/components/marketing/HomeCategoryBanners";
+import MarketingBanner from "@/components/marketing/MarketingBanner";
 import { bgImageStyle, imgFocusStyle, overlayOpacityStyle } from "@/lib/images/focus";
 import CategoryGridView from "@/components/cms/blocks/CategoryGridView";
 import EditorialBlockView from "@/components/cms/blocks/EditorialBlockView";
@@ -12,9 +14,10 @@ import type {
   ContentBlock,
   MapBlock,
   ProductGridBlock,
+  SliderBlock,
   VideoBlock,
 } from "@/lib/blocks/types";
-import type { Category, Product } from "@/lib/utils";
+import type { BannerSlide, Category, Product } from "@/lib/utils";
 import { cx } from "@/lib/utils";
 import ProductCard from "@/components/products/ProductCard";
 
@@ -42,6 +45,8 @@ interface Props {
   blocks: ContentBlock[];
   products?: Product[];
   categories?: Category[];
+  /** Storefront promo slides for slider blocks with useStoreSlides. */
+  bannerSlides?: BannerSlide[];
 }
 
 /**
@@ -49,7 +54,12 @@ interface Props {
  * from any component tree. Data-hungry blocks (productgrid) receive their
  * data via props from the calling server component.
  */
-export default function BlockRenderer({ blocks, products, categories }: Props) {
+export default function BlockRenderer({
+  blocks,
+  products,
+  categories,
+  bannerSlides,
+}: Props) {
   return (
     <div className="mc-blocks">
       {blocks.map((block) => (
@@ -58,6 +68,7 @@ export default function BlockRenderer({ blocks, products, categories }: Props) {
           block={block}
           products={products}
           categories={categories}
+          bannerSlides={bannerSlides}
         />
       ))}
     </div>
@@ -68,10 +79,12 @@ function BlockWrapper({
   block,
   products,
   categories,
+  bannerSlides,
 }: {
   block: ContentBlock;
   products?: Product[];
   categories?: Category[];
+  bannerSlides?: BannerSlide[];
 }) {
   const fullBleed =
     block.type === "hero" ||
@@ -80,7 +93,8 @@ function BlockWrapper({
     block.type === "features" ||
     block.type === "splitbanner" ||
     block.type === "countdown" ||
-    block.type === "editorial";
+    block.type === "editorial" ||
+    (block.type === "categorygrid" && block.variant === "banners");
 
   const layoutClasses = cx(
     block.layout?.alignment && `is-align-${block.layout.alignment}`,
@@ -92,7 +106,12 @@ function BlockWrapper({
   return (
     <div className={cx("mc-block-wrap", layoutClasses)}>
       <div className="mc-block-wrap__inner">
-        <RenderBlock block={block} products={products} categories={categories} />
+        <RenderBlock
+          block={block}
+          products={products}
+          categories={categories}
+          bannerSlides={bannerSlides}
+        />
       </div>
     </div>
   );
@@ -102,10 +121,12 @@ function RenderBlock({
   block,
   products,
   categories,
+  bannerSlides,
 }: {
   block: ContentBlock;
   products?: Product[];
   categories?: Category[];
+  bannerSlides?: BannerSlide[];
 }) {
   switch (block.type) {
     case "richtext": {
@@ -265,7 +286,9 @@ function RenderBlock({
     case "banner":
       return <BannerRender block={block} />;
     case "slider":
-      return <BlockSlider block={block} />;
+      return (
+        <SliderRender block={block} bannerSlides={bannerSlides} />
+      );
     case "video":
       return <VideoRender block={block} />;
     case "productgrid":
@@ -283,10 +306,56 @@ function RenderBlock({
     case "countdown":
       return <CountdownStrip block={block} />;
     case "categorygrid":
+      if (block.variant === "banners") {
+        return (
+          <HomeCategoryBanners
+            categories={categories ?? []}
+            eyebrow={block.eyebrow}
+            heading={block.heading}
+            subheading={block.subheading}
+          />
+        );
+      }
       return <CategoryGridView block={block} categories={categories} />;
     default:
       return null;
   }
+}
+
+function SliderRender({
+  block,
+  bannerSlides,
+}: {
+  block: SliderBlock;
+  bannerSlides?: BannerSlide[];
+}) {
+  if (block.variant === "marketing") {
+    const useStore = block.useStoreSlides !== false;
+    const slides = useStore && bannerSlides && bannerSlides.length > 0 ? bannerSlides : [];
+    if (slides.length > 0) {
+      return (
+        <MarketingBanner
+          slides={slides}
+          showDelay={0}
+          slideInterval={block.intervalMs ?? 5000}
+          countdownTo={block.countdownTo || undefined}
+        />
+      );
+    }
+    // Fall back to simple slider if store slides are empty / inline mode.
+    if (block.slides.some((s) => s.image)) {
+      return <BlockSlider block={block} />;
+    }
+    return (
+      <section className="mc-block mc-block--slider mc-block--placeholder">
+        <p className="mc-admin__hint" style={{ textAlign: "center" }}>
+          Marketing banner — store slides will appear on the live site. Or switch
+          to Simple slider and upload images here.
+        </p>
+      </section>
+    );
+  }
+  return <BlockSlider block={block} />;
 }
 
 function BannerRender({ block }: { block: BannerBlock }) {

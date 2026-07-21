@@ -162,6 +162,12 @@ export type SliderBlock = BaseBlock & {
   slides: SlideData[];
   autoplay?: boolean;
   intervalMs?: number;
+  /** `marketing` = storefront promo banner (optional store slides). */
+  variant?: "simple" | "marketing";
+  /** When true, marketing slider pulls slides from banner-slides.json. */
+  useStoreSlides?: boolean;
+  /** Optional countdown target for the marketing banner. */
+  countdownTo?: string;
 };
 
 /** Video embed — supports YouTube / Vimeo / self-hosted mp4. */
@@ -250,6 +256,8 @@ export type CategoryGridBlock = BaseBlock & {
   subheading?: string;
   limit?: number;
   categoryIds?: string[];
+  /** `banners` = full category promo strips; `grid` = compact cards. */
+  variant?: "grid" | "banners";
 };
 
 export type ContentBlock =
@@ -428,7 +436,7 @@ export const BlockFactory = {
         return {
           id,
           type,
-          layout,
+          layout: { ...layout, padding: "none" },
           slides: [
             {
               image: "",
@@ -447,6 +455,9 @@ export const BlockFactory = {
           ],
           autoplay: true,
           intervalMs: 5000,
+          variant: "simple",
+          useStoreSlides: false,
+          countdownTo: "",
         };
       case "video":
         return {
@@ -541,6 +552,7 @@ export const BlockFactory = {
           subheading: "Every piece, organised the way we shop.",
           limit: 5,
           categoryIds: [],
+          variant: "grid",
         };
     }
   },
@@ -697,6 +709,10 @@ export function normalizeBlock(raw: unknown): ContentBlock | null {
           typeof b.intervalMs === "number" && b.intervalMs > 500
             ? b.intervalMs
             : 5000,
+        variant: b.variant === "marketing" ? "marketing" : "simple",
+        useStoreSlides: Boolean(b.useStoreSlides),
+        countdownTo:
+          typeof b.countdownTo === "string" ? b.countdownTo : "",
       };
     case "video":
       return {
@@ -819,6 +835,7 @@ export function normalizeBlock(raw: unknown): ContentBlock | null {
         categoryIds: Array.isArray(b.categoryIds)
           ? (b.categoryIds as unknown[]).map(String)
           : [],
+        variant: b.variant === "banners" ? "banners" : "grid",
       };
     default:
       return null;

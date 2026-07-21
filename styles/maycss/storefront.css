@@ -76,9 +76,184 @@ body {
 
 /* Department-store header: logo · search · bag */
 .mc-navbar--dept {
-  border-bottom: 1px solid var(--mc-gray-100);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  background: transparent;
+  position: sticky;
+  overflow: hidden;
+}
+.mc-navbar--luxe {
+  isolation: isolate;
+}
+.mc-navbar__bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background-image:
+    linear-gradient(
+      105deg,
+      rgba(12, 12, 12, 0.88) 0%,
+      rgba(18, 18, 18, 0.72) 42%,
+      rgba(40, 12, 16, 0.78) 100%
+    ),
+    url("https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=1800&q=70");
+  background-size: cover;
+  background-position: center 30%;
+  animation: mc-nav-bg-pan 28s ease-in-out infinite alternate;
+  transform-origin: center;
+}
+.mc-navbar__bg::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.04),
+    transparent 40%,
+    rgba(0, 0, 0, 0.18)
+  );
+  pointer-events: none;
+}
+@keyframes mc-nav-bg-pan {
+  0% {
+    background-position: 40% 28%;
+    transform: scale(1);
+  }
+  100% {
+    background-position: 62% 42%;
+    transform: scale(1.08);
+  }
+}
+.mc-navbar--luxe .mc-navbar__shell {
+  position: relative;
+  z-index: 1;
+  animation: mc-nav-enter 0.65s var(--mc-ease, cubic-bezier(0.22, 1, 0.36, 1)) both;
+}
+@keyframes mc-nav-enter {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.mc-navbar--luxe .mc-navbar__dept-top {
+  color: #fff;
+}
+.mc-navbar--luxe .mc-text-logo,
+.mc-navbar--luxe .mc-text-logo a,
+.mc-navbar--luxe .mc-navbar__brand,
+.mc-navbar--luxe .mc-navbar__brand a {
+  color: #fff;
+}
+.mc-navbar--luxe .mc-text-logo__tagline,
+.mc-navbar--luxe .mc-navbar__brand-text {
+  color: rgba(255, 255, 255, 0.72);
+}
+.mc-navbar--luxe .mc-navbar__icon,
+.mc-navbar--luxe .mc-navbar__hamburger {
+  color: #fff;
+}
+.mc-navbar--luxe .mc-navbar__hamburger:hover,
+.mc-navbar--luxe .mc-navbar__icon:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
+.mc-navbar--luxe .mc-navbar__search {
+  border-color: rgba(255, 255, 255, 0.28);
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(8px);
+  transition: border-color 0.25s ease, background 0.25s ease, box-shadow 0.25s ease;
+}
+.mc-navbar--luxe .mc-navbar__search:focus-within {
+  border-color: rgba(255, 255, 255, 0.7);
+  background: rgba(255, 255, 255, 0.18);
+  box-shadow: 0 0 0 3px rgba(226, 26, 44, 0.25);
+}
+.mc-navbar--luxe .mc-navbar__search input {
+  color: #fff;
+}
+.mc-navbar--luxe .mc-navbar__search input::placeholder {
+  color: rgba(255, 255, 255, 0.62);
+}
+.mc-navbar--luxe .mc-navbar__search button {
+  color: #fff;
+  transition: transform 0.2s ease;
+}
+.mc-navbar--luxe .mc-navbar__search button:hover {
+  transform: scale(1.08);
+}
+.mc-navbar--luxe .mc-navbar__navrow--dept {
+  border-top-color: rgba(255, 255, 255, 0.14);
+}
+.mc-navbar--luxe .mc-navbar__link {
+  color: rgba(255, 255, 255, 0.9);
+  position: relative;
+  transition: color 0.2s ease, transform 0.2s ease;
+  animation: mc-nav-link-in 0.55s var(--mc-ease, cubic-bezier(0.22, 1, 0.36, 1)) both;
+}
+.mc-navbar--luxe .mc-navbar__link:nth-child(1) { animation-delay: 0.05s; }
+.mc-navbar--luxe .mc-navbar__link:nth-child(2) { animation-delay: 0.1s; }
+.mc-navbar--luxe .mc-navbar__link:nth-child(3) { animation-delay: 0.15s; }
+.mc-navbar--luxe .mc-navbar__link:nth-child(4) { animation-delay: 0.2s; }
+.mc-navbar--luxe .mc-navbar__link:nth-child(5) { animation-delay: 0.25s; }
+.mc-navbar--luxe .mc-navbar__link:nth-child(6) { animation-delay: 0.3s; }
+.mc-navbar--luxe .mc-navbar__link:nth-child(7) { animation-delay: 0.35s; }
+@keyframes mc-nav-link-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.mc-navbar--luxe .mc-navbar__link:hover {
+  color: #fff;
+  transform: translateY(-1px);
+}
+.mc-navbar--luxe .mc-navbar__link.has-underline::after {
   background: #fff;
 }
+.mc-navbar--luxe .mc-navbar__link.is-active {
+  color: #fff;
+}
+.mc-navbar--luxe .mc-navbar__link.is-sale {
+  color: #ff6b76 !important;
+  text-shadow: 0 0 18px rgba(226, 26, 44, 0.35);
+}
+.mc-navbar--luxe .mc-navbar__link.is-sale:hover {
+  color: #ff8a92 !important;
+}
+.mc-navbar--luxe .mc-text-logo__name,
+.mc-navbar--luxe .mc-text-logo__my,
+.mc-navbar--luxe .mc-text-logo__acss {
+  color: #fff;
+}
+.mc-navbar--luxe .mc-text-logo__rule {
+  background: rgba(255, 255, 255, 0.45);
+}
+.mc-navbar--luxe .mc-nav-auth__avatar {
+  background: rgba(255, 255, 255, 0.18);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+}
+@keyframes mc-nav-badge-pop {
+  0% { transform: scale(0.6); }
+  70% { transform: scale(1.12); }
+  100% { transform: scale(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mc-navbar__bg,
+  .mc-navbar--luxe .mc-navbar__shell,
+  .mc-navbar--luxe .mc-navbar__link,
+  .mc-navbar--luxe .mc-navbar__badge {
+    animation: none !important;
+  }
+}
+
 .mc-navbar__dept-top {
   display: grid;
   grid-template-columns: minmax(140px, 1fr) minmax(220px, 560px) minmax(120px, 1fr);

@@ -112,12 +112,13 @@ export default function NavbarClient({
   return (
     <header
       className={cx(
-        "mc-navbar mc-navbar--sticky mc-navbar--dept",
+        "mc-navbar mc-navbar--sticky mc-navbar--dept mc-navbar--luxe",
         !showUnderline && "mc-navbar--no-underline",
         `mc-navbar--align-${menuAlignment.replace("justify-", "")}`,
       )}
       style={navStyle}
     >
+      <div className="mc-navbar__bg" aria-hidden="true" />
       <div className="mc-container mc-navbar__shell">
         {/* Macy's-style top: logo · search · actions */}
         <div className="mc-navbar__dept-top">

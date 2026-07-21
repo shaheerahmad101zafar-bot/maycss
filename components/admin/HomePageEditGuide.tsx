@@ -40,7 +40,8 @@ export default function HomePageEditGuide({ blocks }: { blocks: ContentBlock[] }
     >
       <p className="mc-admin__stat-label">Homepage layout guide</p>
       <p className="mc-admin__hint" style={{ margin: "8px 0 12px" }}>
-        Blocks render top to bottom on the live site. Edit any block below, then{" "}
+        Live homepage shell order: hero slider → product grid → banner → shop by
+        category, then the remaining blocks below. Edit any block, then{" "}
         <strong>Save Page</strong>.
       </p>
       <ol style={{ margin: 0, paddingLeft: 20, display: "grid", gap: 8 }}>

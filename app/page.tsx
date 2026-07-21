@@ -42,8 +42,22 @@ export default async function Home() {
   if (homePage && homePage.blocks.length > 0) {
     const jsonLd = PageFactory.toJsonLd(homePage);
     const hasFeaturesBlock = homePage.blocks.some((b) => b.type === "features");
-    // Category banners render first — skip duplicate categorygrid block.
+    // Skip duplicate categorygrid — HomeCategoryBanners handles shop-by-category.
     const blocks = homePage.blocks.filter((b) => b.type !== "categorygrid");
+
+    // Annotated homepage order:
+    // 1st  MarketingBanner (hero)
+    // 2nd  SEO copy + product grid
+    // 3rd  Full-bleed banner
+    // 4th  Shop-by-category banners
+    // then remaining CMS blocks
+    const secondIds = new Set(["blk_home_seo_copy", "blk_home_grid"]);
+    const thirdIds = new Set(["blk_home_banner"]);
+    const secondBlocks = blocks.filter((b) => secondIds.has(b.id));
+    const thirdBlocks = blocks.filter((b) => thirdIds.has(b.id));
+    const restBlocks = blocks.filter(
+      (b) => !secondIds.has(b.id) && !thirdIds.has(b.id),
+    );
 
     return (
       <>
@@ -58,9 +72,19 @@ export default async function Home() {
             countdownTo="2026-12-01T00:00:00.000Z"
           />
         )}
+        <BlockRenderer
+          blocks={secondBlocks}
+          products={listingProducts}
+          categories={categories}
+        />
+        <BlockRenderer
+          blocks={thirdBlocks}
+          products={listingProducts}
+          categories={categories}
+        />
         <HomeCategoryBanners categories={categories} />
         <BlockRenderer
-          blocks={blocks}
+          blocks={restBlocks}
           products={listingProducts}
           categories={categories}
         />
@@ -72,8 +96,6 @@ export default async function Home() {
   return (
     <>
       <MarketingBanner slides={slides} />
-      <HomeCategoryBanners categories={categories} />
-      <FeaturesStrip />
 
       <section id="featured" className="mc-section">
         <div className="mc-container">
@@ -95,6 +117,8 @@ export default async function Home() {
         </div>
       </section>
 
+      <HomeCategoryBanners categories={categories} />
+      <FeaturesStrip />
       <EditorialSection />
     </>
   );

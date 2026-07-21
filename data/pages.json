@@ -454,30 +454,49 @@
     },
     "blocks": [
       {
-        "id": "blk_home_hero",
-        "type": "hero",
+        "id": "blk_home_seo_copy",
+        "type": "richtext",
+        "layout": {
+          "alignment": "center",
+          "width": "medium",
+          "columnCount": 1,
+          "padding": "md"
+        },
+        "heading": "Curated Luxury, Delivered Online",
+        "headingLevel": 2,
+        "body": "Discover why discerning shoppers choose Shop MayCSS Online Store for premium fashion online. We curate independent designers and heritage maisons with a focus on fabric integrity, considered silhouettes, and lasting wear. Complimentary shipping is available on qualifying orders, authenticity is guaranteed on every piece, and our team offers personal styling when you want a second eye. Whether you are building a capsule wardrobe or searching for a signature statement, MayCSS is your destination for minimalist luxury that feels effortless, elevated, and entirely your own. Explore the collection, save favourites, and shop with confidence knowing every detail has been vetted for quality and provenance.",
+        "alignment": "center"
+      },
+      {
+        "id": "blk_home_grid",
+        "type": "productgrid",
+        "layout": {
+          "alignment": "center",
+          "width": "full",
+          "columnCount": 4,
+          "padding": "md"
+        },
+        "heading": "New Arrivals",
+        "productIds": [],
+        "filterTag": "new",
+        "limit": 8
+      },
+      {
+        "id": "blk_home_banner",
+        "type": "banner",
         "layout": {
           "alignment": "center",
           "width": "full",
           "columnCount": 1,
-          "padding": "none"
+          "padding": "sm"
         },
-        "eyebrow": "Black Friday Sale",
-        "heading": "MayCSS Black Friday Edit",
-        "subheading": "Shop women's clothing, dresses for women, and jeans and denim — curated fashion products with limited-time savings.",
-        "backgroundImage": "https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=2000&q=80",
-        "imageFocus": {
-          "x": 50,
-          "y": 28,
-          "fit": "cover"
-        },
-        "overlayStrength": 52,
-        "ctaLabel": "Shop Black Friday",
-        "ctaHref": "/sale",
-        "secondaryCtaLabel": "Women's Clothing",
-        "secondaryCtaHref": "/category/womens-clothing",
-        "showCategoryLinks": true,
-        "height": "large"
+        "image": "/uploads/cms/mrjjwq5w-36fe848ffd416220.webp",
+        "eyebrow": "Just Arrived",
+        "heading": "The Autumn Preview",
+        "body": "Refined layers and sculptural tailoring — selected by our style curators at Shop MayCSS Online Store for wardrobes that transcend seasons and trends.",
+        "ctaLabel": "Browse new",
+        "ctaHref": "/new",
+        "overlay": "dark"
       },
       {
         "id": "blk_home_features",
@@ -508,32 +527,30 @@
         ]
       },
       {
-        "id": "blk_home_seo_copy",
-        "type": "richtext",
-        "layout": {
-          "alignment": "center",
-          "width": "medium",
-          "columnCount": 1,
-          "padding": "md"
-        },
-        "heading": "Curated Luxury, Delivered Online",
-        "headingLevel": 2,
-        "body": "Discover why discerning shoppers choose Shop MayCSS Online Store for premium fashion online. We curate independent designers and heritage maisons with a focus on fabric integrity, considered silhouettes, and lasting wear. Complimentary shipping is available on qualifying orders, authenticity is guaranteed on every piece, and our team offers personal styling when you want a second eye. Whether you are building a capsule wardrobe or searching for a signature statement, MayCSS is your destination for minimalist luxury that feels effortless, elevated, and entirely your own. Explore the collection, save favourites, and shop with confidence knowing every detail has been vetted for quality and provenance.",
-        "alignment": "center"
-      },
-      {
-        "id": "blk_home_grid",
-        "type": "productgrid",
+        "id": "blk_home_hero",
+        "type": "hero",
         "layout": {
           "alignment": "center",
           "width": "full",
-          "columnCount": 4,
-          "padding": "md"
+          "columnCount": 1,
+          "padding": "none"
         },
-        "heading": "New Arrivals",
-        "productIds": [],
-        "filterTag": "new",
-        "limit": 8
+        "eyebrow": "Black Friday Sale",
+        "heading": "MayCSS Black Friday Edit",
+        "subheading": "Shop women's clothing, dresses for women, and jeans and denim — curated fashion products with limited-time savings.",
+        "backgroundImage": "https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=2000&q=80",
+        "imageFocus": {
+          "x": 50,
+          "y": 28,
+          "fit": "cover"
+        },
+        "overlayStrength": 52,
+        "ctaLabel": "Shop Black Friday",
+        "ctaHref": "/sale",
+        "secondaryCtaLabel": "Women's Clothing",
+        "secondaryCtaHref": "/category/womens-clothing",
+        "showCategoryLinks": true,
+        "height": "large"
       },
       {
         "id": "blk_home_split",
@@ -604,23 +621,6 @@
         "ctaHref": "/about",
         "image": "https://images.unsplash.com/photo-1469334031218-e382a71b716b?auto=format&fit=crop&w=1600&q=80",
         "imageAlt": "Editorial fashion photography"
-      },
-      {
-        "id": "blk_home_banner",
-        "type": "banner",
-        "layout": {
-          "alignment": "center",
-          "width": "full",
-          "columnCount": 1,
-          "padding": "sm"
-        },
-        "image": "/uploads/cms/mrjjwq5w-36fe848ffd416220.webp",
-        "eyebrow": "Just Arrived",
-        "heading": "The Autumn Preview",
-        "body": "Refined layers and sculptural tailoring — selected by our style curators at Shop MayCSS Online Store for wardrobes that transcend seasons and trends.",
-        "ctaLabel": "Browse new",
-        "ctaHref": "/new",
-        "overlay": "dark"
       },
       {
         "id": "blk_home_cta",

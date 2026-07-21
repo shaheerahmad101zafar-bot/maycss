@@ -49,7 +49,7 @@ export default async function SalePage({ searchParams }: Props) {
   return (
     <>
       <PagePromoBanner page="sale" />
-      <CmsPageView page={cmsPage} products={[]} />
+      <CmsPageView page={cmsPage} products={[]} hideBanner />
       <CategoryPage
         eyebrow="Black Friday"
         title="On Sale Now"

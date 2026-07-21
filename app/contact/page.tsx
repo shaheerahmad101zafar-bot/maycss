@@ -22,7 +22,7 @@ export default async function ContactPage() {
   return (
     <>
       <PagePromoBanner page="contact" />
-      <CmsPageView page={page} products={[]} />
+      <CmsPageView page={page} products={[]} hideBanner />
       <FeaturesStrip />
     </>
   );

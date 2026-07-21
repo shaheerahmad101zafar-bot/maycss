@@ -43,7 +43,7 @@ export default async function CmsPageRoute({ params }: Props) {
         dangerouslySetInnerHTML={{ __html: jsonLd }}
       />
       {bannerKey && <PagePromoBanner page={bannerKey} />}
-      <CmsPageView page={page} products={products} />
+      <CmsPageView page={page} products={products} hideBanner={Boolean(bannerKey)} />
     </>
   );
 }

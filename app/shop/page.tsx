@@ -74,6 +74,7 @@ export default async function ShopPage({ searchParams }: Props) {
           page={page}
           products={allProducts.slice(0, 8)}
           categories={categories}
+          hideBanner
         />
       )}
       {query && (

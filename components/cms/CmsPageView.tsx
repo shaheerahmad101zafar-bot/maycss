@@ -9,13 +9,21 @@ type Props = {
   products?: Product[];
   categories?: Category[];
   children?: React.ReactNode;
+  /** Hide CMS bannerImage when a page already has PagePromoBanner. */
+  hideBanner?: boolean;
 };
 
 /**
  * Universal CMS page shell — banner, header, blocks.
  * Admin-edited fields (title, hero, banner, SEO) render here on every route.
  */
-export default function CmsPageView({ page, products, categories, children }: Props) {
+export default function CmsPageView({
+  page,
+  products,
+  categories,
+  children,
+  hideBanner = false,
+}: Props) {
   const showHeader = Boolean(page.eyebrow || page.hero || page.title);
   const contactAside =
     page.pageKind === "contact" && page.contactDetails ? (
@@ -24,7 +32,7 @@ export default function CmsPageView({ page, products, categories, children }: Pr
 
   return (
     <article className={cx("mc-page", page.pageKind && `mc-page--${page.pageKind}`)}>
-      {page.bannerImage && (
+      {!hideBanner && page.bannerImage && (
         <div
           className="mc-page-banner"
           style={{ backgroundImage: `url(${page.bannerImage})` }}

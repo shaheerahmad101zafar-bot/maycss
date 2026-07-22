@@ -3,24 +3,13 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useCart } from "@/context/CartContext";
+import { cardImageUrl } from "@/lib/images/cdn-url";
 import { productImageAlt } from "@/lib/seo/image-alt";
 import { cx, discountPercent, formatPrice, type Product } from "@/lib/utils";
 
 interface ProductCardProps {
   product: Product;
   onToggleWishlist?: (product: Product, saved: boolean) => void;
-}
-
-/** Prefer smaller derivatives for grid cards (faster paint). */
-function cardImageSrc(src: string | undefined): string {
-  if (!src) return "";
-  if (src.includes("macysassets.com") && !/[?&]wid=/.test(src)) {
-    return `${src}${src.includes("?") ? "&" : "?"}wid=400&fmt=jpeg&qlt=75`;
-  }
-  if (src.includes("images.unsplash.com") && !/[?&]w=/.test(src)) {
-    return `${src}${src.includes("?") ? "&" : "?"}auto=format&fit=crop&w=400&q=70`;
-  }
-  return src;
 }
 
 function Stars({ value = 0 }: { value?: number }) {
@@ -83,12 +72,13 @@ export default function ProductCard({
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           className="mc-card__img"
-          src={cardImageSrc(product.image)}
+          src={cardImageUrl(product.image)}
           alt={productImageAlt(product)}
           loading="lazy"
           width={400}
           height={500}
           decoding="async"
+          sizes="(max-width: 520px) 50vw, (max-width: 900px) 33vw, 25vw"
         />
       </Link>
 

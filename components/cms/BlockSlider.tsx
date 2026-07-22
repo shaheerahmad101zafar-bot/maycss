@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import type { SliderBlock } from "@/lib/blocks/types";
+import { bannerImageUrl } from "@/lib/images/cdn-url";
 import { bgImageStyle } from "@/lib/images/focus";
 
 /**
@@ -37,7 +38,7 @@ export default function BlockSlider({ block }: { block: SliderBlock }) {
           <div
             key={idx}
             className={`mc-slider__slide ${idx === i ? "is-active" : ""}`}
-            style={bgImageStyle(s.image, s.imageFocus)}
+            style={bgImageStyle(bannerImageUrl(s.image), s.imageFocus)}
             aria-hidden={idx !== i}
           >
             <div className="mc-slider__overlay" />

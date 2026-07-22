@@ -1,9 +1,8 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Playfair_Display } from "next/font/google";
+import { Geist, Playfair_Display } from "next/font/google";
 import "./globals.css";
 import "@/styles/maycss/globals.css";
 import "@/styles/maycss/components.css";
-import "@/styles/maycss/admin.css";
 import "@/styles/maycss/responsive.css";
 import "@/styles/maycss/storefront.css";
 import { CartProvider } from "@/context/CartContext";
@@ -23,14 +22,12 @@ import { getSiteOrigin } from "@/lib/site-url";
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
-});
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+  display: "swap",
 });
 const playfair = Playfair_Display({
   variable: "--font-playfair",
   subsets: ["latin"],
+  weight: ["400", "700"],
   display: "swap",
 });
 
@@ -67,10 +64,7 @@ export default async function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   const cfg = await getAppConfig();
   return (
-    <html
-      lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} ${playfair.variable}`}
-    >
+    <html lang="en" className={`${geistSans.variable} ${playfair.variable}`}>
       <body className="mc-body">
         <SiteJsonLd />
         <ChunkLoadRecovery />

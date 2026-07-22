@@ -5,6 +5,7 @@ import BlockRenderer from "@/components/cms/BlockRenderer";
 import MarketingBanner from "@/components/marketing/MarketingBanner";
 import HomeCategoryBanners from "@/components/marketing/HomeCategoryBanners";
 import { getBannerSlides, getCategories, getListingProducts } from "@/lib/data";
+import { heroImageUrl } from "@/lib/images/cdn-url";
 import { PageFactory } from "@/lib/pages";
 import type { Metadata } from "next";
 
@@ -37,7 +38,9 @@ export default async function Home() {
       seen.add(id);
       return true;
     })
-    .slice(0, 24);
+    .slice(0, 12);
+
+  const lcpHero = slides[0]?.image ? heroImageUrl(slides[0].image) : "";
 
   if (homePage && homePage.blocks.length > 0) {
     const jsonLd = PageFactory.toJsonLd(homePage);
@@ -46,9 +49,9 @@ export default async function Home() {
       (b) => b.type === "slider" && b.variant === "marketing",
     );
 
-    // Admin block order = live order (↑ ↓ in Admin → Pages → Home).
     return (
       <>
+        {lcpHero ? <link rel="preload" as="image" href={lcpHero} /> : null}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: jsonLd }}
@@ -73,6 +76,7 @@ export default async function Home() {
 
   return (
     <>
+      {lcpHero ? <link rel="preload" as="image" href={lcpHero} /> : null}
       {slides.length > 0 && <MarketingBanner slides={slides} />}
 
       <section id="featured" className="mc-section">

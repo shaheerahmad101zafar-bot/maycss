@@ -4,6 +4,7 @@ import ContactForm from "@/components/contact/ContactForm";
 import FeaturesStrip from "@/components/marketing/FeaturesStrip";
 import HomeCategoryBanners from "@/components/marketing/HomeCategoryBanners";
 import MarketingBanner from "@/components/marketing/MarketingBanner";
+import { bannerImageUrl } from "@/lib/images/cdn-url";
 import { bgImageStyle, imgFocusStyle, overlayOpacityStyle } from "@/lib/images/focus";
 import CategoryGridView from "@/components/cms/blocks/CategoryGridView";
 import EditorialBlockView from "@/components/cms/blocks/EditorialBlockView";
@@ -377,7 +378,10 @@ function BannerRender({ block }: { block: BannerBlock }) {
         block.overlay && `is-overlay-${block.overlay}`,
         block.overlayStrength !== undefined && "has-custom-overlay",
       )}
-      style={{ ...bgImageStyle(block.image, block.imageFocus), ...overlayStyle }}
+      style={{
+        ...bgImageStyle(bannerImageUrl(block.image), block.imageFocus),
+        ...overlayStyle,
+      }}
     >
       <div className="mc-block--banner__overlay" />
       <div className="mc-block--banner__inner">

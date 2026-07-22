@@ -711,6 +711,14 @@ body {
   padding-block: var(--mc-space-section);
 }
 
+/* Defer layout work for clearly below-fold home sections */
+.mc-home-cat-banners,
+.mc-features,
+.mc-editorial {
+  content-visibility: auto;
+  contain-intrinsic-size: 1px 640px;
+}
+
 .mc-section-header {
   text-align: center;
   max-width: 640px;

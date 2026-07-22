@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { BannerBlock } from "@/lib/blocks/types";
 import type { Category } from "@/lib/utils";
+import { bannerImageUrl } from "@/lib/images/cdn-url";
 import { bgImageStyle, overlayOpacityStyle } from "@/lib/images/focus";
 
 /** Curated shop links for homepage promo banners (admin can change). */
@@ -48,7 +49,7 @@ export default function BannerPromoView({
       className="mc-cat-promo mc-block mc-block--banner-promo"
       aria-label={block.heading}
       style={{
-        ...bgImageStyle(block.image, block.imageFocus),
+        ...bgImageStyle(bannerImageUrl(block.image), block.imageFocus),
         ...overlayStyle,
       }}
     >

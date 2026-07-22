@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { heroImageUrl } from "@/lib/images/cdn-url";
 import { cx, type BannerSlide } from "@/lib/utils";
 
 interface MarketingBannerProps {
@@ -38,6 +39,8 @@ export default function MarketingBanner({
   const [visible, setVisible] = useState(() => showDelay <= 0);
   const [active, setActive] = useState(0);
   const [paused, setPaused] = useState(false);
+  /** Only mount media for the first slide + slides the user has seen (saves LCP bandwidth). */
+  const [mountedMedia, setMountedMedia] = useState(() => new Set<number>([0]));
 
   const targetTs = useMemo(() => {
     if (countdownTo) {
@@ -49,7 +52,6 @@ export default function MarketingBanner({
 
   const [timeLeft, setTimeLeft] = useState<TimeLeft>(() => getTimeLeft(targetTs));
 
-  // Optional reveal delay (skip timer when already visible / delay is 0)
   useEffect(() => {
     if (showDelay <= 0) {
       setVisible(true);
@@ -59,7 +61,6 @@ export default function MarketingBanner({
     return () => clearTimeout(t);
   }, [showDelay]);
 
-  // Real-time countdown, 1s tick
   useEffect(() => {
     if (!visible) return;
     setTimeLeft(getTimeLeft(targetTs));
@@ -67,7 +68,6 @@ export default function MarketingBanner({
     return () => clearInterval(i);
   }, [visible, targetTs]);
 
-  // Slider auto-rotate (pauses on hover / focus)
   useEffect(() => {
     if (!visible || paused || slides.length <= 1) return;
     const i = setInterval(
@@ -76,6 +76,15 @@ export default function MarketingBanner({
     );
     return () => clearInterval(i);
   }, [visible, paused, slides.length, slideInterval]);
+
+  useEffect(() => {
+    setMountedMedia((prev) => {
+      if (prev.has(active)) return prev;
+      const next = new Set(prev);
+      next.add(active);
+      return next;
+    });
+  }, [active]);
 
   const goTo = useCallback((i: number) => setActive(i), []);
   const next = useCallback(
@@ -87,7 +96,6 @@ export default function MarketingBanner({
     [slides.length],
   );
 
-  // Keyboard navigation
   useEffect(() => {
     if (!visible) return;
     const onKey = (e: KeyboardEvent) => {
@@ -111,51 +119,64 @@ export default function MarketingBanner({
       onBlur={() => setPaused(false)}
     >
       <div className="mc-banner__slides">
-        {slides.map((s, i) => (
-          <div
-            key={s.id}
-            className={cx("mc-banner__slide", i === active && "is-active")}
-            aria-hidden={i !== active}
-            aria-roledescription="slide"
-            aria-label={`${i + 1} of ${slides.length}`}
-            style={
-              s.image
-                ? {
-                    backgroundImage: `linear-gradient(90deg, rgba(0,0,0,.72), rgba(0,0,0,.35)), url(${s.image})`,
-                    backgroundSize: "cover",
-                    backgroundPosition: "center",
-                  }
-                : undefined
-            }
-          >
-            <span className="mc-banner__eyebrow">{s.eyebrow}</span>
-            <h2 className="mc-banner__title">{s.title}</h2>
-            <p className="mc-banner__subtitle">{s.subtitle}</p>
+        {slides.map((s, i) => {
+          const isActive = i === active;
+          const showMedia = Boolean(s.image) && (i === 0 || mountedMedia.has(i));
+          const src = showMedia ? heroImageUrl(s.image) : "";
+          return (
+            <div
+              key={s.id}
+              className={cx("mc-banner__slide", isActive && "is-active")}
+              aria-hidden={!isActive}
+              aria-roledescription="slide"
+              aria-label={`${i + 1} of ${slides.length}`}
+            >
+              {showMedia && src ? (
+                // eslint-disable-next-line @next/next/no-img-element -- LCP hero; CDN-resized URL
+                <img
+                  className="mc-banner__media"
+                  src={src}
+                  alt=""
+                  width={1100}
+                  height={420}
+                  decoding={i === 0 ? "sync" : "async"}
+                  loading={i === 0 ? "eager" : "lazy"}
+                  fetchPriority={i === 0 ? "high" : "low"}
+                  draggable={false}
+                />
+              ) : null}
+              <div className="mc-banner__shade" aria-hidden />
+              <div className="mc-banner__content">
+                <span className="mc-banner__eyebrow">{s.eyebrow}</span>
+                <h2 className="mc-banner__title">{s.title}</h2>
+                <p className="mc-banner__subtitle">{s.subtitle}</p>
 
-            <div className="mc-countdown" aria-label="Offer ends in">
-              <div className="mc-countdown__unit">
-                <span className="mc-countdown__value">{pad(timeLeft.days)}</span>
-                <span className="mc-countdown__label">Days</span>
-              </div>
-              <div className="mc-countdown__unit">
-                <span className="mc-countdown__value">{pad(timeLeft.hours)}</span>
-                <span className="mc-countdown__label">Hrs</span>
-              </div>
-              <div className="mc-countdown__unit">
-                <span className="mc-countdown__value">{pad(timeLeft.minutes)}</span>
-                <span className="mc-countdown__label">Min</span>
-              </div>
-              <div className="mc-countdown__unit">
-                <span className="mc-countdown__value">{pad(timeLeft.seconds)}</span>
-                <span className="mc-countdown__label">Sec</span>
+                <div className="mc-countdown" aria-label="Offer ends in">
+                  <div className="mc-countdown__unit">
+                    <span className="mc-countdown__value">{pad(timeLeft.days)}</span>
+                    <span className="mc-countdown__label">Days</span>
+                  </div>
+                  <div className="mc-countdown__unit">
+                    <span className="mc-countdown__value">{pad(timeLeft.hours)}</span>
+                    <span className="mc-countdown__label">Hrs</span>
+                  </div>
+                  <div className="mc-countdown__unit">
+                    <span className="mc-countdown__value">{pad(timeLeft.minutes)}</span>
+                    <span className="mc-countdown__label">Min</span>
+                  </div>
+                  <div className="mc-countdown__unit">
+                    <span className="mc-countdown__value">{pad(timeLeft.seconds)}</span>
+                    <span className="mc-countdown__label">Sec</span>
+                  </div>
+                </div>
+
+                <a href={s.ctaHref} className="mc-banner__cta">
+                  {s.ctaLabel}
+                </a>
               </div>
             </div>
-
-            <a href={s.ctaHref} className="mc-banner__cta">
-              {s.ctaLabel}
-            </a>
-          </div>
-        ))}
+          );
+        })}
       </div>
 
       {slides.length > 1 && (

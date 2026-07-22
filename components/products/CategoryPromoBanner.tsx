@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { bannerImageUrl } from "@/lib/images/cdn-url";
 
 const BANNER_BY_SLUG: Record<
   string,
@@ -42,13 +43,14 @@ export default function CategoryPromoBanner({
   categorySlug,
 }: Props) {
   const cfg = BANNER_BY_SLUG[categorySlug] ?? BANNER_BY_SLUG.default;
+  const image = bannerImageUrl(cfg.image);
 
   return (
     <section
       className="mc-cat-promo"
       aria-label={`${categoryName} Black Friday banner`}
       style={{
-        backgroundImage: `linear-gradient(90deg, rgba(0,0,0,.62), rgba(0,0,0,.28)), url(${cfg.image})`,
+        backgroundImage: `linear-gradient(90deg, rgba(0,0,0,.62), rgba(0,0,0,.28)), url(${image})`,
       }}
     >
       <div className="mc-container mc-cat-promo__inner">

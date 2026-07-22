@@ -1,40 +1,46 @@
 import Link from "next/link";
 import type { Category } from "@/lib/utils";
+import { bannerImageUrl, tileImageUrl } from "@/lib/images/cdn-url";
 
 const IMAGE_BY_SLUG: Record<string, string> = {
   "womens-clothing":
-    "https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=1400&q=65",
+    "https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=900&q=65&fm=webp",
   "womens-dresses":
-    "https://images.unsplash.com/photo-1496747611176-843222e1e57c?auto=format&fit=crop&w=1400&q=65",
+    "https://images.unsplash.com/photo-1496747611176-843222e1e57c?auto=format&fit=crop&w=900&q=65&fm=webp",
   "womens-jeans-denim":
-    "https://images.unsplash.com/photo-1541099649105-f69ad21f3246?auto=format&fit=crop&w=1400&q=65",
+    "https://images.unsplash.com/photo-1541099649105-f69ad21f3246?auto=format&fit=crop&w=900&q=65&fm=webp",
   formal:
-    "https://images.unsplash.com/photo-1566174053879-31528523f8ae?auto=format&fit=crop&w=1400&q=65",
+    "https://images.unsplash.com/photo-1566174053879-31528523f8ae?auto=format&fit=crop&w=900&q=65&fm=webp",
   "wedding-guest":
-    "https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?auto=format&fit=crop&w=1400&q=65",
+    "https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?auto=format&fit=crop&w=900&q=65&fm=webp",
   "cocktail-party":
-    "https://images.unsplash.com/photo-1595777457583-95e059d581b8?auto=format&fit=crop&w=1400&q=65",
-  day: "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&w=1400&q=65",
+    "https://images.unsplash.com/photo-1595777457583-95e059d581b8?auto=format&fit=crop&w=900&q=65&fm=webp",
+  day: "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&w=900&q=65&fm=webp",
   casual:
-    "https://images.unsplash.com/photo-1434389677669-e08b4cac3105?auto=format&fit=crop&w=1400&q=65",
-  work: "https://images.unsplash.com/photo-1487222477894-8943e31ef7b2?auto=format&fit=crop&w=1400&q=65",
+    "https://images.unsplash.com/photo-1434389677669-e08b4cac3105?auto=format&fit=crop&w=900&q=65&fm=webp",
+  work: "https://images.unsplash.com/photo-1487222477894-8943e31ef7b2?auto=format&fit=crop&w=900&q=65&fm=webp",
   "wide-leg-jeans":
-    "https://images.unsplash.com/photo-1541099649105-f69ad21f3246?auto=format&fit=crop&w=1400&q=65",
+    "https://images.unsplash.com/photo-1541099649105-f69ad21f3246?auto=format&fit=crop&w=900&q=65&fm=webp",
   "straight-jeans":
-    "https://images.unsplash.com/photo-1582418702059-97ebafb35d09?auto=format&fit=crop&w=1400&q=65",
+    "https://images.unsplash.com/photo-1582418702059-97ebafb35d09?auto=format&fit=crop&w=900&q=65&fm=webp",
   "barrel-jeans":
-    "https://images.unsplash.com/photo-1475178626620-a4d074967377?auto=format&fit=crop&w=1400&q=65",
+    "https://images.unsplash.com/photo-1475178626620-a4d074967377?auto=format&fit=crop&w=900&q=65&fm=webp",
   "flare-bootcut-jeans":
-    "https://images.unsplash.com/photo-1604176354204-9268737828e4?auto=format&fit=crop&w=1400&q=65",
+    "https://images.unsplash.com/photo-1604176354204-9268737828e4?auto=format&fit=crop&w=900&q=65&fm=webp",
   "skinny-jeans":
-    "https://images.unsplash.com/photo-1584370848010-d7fe6bc767ec?auto=format&fit=crop&w=1400&q=65",
+    "https://images.unsplash.com/photo-1584370848010-d7fe6bc767ec?auto=format&fit=crop&w=900&q=65&fm=webp",
   default:
-    "https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&w=1400&q=65",
+    "https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&w=900&q=65&fm=webp",
 };
 
-function bannerImage(cat: Category): string {
-  if (cat.image) return cat.image.replace(/w=\d+/, "w=1400").replace(/q=\d+/, "q=65");
-  return IMAGE_BY_SLUG[cat.slug] ?? IMAGE_BY_SLUG.default;
+function promoBannerImage(cat: Category): string {
+  const raw = cat.image || IMAGE_BY_SLUG[cat.slug] || IMAGE_BY_SLUG.default;
+  return bannerImageUrl(raw);
+}
+
+function subcardImage(cat: Category): string {
+  const raw = cat.image || IMAGE_BY_SLUG[cat.slug] || IMAGE_BY_SLUG.default;
+  return tileImageUrl(raw);
 }
 
 function hrefFor(cat: Category, parents: Map<string, Category>): string {
@@ -97,7 +103,7 @@ export default function HomeCategoryBanners({
                 className="mc-cat-promo"
                 aria-label={`${cat.name} Black Friday banner`}
                 style={{
-                  backgroundImage: `linear-gradient(90deg, rgba(0,0,0,.62), rgba(0,0,0,.28)), url(${bannerImage(cat)})`,
+                  backgroundImage: `linear-gradient(90deg, rgba(0,0,0,.62), rgba(0,0,0,.28)), url(${promoBannerImage(cat)})`,
                 }}
               >
                 <div className="mc-container mc-cat-promo__inner">
@@ -138,7 +144,7 @@ export default function HomeCategoryBanners({
                       href={hrefFor(card, parents)}
                       className="mc-home-cat-banners__subcard"
                       style={{
-                        backgroundImage: `linear-gradient(180deg, rgba(0,0,0,.15), rgba(0,0,0,.72)), url(${bannerImage(card)})`,
+                        backgroundImage: `linear-gradient(180deg, rgba(0,0,0,.15), rgba(0,0,0,.72)), url(${subcardImage(card)})`,
                       }}
                     >
                       <span className="mc-home-cat-banners__sub-eyebrow">

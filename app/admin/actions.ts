@@ -32,6 +32,8 @@ import {
   type PaymentSettings,
 } from "@/lib/settings";
 import { DynamicAdapter } from "@/lib/payments/dynamic";
+import { PaymentEngine } from "@/lib/payments/engine";
+import { getSiteOrigin } from "@/lib/site-url";
 import {
   getOrderById,
   replaceOrder,
@@ -843,7 +845,7 @@ export async function updatePaymentSettingsAction(
 
   const next: PaymentSettings = {
     provider: String(formData.get("provider") ?? "stripe").trim() || "stripe",
-    merchantName: String(formData.get("merchantName") ?? "").trim(),
+    merchantName: String(formData.get("merchantName") ?? "").trim() || "MAYCSS",
     apiKey: String(formData.get("apiKey") ?? "").trim(),
     secretKey: String(formData.get("secretKey") ?? "").trim(),
     merchantId: String(formData.get("merchantId") ?? "").trim(),
@@ -854,7 +856,8 @@ export async function updatePaymentSettingsAction(
     apiBaseUrl: String(formData.get("apiBaseUrl") ?? "").trim(),
     webhookSecret: String(formData.get("webhookSecret") ?? "").trim(),
     successRedirectPath: String(formData.get("successRedirectPath") ?? "").trim(),
-    currency: String(formData.get("currency") ?? "usd").trim().toLowerCase(),
+    // Store charges customers in USD end-to-end (checkout + payment links).
+    currency: "usd",
     enabled: formData.get("enabled") === "on",
     manualMethods,
   };
@@ -873,9 +876,9 @@ export async function updatePaymentSettingsAction(
     const activeManual = manualMethods.filter((m) => m.enabled).length;
     return {
       ok: true,
-      message: `Saved. Card gateway is live in ${result.value.mode} mode${
+      message: `Saved. Card gateway is live in ${result.value.mode} mode (USD)${
         activeManual > 0 ? ` alongside ${activeManual} manual method(s)` : ""
-      }.`,
+      }. Customers never see the processor brand name.`,
     };
   }
 
@@ -890,6 +893,79 @@ export async function updatePaymentSettingsAction(
       activeManual > 0
         ? `Saved. Card gateway is off; ${activeManual} manual method(s) are available at checkout.`
         : "Saved. No payment methods active — checkout uses the dev-console adapter.",
+  };
+}
+
+export type PaymentLinkState =
+  | { ok: true; link: string; amountUsd: number; transactionId: string; message?: string }
+  | { ok: false; error: string };
+
+/** Admin: create a shareable USD payment link via the configured gateway. */
+export async function createPaymentLinkAction(
+  _prev: PaymentLinkState | null,
+  formData: FormData,
+): Promise<PaymentLinkState> {
+  const amountRaw = String(formData.get("amount") ?? "").trim();
+  const amount = Number(amountRaw);
+  if (!Number.isFinite(amount) || amount < 0.5) {
+    return { ok: false, error: "Enter an amount of at least $0.50 USD." };
+  }
+  if (amount > 100_000) {
+    return { ok: false, error: "Amount is too large." };
+  }
+
+  const note = String(formData.get("note") ?? "").trim().slice(0, 120);
+  const settings = await getSettings();
+  if (!settings.payments.enabled) {
+    return {
+      ok: false,
+      error: "Enable the card gateway and save your API key first.",
+    };
+  }
+
+  const ready = await PaymentEngine.isReady();
+  if (!ready) {
+    return {
+      ok: false,
+      error: "Gateway is not configured. Save a valid API key first.",
+    };
+  }
+
+  const origin = getSiteOrigin();
+  const linkId = `PL-${Date.now().toString(36).toUpperCase()}`;
+  const storeName = settings.payments.merchantName?.trim() || "MAYCSS";
+  const safeStore =
+    /\b(ziina|zainpay|stripe|paypal)\b/i.test(storeName) ? "MAYCSS" : storeName;
+
+  const pay = await PaymentEngine.processPayment({
+    orderId: linkId,
+    amount: Math.round(amount * 100) / 100,
+    currency: "usd",
+    customer: { name: "Customer", email: "payments@maycss.store" },
+    items: [{ name: note || "Payment", quantity: 1, price: amount }],
+    successUrl: `${origin}/?paid=1&link=${encodeURIComponent(linkId)}`,
+    cancelUrl: `${origin}/?pay_cancelled=1`,
+    metadata: {
+      type: "payment_link",
+      hosted_message: note
+        ? `${safeStore}: ${note}`
+        : `${safeStore} payment`,
+    },
+  });
+
+  if (!pay.ok) {
+    return { ok: false, error: pay.error };
+  }
+  if (!pay.value.redirectUrl) {
+    return { ok: false, error: "Gateway did not return a payment link URL." };
+  }
+
+  return {
+    ok: true,
+    link: pay.value.redirectUrl,
+    amountUsd: amount,
+    transactionId: pay.value.transactionId,
+    message: `USD $${amount.toFixed(2)} payment link ready — copy and send to the customer.`,
   };
 }
 

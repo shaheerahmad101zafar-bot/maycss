@@ -6,7 +6,6 @@ import {
   type SettingsFormState,
 } from "@/app/admin/actions";
 import type { PaymentSettings } from "@/lib/settings";
-import { CURRENCIES } from "@/lib/currency";
 import { cx } from "@/lib/utils";
 import ManualMethodsEditor from "./ManualMethodsEditor";
 
@@ -130,23 +129,12 @@ export default function PaymentSettingsForm({ initial: values, strategies }: Pro
 
           <div className="mc-field">
             <label htmlFor="currency">Charge Currency</label>
-            <select
-              id="currency"
-              name="currency"
-              defaultValue={values.currency ?? "usd"}
-            >
-              {Object.values(CURRENCIES)
-                .filter((c) =>
-                  active?.supportedCurrencies.length
-                    ? active.supportedCurrencies.includes(c.code)
-                    : true,
-                )
-                .map((c) => (
-                  <option key={c.code} value={c.code}>
-                    {c.label} ({c.code.toUpperCase()})
-                  </option>
-                ))}
+            <select id="currency" name="currency" defaultValue="usd" disabled>
+              <option value="usd">US Dollar (USD) — required</option>
             </select>
+            <p className="mc-admin__hint">
+              All card charges and payment links are USD end-to-end.
+            </p>
           </div>
 
           <div className="mc-field">
@@ -162,13 +150,17 @@ export default function PaymentSettingsForm({ initial: values, strategies }: Pro
           </div>
 
           <div className="mc-field mc-field--full">
-            <label htmlFor="merchantName">Merchant Name *</label>
+            <label htmlFor="merchantName">Store display name (admin only)</label>
             <input
               id="merchantName"
               name="merchantName"
               defaultValue={values.merchantName}
-              placeholder={active?.label ?? "Acme Payments"}
+              placeholder="MAYCSS"
             />
+            <p className="mc-admin__hint">
+              Internal label only. Customers always see “Card payment” — never
+              Ziina / ZainPay / Stripe.
+            </p>
           </div>
         </div>
       </fieldset>

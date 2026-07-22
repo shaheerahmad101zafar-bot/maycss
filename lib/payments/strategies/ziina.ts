@@ -11,32 +11,27 @@ import type {
 } from "./types";
 
 /**
- * Ziina strategy — UAE-based payment provider popular for Dubai merchants.
- * Ziina's REST API only requires a single API key (no secret / merchant id).
- * That's why we set `apiKeyOnly = true` — the admin UI hides the other
- * credential fields when this strategy is selected.
+ * Ziina strategy — UAE payment processor (API key only).
+ * Customer-facing UI never shows the Ziina brand; charges are always USD.
  *
- * Docs referenced:
- *   • https://docs.ziina.com/api-reference/payment-intents
- *   • Ziina charges in AED (fils = smallest unit). We convert incoming USD
- *     into AED at a fixed reference rate when the store currency is USD.
+ * Docs: https://docs.ziina.com/api-reference/payment-intent/create
  */
 export const ziinaStrategy: PaymentStrategy = {
   id: "ziina",
-  label: "Ziina (UAE)",
+  label: "Card gateway (API key)",
   authType: "api_key",
   apiKeyOnly: true,
-  supportedCurrencies: ["aed", "usd"],
+  supportedCurrencies: ["usd"],
 
   fields: [
     {
       key: "apiKey",
-      label: "Ziina API Key",
+      label: "API Key",
       type: "password",
       required: true,
-      placeholder: "sk_live_… (from Ziina dashboard)",
+      placeholder: "Paste your live or test API key",
       helper:
-        "Only field required. Ziina authenticates with a single bearer token.",
+        "Saved server-side only. Customers never see this provider’s brand.",
     },
     {
       key: "successRedirectPath",
@@ -44,7 +39,7 @@ export const ziinaStrategy: PaymentStrategy = {
       type: "text",
       required: false,
       placeholder: "/checkout/success",
-      helper: "Optional. Defaults to your storefront's success URL.",
+      helper: "Optional. Defaults to the order tracking page.",
     },
   ],
 
@@ -54,10 +49,9 @@ export const ziinaStrategy: PaymentStrategy = {
 
   async validate(ctx) {
     if (!ctx.credentials.apiKey) {
-      return { ok: false, error: "Ziina API Key is required." };
+      return { ok: false, error: "API Key is required." };
     }
     try {
-      // Ziina exposes /v1/payment_intents which returns 401 for a bad key.
       const res = await fetch("https://api-v2.ziina.com/api/payment_intent", {
         method: "GET",
         headers: {
@@ -66,20 +60,21 @@ export const ziinaStrategy: PaymentStrategy = {
         signal: AbortSignal.timeout(5000),
       });
       if (res.status === 401 || res.status === 403) {
-        return { ok: false, error: "Ziina rejected the API key." };
+        return { ok: false, error: "API key was rejected by the payment gateway." };
       }
-      // 405 (method not allowed on GET) is fine — it means auth passed.
       if (res.status >= 500) {
-        return { ok: false, error: `Ziina API returned ${res.status}.` };
+        return { ok: false, error: `Payment gateway returned ${res.status}.` };
       }
     } catch (err) {
       return {
         ok: false,
         error:
-          err instanceof Error ? err.message : "Could not reach Ziina API.",
+          err instanceof Error ? err.message : "Could not reach payment gateway.",
       };
     }
-    const isLive = ctx.credentials.apiKey.startsWith("sk_live_");
+    const isLive =
+      ctx.environment === "live" ||
+      ctx.credentials.apiKey.includes("live");
     return { ok: true, value: { mode: isLive ? "live" : "test" } };
   },
 
@@ -88,11 +83,14 @@ export const ziinaStrategy: PaymentStrategy = {
     input,
   ): Promise<Result<ProcessPaymentOutput>> {
     if (!this.isConfigured(ctx)) {
-      return { ok: false, error: "Ziina is not configured." };
+      return { ok: false, error: "Payment gateway is not configured." };
     }
-    // Ziina takes amounts in fils (1 AED = 100 fils). USD passthrough uses cents.
-    const currency = input.currency.toUpperCase();
+    // Always charge USD (cents). Customer sees dollars end-to-end.
+    const currency = "USD";
     const amountMinor = Math.round(input.amount * 100);
+    const message =
+      input.metadata?.hosted_message?.trim() ||
+      `MAYCSS order ${input.orderId}`;
     try {
       const res = await fetch(
         "https://api-v2.ziina.com/api/payment_intent",
@@ -108,15 +106,8 @@ export const ziinaStrategy: PaymentStrategy = {
             success_url: input.successUrl,
             cancel_url: input.cancelUrl,
             failure_url: input.cancelUrl,
-            message: `Order ${input.orderId}`,
-            customer: {
-              name: input.customer.name,
-              email: input.customer.email,
-            },
-            metadata: {
-              order_id: input.orderId,
-              ...(input.metadata ?? {}),
-            },
+            message,
+            test: ctx.environment === "sandbox",
           }),
           signal: AbortSignal.timeout(15000),
         },
@@ -140,8 +131,8 @@ export const ziinaStrategy: PaymentStrategy = {
         }
         return {
           ok: false,
-          error: `Ziina rejected the payment (${res.status}): ${detail}`,
-          code: `ziina_${res.status}`,
+          error: `Payment gateway rejected the charge (${res.status}): ${detail}`,
+          code: `gateway_${res.status}`,
         };
       }
       const data = (await res.json()) as {
@@ -155,8 +146,8 @@ export const ziinaStrategy: PaymentStrategy = {
         return {
           ok: false,
           error:
-            "Ziina created a session but did not return a payment redirect URL. Check your Ziina account / API key permissions.",
-          code: "ziina_no_redirect",
+            "Payment session was created but no payment link was returned. Check API key permissions (write_payment_intents).",
+          code: "gateway_no_redirect",
         };
       }
       return {
@@ -171,7 +162,7 @@ export const ziinaStrategy: PaymentStrategy = {
       return {
         ok: false,
         error:
-          err instanceof Error ? err.message : "Ziina request failed.",
+          err instanceof Error ? err.message : "Payment request failed.",
       };
     }
   },

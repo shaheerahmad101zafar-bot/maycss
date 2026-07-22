@@ -1,4 +1,5 @@
 import PaymentSettingsForm from "@/components/admin/PaymentSettingsForm";
+import PaymentLinkCreator from "@/components/admin/PaymentLinkCreator";
 import { getSettings } from "@/lib/settings";
 import { PaymentProviderRegistry } from "@/lib/payments/registry";
 
@@ -14,14 +15,14 @@ export default async function AdminPaymentSettingsPage() {
         <div>
           <h1>Payment Providers</h1>
           <p>
-            Pick a gateway from the registry. Each provider declares its own
-            credential form — Ziina asks for just an API key, Stripe asks for
-            key + secret. No code changes to switch. Register additional
-            strategies in <code>lib/payments/registry.ts</code>.
+            Save your API key once. Checkout and payment links both charge in{" "}
+            <strong>USD</strong>. Customers see “Card payment” — never the
+            processor brand name.
           </p>
         </div>
       </header>
       <PaymentSettingsForm initial={settings.payments} strategies={strategies} />
+      <PaymentLinkCreator enabled={settings.payments.enabled} />
     </section>
   );
 }

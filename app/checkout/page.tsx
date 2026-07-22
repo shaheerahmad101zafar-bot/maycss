@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 import CheckoutView from "@/components/checkout/CheckoutView";
-import { PaymentEngine } from "@/lib/payments/engine";
+import { customerPaymentLabel } from "@/lib/payments/branding";
 import { getEnabledManualMethods, getSettings } from "@/lib/settings";
 
 export const metadata = {
@@ -9,10 +9,9 @@ export const metadata = {
 };
 
 export default async function CheckoutPage() {
-  const [manualMethods, settings, gatewayName] = await Promise.all([
+  const [manualMethods, settings] = await Promise.all([
     getEnabledManualMethods(),
     getSettings(),
-    PaymentEngine.gatewayName().catch(() => "Card payment"),
   ]);
 
   return (
@@ -26,11 +25,7 @@ export default async function CheckoutPage() {
           instructions: m.instructions,
         }))}
         cardEnabled={settings.payments.enabled}
-        gatewayName={
-          settings.payments.enabled
-            ? settings.payments.merchantName || gatewayName
-            : gatewayName
-        }
+        gatewayName={customerPaymentLabel(settings.payments.merchantName)}
       />
     </Suspense>
   );

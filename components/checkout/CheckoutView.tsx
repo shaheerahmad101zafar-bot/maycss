@@ -411,12 +411,10 @@ export default function CheckoutView({
                   onChange={() => setChoice({ kind: "card" })}
                 />
                 <div className="mc-payment-option__body">
-                  <p className="mc-payment-option__name">
-                    Card · {gatewayName}
-                  </p>
+                  <p className="mc-payment-option__name">Card · USD</p>
                   <p className="mc-payment-option__sub">
-                    You&apos;ll be redirected to a secure payment page to enter
-                    your card.
+                    Pay securely by card. You&apos;ll be redirected to complete
+                    payment in US dollars.
                   </p>
                 </div>
               </label>
@@ -455,8 +453,8 @@ export default function CheckoutView({
             {choice.kind === "card" && cardEnabled && (
               <div className="mc-payment-detail">
                 <p className="mc-checkout__note">
-                  After you place the order you&apos;ll leave MAYCSS briefly to
-                  pay securely via <strong>{gatewayName}</strong>. We never
+                  After you place the order you&apos;ll be redirected to a secure
+                  card page. Amounts are in <strong>USD ($)</strong>. We never
                   store your full card number on this site.
                 </p>
               </div>

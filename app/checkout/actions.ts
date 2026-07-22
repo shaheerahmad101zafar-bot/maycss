@@ -76,10 +76,10 @@ export async function placeOrderAction(input: unknown): Promise<PlaceOrderResult
   const data = parsed.data;
 
   const [cfg, settings] = await Promise.all([getAppConfig(), getSettings()]);
-  const storeCurrency = normalizeCurrency(cfg.currency);
-  const chargeCurrency = normalizeCurrency(
-    settings.payments.currency || cfg.currency,
-  );
+  // Storefront + gateway charge are always USD end-to-end.
+  const storeCurrency = normalizeCurrency("usd");
+  const chargeCurrency = normalizeCurrency("usd");
+  const storeName = cfg.siteName?.trim() || "MAYCSS";
 
   const subtotal = data.items.reduce(
     (acc, i) => acc + i.price * i.quantity,
@@ -227,7 +227,7 @@ export async function placeOrderAction(input: unknown): Promise<PlaceOrderResult
     const pay = await PaymentEngine.processPayment({
       orderId: order.id,
       amount: chargeAmount,
-      currency: chargeCurrency,
+      currency: "usd",
       customer: {
         name: `${order.contact.firstName} ${order.contact.lastName}`.trim(),
         email: order.email,
@@ -242,7 +242,9 @@ export async function placeOrderAction(input: unknown): Promise<PlaceOrderResult
       cancelUrl,
       metadata: {
         order_id: order.id,
-        store_currency: storeCurrency,
+        store_currency: "usd",
+        charge_currency: "usd",
+        hosted_message: `${storeName} order ${order.id}`,
       },
     });
 

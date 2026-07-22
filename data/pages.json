@@ -520,20 +520,6 @@
         "overlay": "dark"
       },
       {
-        "id": "blk_home_seo_copy",
-        "type": "richtext",
-        "layout": {
-          "alignment": "center",
-          "width": "medium",
-          "columnCount": 1,
-          "padding": "md"
-        },
-        "heading": "Curated Luxury Fashion",
-        "headingLevel": 2,
-        "body": "MAYCSS is your destination for curated luxury fashion online — women clothes, dresses for women, jeans and denim, and considered fashion products. Discover womens t shirts, corset tops, straight leg jeans, wedding guest dresses, and womens work clothes chosen for fabric, fit, and lasting polish. Explore clothes on sale and friday sale edits, plus size clothing and affordable plus size clothing, and wholesale clothing energy without the clutter. Shop cheap online clothing and womens clothes sale finds with the quiet confidence of a luxury edit — authenticity guaranteed, complimentary shipping on qualifying orders.",
-        "alignment": "center"
-      },
-      {
         "id": "blk_home_grid",
         "type": "productgrid",
         "layout": {
@@ -546,6 +532,20 @@
         "productIds": [],
         "filterTag": "new",
         "limit": 8
+      },
+      {
+        "id": "blk_home_seo_copy",
+        "type": "richtext",
+        "layout": {
+          "alignment": "center",
+          "width": "medium",
+          "columnCount": 1,
+          "padding": "md"
+        },
+        "heading": "Curated Luxury Fashion",
+        "headingLevel": 2,
+        "body": "MAYCSS offers curated women clothes, dresses for women, jeans and denim, and fashion products online — including womens work clothes, straight leg jeans, and seasonal clothes on sale.",
+        "alignment": "center"
       },
       {
         "id": "blk_home_banner",

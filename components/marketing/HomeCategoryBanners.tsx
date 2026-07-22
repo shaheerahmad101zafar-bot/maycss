@@ -143,6 +143,7 @@ export default function HomeCategoryBanners({
                       key={card.id}
                       href={hrefFor(card, parents)}
                       className="mc-home-cat-banners__subcard"
+                      aria-label={`Shop ${card.name}`}
                       style={{
                         backgroundImage: `linear-gradient(180deg, rgba(0,0,0,.15), rgba(0,0,0,.72)), url(${subcardImage(card)})`,
                       }}

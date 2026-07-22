@@ -90,6 +90,7 @@ export default function ProductDetail({ product }: Props) {
                   key={src + i}
                   type="button"
                   role="tab"
+                  aria-label={`${product.name} image ${i + 1}`}
                   aria-selected={i === activeImage}
                   className={cx(
                     "mc-pdp__thumb",

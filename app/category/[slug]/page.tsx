@@ -10,6 +10,11 @@ import {
   getProductsByCategoryId,
   getSubcategories,
 } from "@/lib/data";
+import {
+  categoryBreadcrumbJsonLd,
+  categoryToMetadata,
+} from "@/lib/seo/category-metadata";
+import { getSiteOrigin } from "@/lib/site-url";
 
 type Props = {
   params: Promise<{ slug: string }>;
@@ -19,10 +24,7 @@ type Props = {
 export async function generateMetadata({ params }: Props) {
   const { slug } = await params;
   const category = await getCategoryBySlug(slug);
-  return {
-    title: category ? `${category.name} · MayCSS` : "Category not found · MayCSS",
-    description: category?.description ?? "Browse the MayCSS collection.",
-  };
+  return categoryToMetadata(category);
 }
 
 export default async function CategoryRoute({ params, searchParams }: Props) {
@@ -48,8 +50,20 @@ export default async function CategoryRoute({ params, searchParams }: Props) {
     category.slug === "womens-dresses" ||
     category.slug === "womens-jeans-denim";
 
+  const breadcrumbLd = categoryBreadcrumbJsonLd({
+    origin: getSiteOrigin(),
+    items: [
+      { name: "Home", path: "/" },
+      { name: category.name, path: `/category/${category.slug}` },
+    ],
+  });
+
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: breadcrumbLd }}
+      />
       {showHeroBanner && (
         <CategoryPromoBanner
           categoryName={category.name}
@@ -93,7 +107,11 @@ export default async function CategoryRoute({ params, searchParams }: Props) {
                   >
                     {c.image ? (
                       /* eslint-disable-next-line @next/next/no-img-element */
-                      <img src={c.image} alt={c.name} loading="lazy" />
+                      <img
+                        src={c.image}
+                        alt={`${c.name} — MAYCSS`}
+                        loading="lazy"
+                      />
                     ) : (
                       <span className="mc-cat-block__fallback" aria-hidden />
                     )}

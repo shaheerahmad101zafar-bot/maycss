@@ -15,7 +15,9 @@ import SessionProviderWrapper from "@/components/auth/SessionProviderWrapper";
 import ChatWidgetLoader from "@/components/public/ChatWidgetLoader";
 import Analytics from "@/components/Analytics";
 import ChunkLoadRecovery from "@/components/ChunkLoadRecovery";
+import SiteJsonLd from "@/components/seo/SiteJsonLd";
 import { getAppConfig } from "@/lib/app-config";
+import { MAYCSS_PRIMARY_KEYWORDS } from "@/lib/seo/maycss-keywords";
 import { getSiteOrigin } from "@/lib/site-url";
 
 const geistSans = Geist({
@@ -34,10 +36,29 @@ const playfair = Playfair_Display({
 
 export async function generateMetadata(): Promise<Metadata> {
   const cfg = await getAppConfig();
+  const title = `${cfg.siteName} — ${cfg.tagline}`;
+  const description =
+    cfg.tagline ||
+    "MAYCSS curated luxury fashion online — women clothes, dresses, jeans and denim, and fashion products.";
   return {
     metadataBase: new URL(getSiteOrigin()),
-    title: `${cfg.siteName} — ${cfg.tagline}`,
-    description: cfg.tagline,
+    title: {
+      default: title,
+      template: `%s · ${cfg.siteName}`,
+    },
+    description,
+    keywords: [...MAYCSS_PRIMARY_KEYWORDS],
+    openGraph: {
+      title,
+      description,
+      siteName: cfg.siteName,
+      type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+    },
   };
 }
 
@@ -51,6 +72,7 @@ export default async function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} ${playfair.variable}`}
     >
       <body className="mc-body">
+        <SiteJsonLd />
         <ChunkLoadRecovery />
         <SessionProviderWrapper>
           <CartProvider>

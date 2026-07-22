@@ -338,7 +338,7 @@ export const PageFactory = {
 
   toMetadata(page: Page): Metadata {
     const seo = page.seo ?? {};
-    const title = seo.metaTitle || `${page.title} · myacss`;
+    const title = seo.metaTitle || `${page.title} · MAYCSS`;
     const description = seo.metaDescription || page.hero || page.title;
     return {
       title,
@@ -362,6 +362,8 @@ export const PageFactory = {
   },
 
   toJsonLd(page: Page): string {
+    const seo = page.seo ?? {};
+    const description = seo.metaDescription || page.hero || page.title;
     const hasFaq = page.blocks.some((b) => b.type === "faq");
     if (hasFaq) {
       const faqs = page.blocks
@@ -370,6 +372,8 @@ export const PageFactory = {
       return JSON.stringify({
         "@context": "https://schema.org",
         "@type": "FAQPage",
+        name: seo.metaTitle || page.title,
+        description,
         mainEntity: faqs.map((f) => ({
           "@type": "Question",
           name: f.q,
@@ -380,10 +384,11 @@ export const PageFactory = {
     return JSON.stringify({
       "@context": "https://schema.org",
       "@type": "WebPage",
-      name: page.title,
-      description: page.hero,
+      name: seo.metaTitle || page.title,
+      description,
       dateModified: page.lastUpdated,
-      keywords: page.seo?.keywords?.join(", "),
+      keywords: seo.keywords?.join(", "),
+      isPartOf: { "@type": "WebSite", name: "MAYCSS" },
     });
   },
 };

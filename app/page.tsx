@@ -9,9 +9,9 @@ import { PageFactory } from "@/lib/pages";
 import type { Metadata } from "next";
 
 const FALLBACK_META: Metadata = {
-  title: "myacss — Premium fashion & lifestyle, curated",
+  title: "MAYCSS | Curated Luxury Fashion Online",
   description:
-    "Independent designers and heritage houses, sourced with integrity.",
+    "Shop MAYCSS for women clothes, dresses for women, jeans and denim, and fashion products — curated luxury online.",
 };
 
 export async function generateMetadata(): Promise<Metadata> {

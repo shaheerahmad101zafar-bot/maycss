@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useCart } from "@/context/CartContext";
+import { productImageAlt } from "@/lib/seo/image-alt";
 import { cx, discountPercent, formatPrice, type Product } from "@/lib/utils";
 
 interface ProductCardProps {
@@ -83,7 +84,7 @@ export default function ProductCard({
         <img
           className="mc-card__img"
           src={cardImageSrc(product.image)}
-          alt={product.name}
+          alt={productImageAlt(product)}
           loading="lazy"
           width={400}
           height={500}

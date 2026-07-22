@@ -10,6 +10,11 @@ import {
   getCategoryBySlug,
   getProductsByCategoryId,
 } from "@/lib/data";
+import {
+  categoryBreadcrumbJsonLd,
+  categoryToMetadata,
+} from "@/lib/seo/category-metadata";
+import { getSiteOrigin } from "@/lib/site-url";
 
 type Props = {
   params: Promise<{ slug: string; subslug: string }>;
@@ -19,10 +24,7 @@ type Props = {
 export async function generateMetadata({ params }: Props) {
   const { subslug } = await params;
   const category = await getCategoryBySlug(subslug);
-  return {
-    title: category ? `${category.name} · MayCSS` : "Category not found · MayCSS",
-    description: category?.description ?? "Browse the MayCSS collection.",
-  };
+  return categoryToMetadata(category);
 }
 
 export default async function SubcategoryRoute({ params, searchParams }: Props) {
@@ -48,8 +50,21 @@ export default async function SubcategoryRoute({ params, searchParams }: Props) 
     STOREFRONT_PAGE_SIZE,
   );
 
+  const breadcrumbLd = categoryBreadcrumbJsonLd({
+    origin: getSiteOrigin(),
+    items: [
+      { name: "Home", path: "/" },
+      { name: parent.name, path: `/category/${parent.slug}` },
+      { name: sub.name, path: `/category/${parent.slug}/${sub.slug}` },
+    ],
+  });
+
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: breadcrumbLd }}
+      />
       <CategoryPromoBanner
         categoryName={sub.name}
         categorySlug={parent.slug}

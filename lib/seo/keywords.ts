@@ -3,6 +3,8 @@
  * When you're ready to upgrade, swap `suggest()` for a call to a real KW tool.
  */
 
+import { keywordsForSuggest } from "./maycss-keywords";
+
 const MODIFIERS = [
   "best",
   "top",
@@ -10,15 +12,9 @@ const MODIFIERS = [
   "premium",
   "cheap",
   "buy",
-  "review",
-  "reviews",
-  "how to",
-  "what is",
-  "guide to",
-  "vs",
-  "for beginners",
-  "near me",
   "online",
+  "for women",
+  "sale",
 ];
 
 function pluralise(word: string): string {
@@ -27,25 +23,25 @@ function pluralise(word: string): string {
   if (lower.endsWith("s") || lower.endsWith("x") || lower.endsWith("z")) {
     return word + "es";
   }
-  if (lower.endsWith("y") && word.length > 1 && !/[aeiou]/i.test(word[word.length - 2])) {
+  if (lower.endsWith("y") && word.length > 1 && !/[aeiou]/i.test(word[word.length - 2]!)) {
     return word.slice(0, -1) + "ies";
   }
   return word + "s";
 }
 
 export const KeywordChecker = {
-  /** Local suggestions based on the seed keyword. */
+  /** Local suggestions: MAYCSS catalog first, then modifiers. No "near me". */
   suggest(seed: string, limit = 12): string[] {
     const s = seed.trim().toLowerCase();
-    if (!s) return [];
-    const out = new Set<string>();
+    const catalog = keywordsForSuggest(seed, limit);
+    if (!s) return catalog;
+    const out = new Set<string>(catalog);
     out.add(s);
     out.add(pluralise(s));
     for (const m of MODIFIERS) {
       out.add(`${m} ${s}`);
     }
     out.add(`${s} online`);
-    out.add(`${s} guide`);
     return Array.from(out).slice(0, limit);
   },
 

@@ -31,7 +31,7 @@ export default async function Footer() {
 
   const tagline =
     cfg.tagline ||
-    "Premium fashion and lifestyle, curated with intention.";
+    "Curated Luxury Fashion — women clothes, dresses, and denim online.";
 
   return (
     <footer className="mc-footer">
@@ -43,6 +43,11 @@ export default async function Footer() {
             variant="footer"
           />
           <p className="mc-footer__tagline">{tagline}</p>
+          <p className="mc-footer__tagline">
+            Online fashion store for women clothes, dresses for women, jeans and
+            denim, and fashion products — clothes on sale and friday sale edits
+            shipped nationwide.
+          </p>
           {activeSocials.length > 0 && (
             <div className="mc-footer__socials" aria-label="Social media">
               {activeSocials.map((s) => (
@@ -65,9 +70,11 @@ export default async function Footer() {
           <h3>Shop</h3>
           <ul>
             <li><Link href="/shop">Shop All</Link></li>
-            <li><Link href="/new">New Arrivals</Link></li>
+            <li><Link href="/category/womens-clothing">Women&apos;s Clothing</Link></li>
+            <li><Link href="/category/womens-dresses">Dresses</Link></li>
+            <li><Link href="/category/womens-jeans-denim">Jeans &amp; Denim</Link></li>
             <li><Link href="/sale">Sale</Link></li>
-            <li><Link href="/brands">Brands</Link></li>
+            <li><Link href="/new">New Arrivals</Link></li>
           </ul>
         </nav>
 

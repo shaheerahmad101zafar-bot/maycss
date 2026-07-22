@@ -11,13 +11,13 @@ export async function generateMetadata({ params }: PageProps) {
   const { id } = await params;
   const product = await getProductById(id);
   if (!product) return { title: "Product not found · MayCSS" };
-  const title = product.seo?.metaTitle ?? `${product.name} · MayCSS`;
+  const title = product.seo?.metaTitle ?? `${product.name} · MAYCSS`;
   const description =
     product.seo?.metaDescription ?? product.description ?? product.name;
   return {
     title,
     description,
-    keywords: product.seo?.keywords,
+    keywords: product.seo?.keywords ?? ["MAYCSS", "fashion products"],
     openGraph: {
       title,
       description,

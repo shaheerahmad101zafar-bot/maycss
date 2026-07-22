@@ -9,6 +9,7 @@ import {
   resolveGallery,
   type Product,
 } from "@/lib/utils";
+import { productImageAlt } from "@/lib/seo/image-alt";
 
 interface Props {
   product: Product;
@@ -97,7 +98,7 @@ export default function ProductDetail({ product }: Props) {
                   onClick={() => setActiveImage(i)}
                 >
                   {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={src} alt={`${product.name} view ${i + 1}`} />
+                  <img src={src} alt={productImageAlt(product, { view: i + 1 })} />
                 </button>
               ))}
             </div>
@@ -125,7 +126,9 @@ export default function ProductDetail({ product }: Props) {
             <img
               className="mc-pdp__image"
               src={gallery[activeImage]}
-              alt={`${product.name}${color ? ` — ${color}` : ""}`}
+              alt={productImageAlt(product, {
+                color: color ?? undefined,
+              })}
               key={gallery[activeImage]}
             />
           </div>

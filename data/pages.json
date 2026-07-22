@@ -437,24 +437,30 @@
     "pageKind": "standard",
     "published": true,
     "showInFooter": false,
-    "lastUpdated": "2026-07-19",
+    "lastUpdated": "2026-07-22",
     "seo": {
-      "metaTitle": "Shop MAYCSS Online Store | Black Friday Fashion",
-      "metaDescription": "Shop MAYCSS Online Store for women's clothing, dresses for women, jeans and denim. Wholesale clothing energy, fashion products, Black Friday friday sale deals.",
+      "metaTitle": "MAYCSS | Curated Luxury Fashion Online",
+      "metaDescription": "Shop MAYCSS for women clothes, dresses for women, jeans and denim, and fashion products. Wholesale clothing energy with clothes on sale, friday sale picks, and affordable plus size clothing — online only.",
       "ogImage": "https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=1200&q=80",
       "keywords": [
         "MAYCSS",
-        "Shop MayCSS Online Store",
         "wholesale clothing",
         "fashion products",
-        "dresses for women",
-        "jeans and denim",
+        "women clothes",
+        "womens t shirts",
+        "cheap online clothing",
+        "cheap plus size clothes",
         "womens clothes sale",
+        "jeans and denim",
+        "straight leg jeans",
+        "dresses for women",
+        "plus size clothing",
+        "clothes on sale",
         "friday sale",
-        "Black Friday",
+        "corset top",
         "wedding guest",
-        "party",
-        "cheap online clothing"
+        "summer dress",
+        "usa cheap clothes"
       ]
     },
     "blocks": [
@@ -522,9 +528,9 @@
           "columnCount": 1,
           "padding": "md"
         },
-        "heading": "Curated Luxury, Delivered Online",
+        "heading": "Curated Luxury Fashion",
         "headingLevel": 2,
-        "body": "Discover why discerning shoppers choose Shop MayCSS Online Store for premium fashion online. We curate independent designers and heritage maisons with a focus on fabric integrity, considered silhouettes, and lasting wear. Complimentary shipping is available on qualifying orders, authenticity is guaranteed on every piece, and our team offers personal styling when you want a second eye. Whether you are building a capsule wardrobe or searching for a signature statement, MayCSS is your destination for minimalist luxury that feels effortless, elevated, and entirely your own. Explore the collection, save favourites, and shop with confidence knowing every detail has been vetted for quality and provenance.",
+        "body": "MAYCSS is your destination for curated luxury fashion online — women clothes, dresses for women, jeans and denim, and considered fashion products. Discover womens t shirts, corset tops, straight leg jeans, wedding guest dresses, and womens work clothes chosen for fabric, fit, and lasting polish. Explore clothes on sale and friday sale edits, plus size clothing and affordable plus size clothing, and wholesale clothing energy without the clutter. Shop cheap online clothing and womens clothes sale finds with the quiet confidence of a luxury edit — authenticity guaranteed, complimentary shipping on qualifying orders.",
         "alignment": "center"
       },
       {
@@ -784,16 +790,19 @@
     "pageKind": "shop",
     "published": true,
     "showInFooter": false,
-    "lastUpdated": "2026-07-21",
+    "lastUpdated": "2026-07-22",
     "seo": {
-      "metaTitle": "Shop MayCSS Online Store | Shop All",
-      "metaDescription": "Shop MayCSS Online Store for curated premium fashion and minimalist luxury apparel — high-quality pieces chosen for craft, fit, and lasting style.",
+      "metaTitle": "Shop All Fashion Products · MAYCSS",
+      "metaDescription": "Browse fashion products at MAYCSS — women clothes, dresses, jeans and denim, womens t shirts, and clothes on sale. A curated cheap clothing brand edit with wholesale clothing reach.",
       "keywords": [
-        "Shop MayCSS Online Store",
-        "shop all",
-        "shop luxury fashion",
-        "designer clothing online",
-        "MayCSS collection"
+        "MAYCSS",
+        "fashion products",
+        "women clothes",
+        "wholesale clothing",
+        "cheap online clothing",
+        "clothes on sale",
+        "jeans and denim",
+        "dresses for women"
       ],
       "ogImage": "https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=1200&q=80"
     },
@@ -858,16 +867,18 @@
     "pageKind": "sale",
     "published": true,
     "showInFooter": false,
-    "lastUpdated": "2026-07-21",
+    "lastUpdated": "2026-07-22",
     "seo": {
-      "metaTitle": "Shop MayCSS Online Store | Black Friday Sale",
-      "metaDescription": "Shop MayCSS Online Store for exclusive luxury sale discounts. Limited-time markdowns on curated fashion — elegant pieces at investment-friendly prices.",
+      "metaTitle": "Clothes on Sale & Friday Sale · MAYCSS",
+      "metaDescription": "Shop clothes on sale and friday sale fashion at MAYCSS — womens clothes sale, cheap online clothing, and affordable plus size clothing in a curated luxury edit.",
       "keywords": [
-        "Shop MayCSS Online Store",
-        "Black Friday",
-        "sale",
-        "luxury fashion sale",
-        "markdowns"
+        "MAYCSS",
+        "clothes on sale",
+        "friday sale",
+        "womens clothes sale",
+        "cheap online clothing",
+        "affordable plus size clothing",
+        "cheap plus size clothes"
       ],
       "ogImage": "https://images.unsplash.com/photo-1541099649105-f69ad21f3246?auto=format&fit=crop&w=1200&q=80"
     },

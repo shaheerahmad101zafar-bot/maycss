@@ -17,6 +17,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${base}/brands`, lastModified: now, changeFrequency: "weekly", priority: 0.7 },
     { url: `${base}/contact`, lastModified: now, changeFrequency: "monthly", priority: 0.5 },
     { url: `${base}/account/signin`, lastModified: now, changeFrequency: "monthly", priority: 0.3 },
+    // Product feed for Google Merchant Center (also linked from docs/).
+    {
+      url: `${base}/feeds/google-shopping.xml`,
+      lastModified: now,
+      changeFrequency: "hourly",
+      priority: 0.4,
+    },
   ];
 
   const [categories, products, pages] = await Promise.all([

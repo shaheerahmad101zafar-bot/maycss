@@ -213,19 +213,20 @@ export default function CheckoutView({
           <div className="mc-checkout__confirm-mark" aria-hidden>
             ✓
           </div>
-          <h1>Order received</h1>
+          <h1>Thank you</h1>
           {confirmed.isManual ? (
             <p>
-              Order <strong>{confirmed.orderId}</strong> is on hold pending
-              confirmation of your <strong>{confirmed.methodName}</strong>{" "}
-              transfer. We&apos;ll email <strong>{confirmed.email}</strong> the
-              moment we verify it.
+              Thank you, {confirmed.email.split("@")[0]}. Order{" "}
+              <strong>{confirmed.orderId}</strong> is reserved while we confirm
+              your <strong>{confirmed.methodName}</strong> transfer. We&apos;ll
+              email you as soon as it&apos;s verified.
             </p>
           ) : (
             <p>
-              Thank you! Your order <strong>{confirmed.orderId}</strong> is
-              being prepared. A receipt is on its way to{" "}
-              <strong>{confirmed.email}</strong>.
+              Thank you for shopping with MAYCSS. Your order{" "}
+              <strong>{confirmed.orderId}</strong> is confirmed — a receipt is on
+              its way to <strong>{confirmed.email}</strong>. We can&apos;t wait
+              for you to wear it.
             </p>
           )}
           <div
@@ -411,10 +412,9 @@ export default function CheckoutView({
                   onChange={() => setChoice({ kind: "card" })}
                 />
                 <div className="mc-payment-option__body">
-                  <p className="mc-payment-option__name">Card · USD</p>
+                  <p className="mc-payment-option__name">CARD PAYMENTS</p>
                   <p className="mc-payment-option__sub">
-                    Pay securely by card. You&apos;ll be redirected to complete
-                    payment in US dollars.
+                    Pay securely by card.
                   </p>
                 </div>
               </label>
@@ -449,16 +449,6 @@ export default function CheckoutView({
                 </div>
               </label>
             ))}
-
-            {choice.kind === "card" && cardEnabled && (
-              <div className="mc-payment-detail">
-                <p className="mc-checkout__note">
-                  After you place the order you&apos;ll be redirected to a secure
-                  card page. Amounts are in <strong>USD ($)</strong>. We never
-                  store your full card number on this site.
-                </p>
-              </div>
-            )}
 
             {choice.kind === "manual" && activeManual && (
               <div className="mc-payment-detail mc-payment-detail--manual">

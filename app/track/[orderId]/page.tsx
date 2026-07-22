@@ -6,7 +6,7 @@ import OrderTimeline from "@/components/orders/OrderTimeline";
 
 type Props = {
   params: Promise<{ orderId: string }>;
-  searchParams: Promise<{ email?: string }>;
+  searchParams: Promise<{ email?: string; paid?: string }>;
 };
 
 export async function generateMetadata({ params }: Props) {
@@ -24,7 +24,7 @@ export async function generateMetadata({ params }: Props) {
  */
 export default async function TrackOrderPage({ params, searchParams }: Props) {
   const { orderId } = await params;
-  const { email } = await searchParams;
+  const { email, paid } = await searchParams;
   const order = await getOrderById(orderId);
   if (!order) notFound();
   if (!email || order.email.toLowerCase() !== email.toLowerCase()) {
@@ -60,10 +60,34 @@ export default async function TrackOrderPage({ params, searchParams }: Props) {
     );
   }
 
+  const justPaid = paid === "1";
+
   return (
     <section className="mc-track">
+      {justPaid && (
+        <div className="mc-container" style={{ paddingTop: "2rem" }}>
+          <div
+            className="mc-checkout__confirm"
+            style={{ marginBottom: "1.5rem", maxWidth: 640, marginInline: "auto" }}
+          >
+            <div className="mc-checkout__confirm-mark" aria-hidden>
+              ✓
+            </div>
+            <h1>Thank you for your order</h1>
+            <p>
+              Payment received — thank you for shopping with MAYCSS,{" "}
+              {order.contact.firstName}. Order <strong>{order.id}</strong> is on
+              its way to being prepared. A confirmation is heading to{" "}
+              <strong>{order.email}</strong>.
+            </p>
+          </div>
+        </div>
+      )}
+
       <header className="mc-page__header">
-        <p className="mc-page__eyebrow">Order tracking</p>
+        <p className="mc-page__eyebrow">
+          {justPaid ? "You’re all set" : "Order tracking"}
+        </p>
         <h1
           className="mc-page__title"
           style={{ display: "flex", justifyContent: "center", gap: 12, alignItems: "center" }}

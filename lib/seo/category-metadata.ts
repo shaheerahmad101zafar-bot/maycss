@@ -27,7 +27,7 @@ export function categoryToMetadata(category: Category | null | undefined): Metad
   );
 
   return {
-    title: titled,
+    title: { absolute: titled },
     description,
     keywords,
     openGraph: {

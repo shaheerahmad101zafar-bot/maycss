@@ -15,7 +15,7 @@ export async function generateMetadata({ params }: PageProps) {
   const description =
     product.seo?.metaDescription ?? product.description ?? product.name;
   return {
-    title,
+    title: { absolute: title },
     description,
     keywords: product.seo?.keywords ?? ["MAYCSS", "fashion products"],
     openGraph: {

@@ -341,7 +341,7 @@ export const PageFactory = {
     const title = seo.metaTitle || `${page.title} · MAYCSS`;
     const description = seo.metaDescription || page.hero || page.title;
     return {
-      title,
+      title: { absolute: title },
       description,
       keywords: seo.keywords,
       alternates: seo.canonical ? { canonical: seo.canonical } : undefined,

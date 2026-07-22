@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import {
   saveOrder,
+  replaceOrder,
   type Order,
   type OrderPayment,
   type OrderStatusEvent,
@@ -13,18 +14,18 @@ import { renderOrderStatusEmail } from "@/lib/email/templates/order-status";
 import { getSettings } from "@/lib/settings";
 import { getAppConfig } from "@/lib/app-config";
 import { placeOrderSchema, zodFieldErrors } from "@/lib/validation/schemas";
-import { normalizeCurrency } from "@/lib/currency";
+import {
+  convertPrice,
+  normalizeCurrency,
+  type CurrencyCode,
+} from "@/lib/currency";
+import { PaymentEngine } from "@/lib/payments/engine";
+import { getSiteOrigin } from "@/lib/site-url";
 
 /* -------------------------------------------------------------------------- */
 /*  Coupon table                                                              */
 /* -------------------------------------------------------------------------- */
 
-/**
- * Sample in-memory coupon registry. In production, back this with a database
- * so campaign managers can add/edit codes without a redeploy. All logic below
- * is coupon-shape-agnostic — swap the lookup and everything downstream
- * continues to work.
- */
 type Coupon =
   | { code: string; type: "percent"; value: number; minSubtotal?: number }
   | { code: string; type: "fixed"; value: number; minSubtotal?: number };
@@ -56,7 +57,7 @@ function applyCoupon(subtotal: number, coupon: Coupon): number {
 export type { PlaceOrderInput } from "@/lib/validation/schemas";
 
 export type PlaceOrderResult =
-  | { ok: true; orderId: string }
+  | { ok: true; orderId: string; redirectUrl?: string }
   | { ok: false; error: string; fieldErrors?: Record<string, string> };
 
 /* -------------------------------------------------------------------------- */
@@ -64,7 +65,6 @@ export type PlaceOrderResult =
 /* -------------------------------------------------------------------------- */
 
 export async function placeOrderAction(input: unknown): Promise<PlaceOrderResult> {
-  // 1) Zod validation — one call replaces the whole required-fields loop.
   const parsed = placeOrderSchema.safeParse(input);
   if (!parsed.success) {
     return {
@@ -75,9 +75,11 @@ export async function placeOrderAction(input: unknown): Promise<PlaceOrderResult
   }
   const data = parsed.data;
 
-  // 2) Compute money in the store's base currency.
-  const cfg = await getAppConfig();
-  const currency = normalizeCurrency(cfg.currency);
+  const [cfg, settings] = await Promise.all([getAppConfig(), getSettings()]);
+  const storeCurrency = normalizeCurrency(cfg.currency);
+  const chargeCurrency = normalizeCurrency(
+    settings.payments.currency || cfg.currency,
+  );
 
   const subtotal = data.items.reduce(
     (acc, i) => acc + i.price * i.quantity,
@@ -86,7 +88,6 @@ export async function placeOrderAction(input: unknown): Promise<PlaceOrderResult
   const shippingCost = subtotal >= 75 ? 0 : 8.95;
   const tax = estimateTax(subtotal);
 
-  // 3) Order-level coupon discount (independent from payment-method discount).
   let couponDiscount = 0;
   let couponCode: string | undefined;
   if (data.couponCode) {
@@ -109,11 +110,9 @@ export async function placeOrderAction(input: unknown): Promise<PlaceOrderResult
 
   const preTotal = subtotal + shippingCost + tax - couponDiscount;
 
-  // 4) Resolve manual method server-side (never trust the client's discount).
   let payment: OrderPayment = { method: "card" };
   let methodDiscount = 0;
   if (data.payment.method === "manual") {
-    const settings = await getSettings();
     const method = settings.payments.manualMethods.find(
       (m) => m.id === data.payment.methodId && m.enabled,
     );
@@ -148,7 +147,7 @@ export async function placeOrderAction(input: unknown): Promise<PlaceOrderResult
     note:
       payment.method === "manual"
         ? `Order placed via ${payment.methodName}. Awaiting funds verification.`
-        : "Order placed.",
+        : "Order placed — awaiting card payment.",
   };
 
   const order: Order = {
@@ -180,7 +179,7 @@ export async function placeOrderAction(input: unknown): Promise<PlaceOrderResult
     tax,
     couponCode,
     discountAmount: couponDiscount || undefined,
-    currency,
+    currency: storeCurrency,
     total,
     status: "pending",
     statusHistory: [initialEvent],
@@ -194,6 +193,128 @@ export async function placeOrderAction(input: unknown): Promise<PlaceOrderResult
     return { ok: false, error: "We couldn't save your order. Please retry." };
   }
 
+  // Card path: create a real payment intent with the configured gateway
+  // (Ziina / Stripe / PayPal / generic). Never touch raw card numbers here —
+  // the customer is redirected to the provider's hosted checkout.
+  if (payment.method === "card") {
+    if (!settings.payments.enabled) {
+      return {
+        ok: false,
+        error:
+          "Card payments are not enabled. Ask the store admin to enable a gateway under Settings → Payments.",
+      };
+    }
+
+    const ready = await PaymentEngine.isReady();
+    if (!ready) {
+      return {
+        ok: false,
+        error:
+          "Payment gateway is not configured correctly. Check the API key in Admin → Settings → Payments.",
+      };
+    }
+
+    const chargeAmount = toChargeAmount(total, storeCurrency, chargeCurrency);
+    const origin = getSiteOrigin();
+    const successPath =
+      settings.payments.successRedirectPath?.trim() ||
+      `/track/${order.id}?email=${encodeURIComponent(order.email)}&paid=1`;
+    const successUrl = successPath.startsWith("http")
+      ? successPath
+      : `${origin}${successPath.startsWith("/") ? "" : "/"}${successPath}`;
+    const cancelUrl = `${origin}/checkout?cancelled=1&order=${encodeURIComponent(order.id)}`;
+
+    const pay = await PaymentEngine.processPayment({
+      orderId: order.id,
+      amount: chargeAmount,
+      currency: chargeCurrency,
+      customer: {
+        name: `${order.contact.firstName} ${order.contact.lastName}`.trim(),
+        email: order.email,
+        phone: order.phone,
+      },
+      items: order.items.map((i) => ({
+        name: i.name,
+        quantity: i.quantity,
+        price: toChargeAmount(i.price, storeCurrency, chargeCurrency),
+      })),
+      successUrl,
+      cancelUrl,
+      metadata: {
+        order_id: order.id,
+        store_currency: storeCurrency,
+      },
+    });
+
+    if (!pay.ok) {
+      console.error("[checkout] payment failed", pay.error, pay.code);
+      try {
+        await replaceOrder({
+          ...order,
+          status: "hold",
+          statusHistory: [
+            ...order.statusHistory,
+            {
+              from: "pending",
+              to: "hold",
+              at: new Date().toISOString(),
+              by: "system",
+              note: `Payment failed: ${pay.error}`,
+            },
+          ],
+        });
+      } catch (err) {
+        console.warn("[checkout] could not mark order hold", err);
+      }
+      return {
+        ok: false,
+        error:
+          pay.error ||
+          "Payment could not be started. Please try again or use another method.",
+      };
+    }
+
+    try {
+      await replaceOrder({
+        ...order,
+        paymentTransactionId: pay.value.transactionId,
+        statusHistory: [
+          ...order.statusHistory,
+          {
+            from: "pending",
+            to: "pending",
+            at: new Date().toISOString(),
+            by: "system",
+            note: `Payment session created (${pay.value.transactionId}). Status: ${pay.value.status}.`,
+          },
+        ],
+      });
+    } catch (err) {
+      console.warn("[checkout] could not save transaction id", err);
+    }
+
+    // Don't email "order placed" until payment succeeds for card — customer
+    // may abandon the hosted checkout. Manual payments still get a receipt.
+    revalidatePath("/admin/orders");
+    revalidatePath("/admin");
+    revalidatePath("/account/orders");
+
+    if (!pay.value.redirectUrl) {
+      return {
+        ok: false,
+        error:
+          "Payment gateway did not return a checkout URL. Check provider settings / API response.",
+      };
+    }
+
+    return {
+      ok: true,
+      orderId: order.id,
+      redirectUrl: pay.value.redirectUrl,
+    };
+  }
+
+  // Manual payment — confirm immediately, await admin review.
   try {
     const emailer = getEmailAdapter();
     const tpl = renderOrderStatusEmail(order, initialEvent);
@@ -207,4 +328,13 @@ export async function placeOrderAction(input: unknown): Promise<PlaceOrderResult
   revalidatePath("/admin");
   revalidatePath("/account/orders");
   return { ok: true, orderId: order.id };
+}
+
+function toChargeAmount(
+  amount: number,
+  from: CurrencyCode,
+  to: CurrencyCode,
+): number {
+  if (from === to) return amount;
+  return convertPrice(amount, from, to);
 }

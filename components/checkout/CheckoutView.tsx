@@ -2,6 +2,7 @@
 
 import { useMemo, useState, type FormEvent } from "react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { useCart } from "@/context/CartContext";
 import { cx, estimateTax, formatPrice } from "@/lib/utils";
 import { placeOrderAction } from "@/app/checkout/actions";
@@ -28,10 +29,6 @@ type FormState = {
   city: string;
   state: string;
   zip: string;
-  cardName: string;
-  cardNumber: string;
-  expiry: string;
-  cvc: string;
 };
 
 const emptyForm: FormState = {
@@ -44,24 +41,22 @@ const emptyForm: FormState = {
   city: "",
   state: "",
   zip: "",
-  cardName: "",
-  cardNumber: "",
-  expiry: "",
-  cvc: "",
 };
-
-function normalizeCardNumber(v: string) {
-  return v.replace(/\s+/g, "");
-}
 
 type PaymentChoice = { kind: "card" } | { kind: "manual"; id: string };
 
 interface Props {
   manualMethods: PublicManualMethod[];
   cardEnabled: boolean;
+  gatewayName?: string;
 }
 
-export default function CheckoutView({ manualMethods, cardEnabled }: Props) {
+export default function CheckoutView({
+  manualMethods,
+  cardEnabled,
+  gatewayName = "secure payment",
+}: Props) {
+  const searchParams = useSearchParams();
   const { items, subtotal, isHydrated, clearCart } = useCart();
   const [form, setForm] = useState<FormState>(emptyForm);
   const [submitting, setSubmitting] = useState(false);
@@ -74,9 +69,13 @@ export default function CheckoutView({ manualMethods, cardEnabled }: Props) {
   const [errors, setErrors] = useState<Partial<Record<keyof FormState, string>>>(
     {},
   );
-  const [banner, setBanner] = useState<string | null>(null);
+  const [banner, setBanner] = useState<string | null>(() => {
+    if (searchParams.get("cancelled") === "1") {
+      return "Payment was cancelled. Your order is on hold — you can try again below.";
+    }
+    return null;
+  });
 
-  // Default payment choice: card if enabled, else first manual, else card fallback.
   const initialChoice: PaymentChoice = cardEnabled
     ? { kind: "card" }
     : manualMethods.length > 0
@@ -135,20 +134,6 @@ export default function CheckoutView({ manualMethods, cardEnabled }: Props) {
     if (!form.state.trim()) errs.state = "State is required.";
     if (!form.zip.trim()) errs.zip = "ZIP is required.";
     else if (!/^\d{4,10}$/.test(form.zip.trim())) errs.zip = "ZIP looks invalid.";
-
-    // Card fields only required for the card method.
-    if (choice.kind === "card") {
-      if (!form.cardName.trim()) errs.cardName = "Name on card is required.";
-      const digits = normalizeCardNumber(form.cardNumber);
-      if (!digits) errs.cardNumber = "Card number is required.";
-      else if (digits.length < 13 || digits.length > 19)
-        errs.cardNumber = "Card number looks invalid.";
-      if (!form.expiry.trim()) errs.expiry = "Expiration is required.";
-      else if (!/^\d{2}\s*\/?\s*\d{2}$/.test(form.expiry))
-        errs.expiry = "Use MM/YY format.";
-      if (!form.cvc.trim()) errs.cvc = "CVC is required.";
-      else if (!/^\d{3,4}$/.test(form.cvc)) errs.cvc = "3 or 4 digits.";
-    }
     return errs;
   };
 
@@ -193,6 +178,12 @@ export default function CheckoutView({ manualMethods, cardEnabled }: Props) {
             : { method: "card" },
       });
       if (result.ok) {
+        if (result.redirectUrl) {
+          // Hosted gateway (Ziina / Stripe / PayPal) — leave this site.
+          clearCart();
+          window.location.assign(result.redirectUrl);
+          return;
+        }
         setConfirmed({
           orderId: result.orderId,
           email: form.email,
@@ -205,7 +196,11 @@ export default function CheckoutView({ manualMethods, cardEnabled }: Props) {
       }
     } catch (err) {
       console.error(err);
-      setBanner("Something went wrong. Please try again.");
+      setBanner(
+        err instanceof Error
+          ? err.message
+          : "Something went wrong starting payment. Please try again.",
+      );
     } finally {
       setSubmitting(false);
     }
@@ -285,9 +280,8 @@ export default function CheckoutView({ manualMethods, cardEnabled }: Props) {
 
       {noMethodsAvailable && (
         <div className="mc-checkout__banner" role="alert">
-          No payment methods are enabled yet. In dev, checkout will succeed with
-          the console adapter — in production, ask the admin to enable a
-          payment method.
+          No payment methods are enabled yet. Ask the admin to enable a card
+          gateway or manual method under Settings → Payments.
         </div>
       )}
 
@@ -400,7 +394,6 @@ export default function CheckoutView({ manualMethods, cardEnabled }: Props) {
             </div>
           </fieldset>
 
-          {/* Payment method chooser */}
           <fieldset className="mc-fieldset">
             <legend>Payment method</legend>
 
@@ -418,9 +411,12 @@ export default function CheckoutView({ manualMethods, cardEnabled }: Props) {
                   onChange={() => setChoice({ kind: "card" })}
                 />
                 <div className="mc-payment-option__body">
-                  <p className="mc-payment-option__name">Card Payment (Auto)</p>
+                  <p className="mc-payment-option__name">
+                    Card · {gatewayName}
+                  </p>
                   <p className="mc-payment-option__sub">
-                    Charged instantly via the merchant gateway.
+                    You&apos;ll be redirected to a secure payment page to enter
+                    your card.
                   </p>
                 </div>
               </label>
@@ -456,63 +452,16 @@ export default function CheckoutView({ manualMethods, cardEnabled }: Props) {
               </label>
             ))}
 
-            {/* Card details form (only when card selected) */}
             {choice.kind === "card" && cardEnabled && (
               <div className="mc-payment-detail">
                 <p className="mc-checkout__note">
-                  This is a simulated checkout — no real card is charged.
+                  After you place the order you&apos;ll leave MAYCSS briefly to
+                  pay securely via <strong>{gatewayName}</strong>. We never
+                  store your full card number on this site.
                 </p>
-                <div className="mc-field">
-                  <label htmlFor="cardName">Name on card</label>
-                  <input
-                    id="cardName"
-                    autoComplete="cc-name"
-                    value={form.cardName}
-                    onChange={update("cardName")}
-                  />
-                  {err("cardName")}
-                </div>
-                <div className="mc-field">
-                  <label htmlFor="cardNumber">Card number</label>
-                  <input
-                    id="cardNumber"
-                    autoComplete="cc-number"
-                    inputMode="numeric"
-                    placeholder="4242 4242 4242 4242"
-                    value={form.cardNumber}
-                    onChange={update("cardNumber")}
-                  />
-                  {err("cardNumber")}
-                </div>
-                <div className="mc-field-row">
-                  <div className="mc-field">
-                    <label htmlFor="expiry">Expiration (MM/YY)</label>
-                    <input
-                      id="expiry"
-                      autoComplete="cc-exp"
-                      placeholder="MM/YY"
-                      value={form.expiry}
-                      onChange={update("expiry")}
-                    />
-                    {err("expiry")}
-                  </div>
-                  <div className="mc-field">
-                    <label htmlFor="cvc">CVC</label>
-                    <input
-                      id="cvc"
-                      autoComplete="cc-csc"
-                      inputMode="numeric"
-                      placeholder="123"
-                      value={form.cvc}
-                      onChange={update("cvc")}
-                    />
-                    {err("cvc")}
-                  </div>
-                </div>
               </div>
             )}
 
-            {/* Manual method details (QR code + instructions) */}
             {choice.kind === "manual" && activeManual && (
               <div className="mc-payment-detail mc-payment-detail--manual">
                 <div className="mc-manual-pay">
@@ -556,15 +505,17 @@ export default function CheckoutView({ manualMethods, cardEnabled }: Props) {
               "mc-btn mc-btn--primary mc-btn--block mc-checkout__submit",
               submitting && "is-loading",
             )}
-            disabled={submitting || displayItems.length === 0}
+            disabled={submitting || displayItems.length === 0 || noMethodsAvailable}
           >
             {submitting
-              ? "Processing…"
+              ? choice.kind === "card"
+                ? "Connecting to payment…"
+                : "Processing…"
               : displayItems.length === 0
               ? "Your bag is empty"
               : choice.kind === "manual"
               ? `I've sent ${formatPrice(total)} — place order`
-              : `Pay ${formatPrice(total)}`}
+              : `Pay ${formatPrice(total)} securely`}
           </button>
         </div>
 

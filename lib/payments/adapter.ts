@@ -14,7 +14,8 @@ export type Result<T> =
 export type ProcessPaymentInput = {
   orderId: string;
   amount: number;
-  currency: "usd" | "pkr" | "eur";
+  /** ISO 4217 lowercase (usd, aed, eur, …). */
+  currency: string;
   customer: { name: string; email: string; phone?: string };
   items: Array<{ name: string; quantity: number; price: number }>;
   successUrl: string;

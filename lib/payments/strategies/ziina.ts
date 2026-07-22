@@ -123,23 +123,48 @@ export const ziinaStrategy: PaymentStrategy = {
       );
       if (!res.ok) {
         const body = await res.text();
+        let detail = body.slice(0, 300);
+        try {
+          const parsed = JSON.parse(body) as {
+            message?: string;
+            error?: string | { message?: string };
+          };
+          detail =
+            parsed.message ||
+            (typeof parsed.error === "string"
+              ? parsed.error
+              : parsed.error?.message) ||
+            detail;
+        } catch {
+          /* keep raw slice */
+        }
         return {
           ok: false,
-          error: `Ziina rejected the payment (${res.status}): ${body.slice(0, 300)}`,
+          error: `Ziina rejected the payment (${res.status}): ${detail}`,
           code: `ziina_${res.status}`,
         };
       }
       const data = (await res.json()) as {
-        id: string;
+        id?: string;
         redirect_url?: string;
+        redirectUrl?: string;
         status?: string;
       };
+      const redirectUrl = data.redirect_url ?? data.redirectUrl;
+      if (!data.id || !redirectUrl) {
+        return {
+          ok: false,
+          error:
+            "Ziina created a session but did not return a payment redirect URL. Check your Ziina account / API key permissions.",
+          code: "ziina_no_redirect",
+        };
+      }
       return {
         ok: true,
         value: {
           transactionId: data.id,
           status: "pending",
-          redirectUrl: data.redirect_url ?? input.successUrl,
+          redirectUrl,
         },
       };
     } catch (err) {

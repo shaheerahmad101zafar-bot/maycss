@@ -1150,6 +1150,10 @@ export async function updateAppConfigAction(
       formData.get("supportPhone") !== null
         ? String(formData.get("supportPhone") ?? "").trim()
         : current.supportPhone,
+    businessAddress:
+      formData.get("businessAddress") !== null
+        ? String(formData.get("businessAddress") ?? "").trim()
+        : current.businessAddress,
     currency,
     menuAlignment,
     activeLinkStyle: {

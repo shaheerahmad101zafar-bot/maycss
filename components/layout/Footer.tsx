@@ -2,6 +2,7 @@ import Link from "next/link";
 import NewsletterSignup from "./NewsletterSignup";
 import TextLogo from "./TextLogo";
 import { getAppConfig } from "@/lib/app-config";
+import { MAYCSS_BUSINESS } from "@/lib/business";
 import { PageFactory } from "@/lib/pages";
 
 const YEAR = new Date().getFullYear();
@@ -33,21 +34,35 @@ export default async function Footer() {
     cfg.tagline ||
     "Curated Luxury Fashion — women clothes, dresses, and denim online.";
 
+  const email = cfg.contactEmail || MAYCSS_BUSINESS.supportEmail;
+  const phone = cfg.supportPhone || MAYCSS_BUSINESS.supportPhone;
+  const address =
+    cfg.businessAddress || MAYCSS_BUSINESS.addressMultiline;
+  const phoneTel = phone.replace(/[^\d+]/g, "") || MAYCSS_BUSINESS.supportPhoneTel;
+
   return (
     <footer className="mc-footer">
       <div className="mc-container mc-footer__inner">
         <div className="mc-footer__col">
           <TextLogo
-            siteName={cfg.siteName}
+            siteName={cfg.siteName || MAYCSS_BUSINESS.storeName}
             tagline={tagline}
             variant="footer"
           />
           <p className="mc-footer__tagline">{tagline}</p>
-          <p className="mc-footer__tagline">
-            Online fashion store for women clothes, dresses for women, jeans and
-            denim, and fashion products — clothes on sale and friday sale edits
-            shipped nationwide.
-          </p>
+          <address className="mc-footer__contact">
+            <strong>{cfg.siteName || MAYCSS_BUSINESS.storeName}</strong>
+            <br />
+            {address.split("\n").map((line) => (
+              <span key={line}>
+                {line}
+                <br />
+              </span>
+            ))}
+            <a href={`mailto:${email}`}>{email}</a>
+            <br />
+            <a href={`tel:${phoneTel}`}>{phone}</a>
+          </address>
           {activeSocials.length > 0 && (
             <div className="mc-footer__socials" aria-label="Social media">
               {activeSocials.map((s) => (
@@ -102,7 +117,7 @@ export default async function Footer() {
 
       <div className="mc-footer__bar">
         <div className="mc-container mc-footer__bar-inner">
-          <p>&copy; {YEAR} {cfg.siteName}. All rights reserved.</p>
+          <p>&copy; {YEAR} {cfg.siteName || MAYCSS_BUSINESS.storeName}. All rights reserved.</p>
           <div className="mc-footer__bar-links">
             {legalPages.map((p) => (
               <Link key={p.id} href={`/${p.slug}`}>

@@ -2,6 +2,7 @@ import "server-only";
 import { cache } from "react";
 import { unstable_cache } from "next/cache";
 import type { CurrencyCode } from "./currency";
+import { MAYCSS_BUSINESS } from "./business";
 import { readStoreJson, writeStoreJson } from "./storage/json-store";
 
 export type MenuAlignment = "justify-start" | "justify-center" | "justify-end";
@@ -22,6 +23,8 @@ export type AppConfig = {
   useTextLogo?: boolean;
   contactEmail: string;
   supportPhone: string;
+  /** Physical business / returns address (GMC-aligned). */
+  businessAddress: string;
   currency: CurrencyCode;
   /** Flex justify rule applied to the desktop menu link row. */
   menuAlignment: MenuAlignment;
@@ -32,15 +35,16 @@ export type AppConfig = {
 };
 
 const DEFAULT: AppConfig = {
-  siteName: "myacss",
-  tagline: "Premium fashion & lifestyle, curated.",
+  siteName: MAYCSS_BUSINESS.storeName,
+  tagline: "Curated Luxury Fashion",
   logoUrl: "",
   logoHeight: 64,
   logoWidth: 0,
   logoBgColor: "#ffffff",
   useTextLogo: true,
-  contactEmail: "hello@maycss.example",
-  supportPhone: "",
+  contactEmail: MAYCSS_BUSINESS.supportEmail,
+  supportPhone: MAYCSS_BUSINESS.supportPhone,
+  businessAddress: MAYCSS_BUSINESS.addressMultiline,
   currency: "usd",
   menuAlignment: "justify-center",
   activeLinkStyle: {
@@ -90,6 +94,25 @@ async function loadAppConfig(fresh = false): Promise<AppConfig> {
       ...DEFAULT,
       ...parsed,
       useTextLogo: parsed.useTextLogo !== false,
+      contactEmail:
+        typeof parsed.contactEmail === "string" && parsed.contactEmail.trim()
+          ? parsed.contactEmail.trim()
+          : DEFAULT.contactEmail,
+      supportPhone:
+        typeof parsed.supportPhone === "string" && parsed.supportPhone.trim()
+          ? parsed.supportPhone.trim()
+          : DEFAULT.supportPhone,
+      businessAddress:
+        typeof parsed.businessAddress === "string" &&
+        parsed.businessAddress.trim()
+          ? parsed.businessAddress.trim()
+          : DEFAULT.businessAddress,
+      siteName:
+        typeof parsed.siteName === "string" && parsed.siteName.trim()
+          ? parsed.siteName.trim() === "myacss"
+            ? MAYCSS_BUSINESS.storeName
+            : parsed.siteName.trim()
+          : DEFAULT.siteName,
       menuAlignment: normalizeMenuAlignment(parsed.menuAlignment),
       activeLinkStyle: normalizeActiveLinkStyle(parsed.activeLinkStyle),
     };

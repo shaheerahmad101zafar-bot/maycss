@@ -701,6 +701,25 @@
   margin: 0 0 12px;
 }
 
+.mc-footer__contact {
+  display: block;
+  font-style: normal;
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.82);
+  line-height: 1.55;
+  margin: 0 0 1rem;
+}
+
+.mc-footer__contact a {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.mc-footer__contact a:hover {
+  color: var(--mc-gold);
+}
+
 .mc-footer__signup {
   display: flex;
   gap: 6px;

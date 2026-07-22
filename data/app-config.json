@@ -1,13 +1,14 @@
 {
-  "siteName": "myacss",
-  "tagline": "Curated luxury fashion",
+  "siteName": "MAYCSS",
+  "tagline": "Curated Luxury Fashion",
   "logoUrl": "/uploads/logos/mrkbm2c9-730b4a4cd651c0e5.webp",
   "logoHeight": 90,
   "logoWidth": 87,
   "logoBgColor": "#ffffff",
   "useTextLogo": true,
-  "contactEmail": "",
-  "supportPhone": "",
+  "contactEmail": "myacssstore@gmail.com",
+  "supportPhone": "+1 (501) 436-9308",
+  "businessAddress": "1707 S Lee's Summit Rd\nIndependence, MO 64050\nUSA",
   "currency": "usd",
   "menuAlignment": "justify-center",
   "activeLinkStyle": {

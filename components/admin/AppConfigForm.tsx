@@ -138,6 +138,46 @@ export default function AppConfigForm({ initial: cfg }: { initial: AppConfig }) 
         </div>
       </fieldset>
 
+      <fieldset className="mc-fieldset">
+        <legend>Business contact (Google Merchant Center)</legend>
+        <div className="mc-admin__form-grid">
+          <div className="mc-field">
+            <label htmlFor="contactEmail">Support email</label>
+            <input
+              id="contactEmail"
+              name="contactEmail"
+              type="email"
+              defaultValue={cfg.contactEmail ?? ""}
+              placeholder="myacssstore@gmail.com"
+            />
+          </div>
+          <div className="mc-field">
+            <label htmlFor="supportPhone">Support phone</label>
+            <input
+              id="supportPhone"
+              name="supportPhone"
+              type="tel"
+              defaultValue={cfg.supportPhone ?? ""}
+              placeholder="+1 (501) 436-9308"
+            />
+          </div>
+          <div className="mc-field mc-field--full">
+            <label htmlFor="businessAddress">Business / returns address</label>
+            <textarea
+              id="businessAddress"
+              name="businessAddress"
+              rows={3}
+              defaultValue={cfg.businessAddress ?? ""}
+              placeholder={"1707 S Lee's Summit Rd\nIndependence, MO 64050\nUSA"}
+            />
+            <p className="mc-field__hint">
+              Shown in the footer and contact page. Must match your Google Merchant
+              Center business profile.
+            </p>
+          </div>
+        </div>
+      </fieldset>
+
       <div className="mc-admin__form-actions">
         <button type="submit" className="mc-btn mc-btn--primary" disabled={pending}>
           {pending ? "Saving…" : "Save Configuration"}

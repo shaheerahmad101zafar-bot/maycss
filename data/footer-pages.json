@@ -49,15 +49,23 @@
   {
     "id": "shop",
     "slug": "shop",
-    "title": "Shop the Collection",
+    "title": "Shop All",
     "showInFooter": false,
     "published": true
   },
   {
     "id": "sale",
     "slug": "sale",
-    "title": "The Sale Edit",
+    "title": "Shop the Sale Edit",
     "showInFooter": false,
+    "published": true
+  },
+  {
+    "id": "terms-of-service",
+    "slug": "terms-of-service",
+    "title": "Terms of Service",
+    "showInFooter": true,
+    "footerColumn": "legal",
     "published": true
   }
 ]

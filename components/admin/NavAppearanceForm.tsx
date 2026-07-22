@@ -34,6 +34,7 @@ export default function NavAppearanceForm({ cfg }: { cfg: AppConfig }) {
       <input type="hidden" name="logoBgColor" value={cfg.logoBgColor ?? "#ffffff"} />
       <input type="hidden" name="contactEmail" value={cfg.contactEmail ?? ""} />
       <input type="hidden" name="supportPhone" value={cfg.supportPhone ?? ""} />
+      <input type="hidden" name="businessAddress" value={cfg.businessAddress ?? ""} />
       <input type="hidden" name="currency" value={cfg.currency ?? "usd"} />
       <input type="hidden" name="useTextLogo" value={cfg.useTextLogo !== false ? "on" : "off"} />
 

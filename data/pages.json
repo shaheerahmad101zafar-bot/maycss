@@ -97,9 +97,9 @@
           "padding": "lg"
         },
         "heading": "Questions? We are here.",
-        "body": "Our concierge team responds within one business day.",
-        "ctaLabel": "Contact us",
-        "ctaHref": "/contact",
+        "body": "Email myacssstore@gmail.com or call +1 (501) 436-9308. Business address: 1707 S Lee's Summit Rd, Independence, MO 64050, USA.",
+        "ctaLabel": "Email MAYCSS support",
+        "ctaHref": "mailto:myacssstore@gmail.com",
         "variant": "dark"
       }
     ]
@@ -171,7 +171,7 @@
           },
           {
             "q": "What is your return policy?",
-            "a": "Unworn items with original tags can be returned within 30 days of delivery for a full refund to your original payment method. Sale items are final unless faulty. See our Refund & Returns Policy for full details."
+            "a": "Unworn items with original tags may be returned within 10 days of delivery by mail to MAYCSS Returns, 1707 S Lee's Summit Rd, Independence, MO 64050, USA. Email myacssstore@gmail.com or call +1 (501) 436-9308 to start a return. See our Refund & Returns Policy for full details."
           },
           {
             "q": "Do you ship internationally?",
@@ -207,7 +207,7 @@
         "heading": "Still need help?",
         "body": "Our customer care team is available Monday to Friday, 9am–6pm ET.",
         "ctaLabel": "Contact us",
-        "ctaHref": "mailto:hello@maycss.example",
+        "ctaHref": "mailto:myacssstore@gmail.com",
         "variant": "dark"
       }
     ],
@@ -248,7 +248,7 @@
         },
         "heading": "Your Privacy at MayCSS",
         "headingLevel": 2,
-        "body": "Your privacy matters when you Shop MayCSS Online Store. This Privacy Policy explains what information we collect, why we use it, and how we protect it. We wrote it to be clear, transparent, and easy to understand — so you can shop luxury fashion online with confidence.\n\nInformation We Collect includes details you provide at checkout, account information, site activity, and technical data used to keep the site secure. How We Use Your Data: to process orders when you Shop MayCSS Online Store, send updates, personalise your experience, and send marketing only if you opt in. We do not sell your personal information.\n\nSecurity: payments on Shop MayCSS Online Store are processed by PCI-DSS compliant providers over encrypted connections. We never store your full card number. You may request a copy of your data, corrections, or account deletion by emailing privacy@maycss.example. Continued use of Shop MayCSS Online Store after policy updates means you accept the revised policy.",
+        "body": "Your privacy matters when you Shop MayCSS Online Store. This Privacy Policy explains what information we collect, why we use it, and how we protect it. We wrote it to be clear, transparent, and easy to understand — so you can shop luxury fashion online with confidence.\n\nInformation We Collect includes details you provide at checkout, account information, site activity, and technical data used to keep the site secure. How We Use Your Data: to process orders when you Shop MayCSS Online Store, send updates, personalise your experience, and send marketing only if you opt in. We do not sell your personal information.\n\nSecurity: payments on Shop MayCSS Online Store are processed by PCI-DSS compliant providers over encrypted connections. We never store your full card number. You may request a copy of your data, corrections, or account deletion by emailing myacssstore@gmail.com. Continued use of Shop MayCSS Online Store after policy updates means you accept the revised policy.\n\nController / business contact: MAYCSS, 1707 S Lee's Summit Rd, Independence, MO 64050, USA. Email: myacssstore@gmail.com. Phone: +1 (501) 436-9308.",
         "alignment": "left"
       },
       {
@@ -304,7 +304,7 @@
         },
         "heading": "Your rights",
         "headingLevel": 2,
-        "body": "You can request a copy of everything we hold about you, ask us to correct anything inaccurate, or ask us to delete your account entirely. Email privacy@maycss.example and we will respond within a reasonable timeframe. These rights help you stay in control while you Shop MayCSS Online Store.",
+        "body": "You can request a copy of the personal data we hold, ask us to correct inaccurate information, or request deletion of your account. Email myacssstore@gmail.com and we will respond within a reasonable timeframe. Business contact: MAYCSS, 1707 S Lee's Summit Rd, Independence, MO 64050, USA, phone +1 (501) 436-9308.",
         "alignment": "left"
       },
       {
@@ -329,101 +329,72 @@
     "slug": "refund-policy",
     "title": "Refund & Returns Policy",
     "eyebrow": "Legal",
-    "hero": "Simple, fair returns when you Shop MayCSS Online Store — because you should love what you bought.",
+    "hero": "MAYCSS offers a clear 10-day return window with mail-in returns to our Independence, MO address.",
     "pageKind": "standard",
     "published": true,
     "showInFooter": true,
     "footerColumn": "legal",
     "lastUpdated": "2026-07-19",
     "seo": {
-      "metaTitle": "Refund & Returns Policy | Shop MayCSS Online Store",
-      "metaDescription": "Need to return an item? Learn about our easy returns and refund process at Shop MayCSS Online Store. Your satisfaction is our priority.",
+      "metaTitle": "Refund & Returns Policy | 10-Day Returns | MAYCSS",
+      "metaDescription": "MAYCSS 10-day return policy: unworn items with tags may be mailed to 1707 S Lee's Summit Rd, Independence, MO 64050, USA. Contact myacssstore@gmail.com or +1 (501) 436-9308.",
       "ogImage": "",
       "keywords": [
-        "Shop MayCSS Online Store",
+        "MAYCSS",
         "refund policy",
-        "returns",
-        "exchanges"
+        "10-day returns",
+        "mail-in returns"
       ]
     },
     "blocks": [
       {
         "id": "blk_refund_intro",
         "type": "richtext",
-        "layout": {
-          "alignment": "center",
-          "width": "full",
-          "columnCount": 1,
-          "padding": "md"
-        },
-        "heading": "Fair Returns You Can Trust",
-        "headingLevel": 2,
-        "body": "Simple, fair returns — because you should love what you bought when you Shop MayCSS Online Store. This Refund & Returns Policy explains eligibility, how to send an item back, and when your refund is issued.\n\nReturn Eligibility: items must be unworn, unwashed, unused, with original tags and packaging; request within 30 days of delivery. Sale items are final unless faulty.\n\nHow to Initiate a Return: sign in, open My Orders, choose Return, and use the prepaid label we email for eligible orders when you Shop MayCSS Online Store. Pack securely and keep your drop-off receipt.\n\nRefund Timeline: approved refunds return to your original payment method within 5–10 business days after we receive the return. Shipping is non-refundable unless the item was faulty.\n\nExchanges and damaged items: start a return then place a new order, or email hello@maycss.example within 7 days with a photo for replacements. Shop MayCSS Online Store with confidence — returns are clear, calm, and fair. Questions? Contact support when you Shop MayCSS Online Store.",
-        "alignment": "left"
+        "heading": "MAYCSS Refund & Returns Policy",
+        "body": "This Refund & Returns Policy applies to all purchases from MAYCSS (myacssstore.store). It matches our Google Merchant Center return settings: a 10-day return window and mail-in returns to our US business address.\n\nStore name: MAYCSS\nSupport email: myacssstore@gmail.com\nSupport phone: +1 (501) 436-9308\nReturns address: 1707 S Lee's Summit Rd, Independence, MO 64050, USA"
       },
       {
-        "id": "blk_09d2ca00d81f",
+        "id": "blk_refund_window",
         "type": "richtext",
-        "layout": {
-          "alignment": "center",
-          "width": "full",
-          "columnCount": 1,
-          "padding": "md"
-        },
-        "heading": "30-day returns",
-        "headingLevel": 2,
-        "body": "You have 30 days from the day your order arrives to request a return when you Shop MayCSS Online Store. Items must be unworn, unwashed, and returned with all original tags and packaging. Please keep proof of delivery and your order confirmation to make the process smoother.",
-        "alignment": "left"
+        "heading": "10-day return window",
+        "body": "You have 10 days from the date your order is delivered to start a return. Items must be unworn, unwashed, unused, and returned with all original tags and packaging intact. Sale items are final sale unless the item is faulty or not as described."
       },
       {
-        "id": "blk_8b6d54731dd8",
+        "id": "blk_refund_mailin",
         "type": "richtext",
-        "layout": {
-          "alignment": "center",
-          "width": "full",
-          "columnCount": 1,
-          "padding": "md"
-        },
-        "heading": "How to return",
-        "headingLevel": 2,
-        "body": "Sign in to your account, find your order under My Orders, and click Return. We will email a prepaid return label for eligible orders. Drop the package at any carrier location; your refund is processed the day we receive and inspect the return at Shop MayCSS Online Store.",
-        "alignment": "left"
+        "heading": "How to return (mail-in)",
+        "body": "1. Email myacssstore@gmail.com (or call +1 (501) 436-9308) with your order number and reason for return within 10 days of delivery.\n2. We will confirm eligibility and provide return instructions.\n3. Pack the item securely and mail it to:\n\nMAYCSS Returns\n1707 S Lee's Summit Rd\nIndependence, MO 64050\nUSA\n\nKeep your shipping receipt until your refund is issued. Return shipping is the customer's responsibility unless the item is faulty or we sent the wrong item."
       },
       {
-        "id": "blk_c5dfde37efb4",
+        "id": "blk_refund_issue",
         "type": "richtext",
-        "layout": {
-          "alignment": "center",
-          "width": "full",
-          "columnCount": 1,
-          "padding": "md"
-        },
         "heading": "How refunds are issued",
-        "headingLevel": 2,
-        "body": "Refunds go back to your original payment method within 5–10 business days after we receive your return. Shipping charges are non-refundable unless the item was faulty. Exchanges are available by starting a return and placing a new order for the size or colour you want at Shop MayCSS Online Store.",
-        "alignment": "left"
+        "body": "Once we receive and inspect your return, approved refunds are issued to your original payment method within 5–10 business days. Shipping charges are non-refundable unless the item was faulty or we made an error. Exchanges: start a return, then place a new order for the size or color you want."
       },
       {
-        "id": "blk_2869e14b63d5",
+        "id": "blk_refund_faq",
         "type": "faq",
-        "layout": {
-          "alignment": "center",
-          "width": "full",
-          "columnCount": 1,
-          "padding": "md"
-        },
+        "heading": "Returns FAQ",
         "items": [
           {
-            "q": "Can I exchange instead of return?",
-            "a": "Yes — start a return and place a new order for the size or colour you want at Shop MayCSS Online Store so you do not miss popular sizes."
+            "q": "What is the return window?",
+            "a": "10 days from delivery. Contact us within that window to start a mail-in return."
           },
           {
-            "q": "What about sale items?",
-            "a": "Sale items are final sale unless the item is faulty. Please review sale terms carefully before you complete checkout."
+            "q": "Where do I mail returns?",
+            "a": "MAYCSS Returns, 1707 S Lee's Summit Rd, Independence, MO 64050, USA."
           },
           {
-            "q": "What if my item arrived damaged?",
-            "a": "Email hello@maycss.example within 7 days with a clear photo. We will replace it at no cost when you Shop MayCSS Online Store and the item is confirmed damaged in transit or on arrival."
+            "q": "How do I contact support?",
+            "a": "Email myacssstore@gmail.com or call +1 (501) 436-9308."
+          },
+          {
+            "q": "What about damaged items?",
+            "a": "Email myacssstore@gmail.com within 7 days of delivery with a clear photo. We will arrange a replacement or refund when the item is confirmed damaged."
+          },
+          {
+            "q": "Are sale items returnable?",
+            "a": "Sale items are final sale unless faulty or not as described."
           }
         ]
       }
@@ -682,7 +653,7 @@
     "slug": "contact",
     "title": "We're Here to Help",
     "eyebrow": "Contact Us",
-    "hero": "Sizing, orders, styling, or a quick question — our concierge team responds with care, usually within one business day.",
+    "hero": "Contact MAYCSS support by email or phone. Mail-in returns are accepted at our Independence, MO business address.",
     "bannerImage": "https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&w=1600&q=80",
     "showHeroBanner": true,
     "heroCtaLabel": "Send a Message",
@@ -692,28 +663,33 @@
     "pageKind": "contact",
     "mapEmbed": "<iframe src=\"https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3022.215!2d-73.974!3d40.761!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNDDCsDQ1JzM5LjYiTiA3M8KwNTgnMjAuNCJX!5e0!3m2!1sen!2sus!4v1\" width=\"600\" height=\"450\" style=\"border:0;\" allowfullscreen=\"\" loading=\"lazy\" referrerpolicy=\"no-referrer-when-downgrade\"></iframe>",
     "contactDetails": {
-      "heading": "Visit & Connect",
-      "lead": "Experience MayCSS in person or reach us through any of the channels below.",
+      "heading": "MAYCSS Customer Support",
+      "lead": "Official contact details for MAYCSS — matching our Google Merchant Center business profile.",
       "rows": [
         {
-          "id": "cdr_boutique",
-          "label": "Flagship Boutique",
-          "body": "450 Madison Avenue\nNew York, NY 10022"
+          "id": "cdr_store",
+          "label": "Store name",
+          "body": "MAYCSS"
         },
         {
-          "id": "cdr_hours",
-          "label": "Hours",
-          "body": "Mon – Sat: 10am – 8pm\nSun: 11am – 6pm"
+          "id": "cdr_address",
+          "label": "Business address",
+          "body": "1707 S Lee's Summit Rd\nIndependence, MO 64050\nUSA"
         },
         {
           "id": "cdr_email",
-          "label": "Email",
-          "body": "hello@maycss.example"
+          "label": "Support email",
+          "body": "myacssstore@gmail.com"
         },
         {
           "id": "cdr_phone",
-          "label": "Phone",
-          "body": "+1 (800) 555-0199"
+          "label": "Support phone",
+          "body": "+1 (501) 436-9308"
+        },
+        {
+          "id": "cdr_returns",
+          "label": "Mail-in returns",
+          "body": "Return eligible items within 10 days of delivery to:\n1707 S Lee's Summit Rd\nIndependence, MO 64050\nUSA"
         }
       ]
     },
@@ -742,9 +718,9 @@
           "columnCount": 1,
           "padding": "md"
         },
-        "heading": "Dedicated Customer Support",
+        "heading": "Contact MAYCSS",
         "headingLevel": 2,
-        "body": "Thank you for choosing to Shop MayCSS Online Store — we are here to make every step of your experience feel considered, calm, and personal. Whether you need sizing guidance, order support, product details, or a styling consultation, our concierge team responds with care and clarity, usually within one business day.\n\nCustomer satisfaction is central to how we serve you. When you Shop MayCSS Online Store, you can expect thoughtful answers, honest recommendations, and solutions that respect your time. Share your enquiry through the form below, and a real member of our team will follow up personally — never a generic reply.\n\nFrom tracking a parcel to refining a capsule wardrobe, we treat every question with the same standard we bring to our collection: precision, warmth, and quiet confidence. Explore our FAQ for quick answers, or contact us for personalised help whenever you Shop MayCSS Online Store. Luxury fashion deserves luxury service, and that promise guides every conversation.\n\nWe are ready when you are. Shop MayCSS Online Store with confidence, knowing support is part of the MayCSS experience — from first browse to final fit, and every moment after.",
+        "body": "Thank you for shopping with MAYCSS. For order help, sizing, or returns, email myacssstore@gmail.com or call +1 (501) 436-9308. Our business address is 1707 S Lee's Summit Rd, Independence, MO 64050, USA. We typically respond within one business day.",
         "alignment": "left"
       },
       {
@@ -926,5 +902,52 @@
         "limit": 12
       }
     ]
+  },
+  {
+    "id": "terms-of-service",
+    "slug": "terms-of-service",
+    "title": "Terms of Service",
+    "eyebrow": "Legal",
+    "published": true,
+    "showInFooter": true,
+    "footerColumn": "legal",
+    "pageKind": "standard",
+    "showHeroBanner": true,
+    "seo": {
+      "metaTitle": "Terms of Service | MAYCSS",
+      "metaDescription": "MAYCSS Terms of Service for myacssstore.store — purchases, 10-day returns, and customer responsibilities. Contact myacssstore@gmail.com.",
+      "keywords": [
+        "MAYCSS",
+        "terms of service",
+        "legal"
+      ]
+    },
+    "blocks": [
+      {
+        "id": "blk_tos_intro",
+        "type": "richtext",
+        "heading": "Agreement to terms",
+        "body": "By accessing myacssstore.store or placing an order with MAYCSS, you agree to these Terms of Service. Store name: MAYCSS. Business address: 1707 S Lee's Summit Rd, Independence, MO 64050, USA. Support: myacssstore@gmail.com / +1 (501) 436-9308."
+      },
+      {
+        "id": "blk_tos_orders",
+        "type": "richtext",
+        "heading": "Orders & pricing",
+        "body": "All prices are listed in USD unless otherwise stated. We reserve the right to refuse or cancel orders in case of pricing errors, suspected fraud, or stock issues. You will receive an order confirmation by email after checkout."
+      },
+      {
+        "id": "blk_tos_returns",
+        "type": "richtext",
+        "heading": "Returns",
+        "body": "Returns are governed by our Refund & Returns Policy: a 10-day return window from delivery and mail-in returns to MAYCSS at 1707 S Lee's Summit Rd, Independence, MO 64050, USA. Contact myacssstore@gmail.com to start a return."
+      },
+      {
+        "id": "blk_tos_contact",
+        "type": "richtext",
+        "heading": "Contact",
+        "body": "Questions about these terms: email myacssstore@gmail.com, call +1 (501) 436-9308, or write to MAYCSS, 1707 S Lee's Summit Rd, Independence, MO 64050, USA."
+      }
+    ],
+    "hero": "Please read these Terms of Service carefully before purchasing from MAYCSS."
   }
 ]

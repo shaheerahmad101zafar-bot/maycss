@@ -54,14 +54,14 @@ export function cdnImageUrl(
   return src;
 }
 
-/** Hero / full-bleed banners (mobile-first; desktop still under 1400). */
+/** Hero / full-bleed banners — mobile-first width for LCP. */
 export function heroImageUrl(src: string | undefined | null): string {
-  return cdnImageUrl(src, { width: 1100, quality: 70, format: "webp" });
+  return cdnImageUrl(src, { width: 750, quality: 65, format: "webp" });
 }
 
 /** Promo / category strips (~full width, shorter height). */
 export function bannerImageUrl(src: string | undefined | null): string {
-  return cdnImageUrl(src, { width: 900, quality: 68, format: "webp" });
+  return cdnImageUrl(src, { width: 720, quality: 62, format: "webp" });
 }
 
 /** Category subcards / tiles. */

@@ -1,7 +1,4 @@
-"use client";
-
 import Link from "next/link";
-import { useEffect, useState } from "react";
 
 const MESSAGES = [
   {
@@ -22,47 +19,33 @@ const MESSAGES = [
   },
 ];
 
-/** Sliding Black Friday promo strip under the top of every page. */
+/**
+ * Server-rendered promo strip — CSS cycles messages (no client JS / intervals).
+ */
 export default function PromoBar() {
-  const [index, setIndex] = useState(0);
-
-  useEffect(() => {
-    const id = window.setInterval(() => {
-      setIndex((i) => (i + 1) % MESSAGES.length);
-    }, 4000);
-    return () => window.clearInterval(id);
-  }, []);
-
-  const msg = MESSAGES[index] ?? MESSAGES[0];
-
   return (
     <div
       className="mc-promo-bar mc-promo-bar--sale"
       role="region"
       aria-label="Black Friday sale"
-      aria-live="polite"
     >
       <div className="mc-container mc-promo-bar__inner">
-        <p key={index} className="mc-promo-bar__text mc-promo-bar__text--slide">
-          <strong>{msg.strong}</strong>
-          <span aria-hidden="true"> — </span>
-          {msg.rest}
-        </p>
+        <div className="mc-promo-bar__rotator" aria-live="polite">
+          {MESSAGES.map((msg, i) => (
+            <p
+              key={i}
+              className="mc-promo-bar__text mc-promo-bar__text--css"
+              style={{ animationDelay: `${i * 4}s` }}
+            >
+              <strong>{msg.strong}</strong>
+              <span aria-hidden="true"> — </span>
+              {msg.rest}
+            </p>
+          ))}
+        </div>
         <Link href="/sale" className="mc-promo-bar__cta">
           Shop Sale
         </Link>
-      </div>
-      <div className="mc-promo-bar__dots" aria-hidden="true">
-        {MESSAGES.map((_, i) => (
-          <span
-            key={i}
-            className={
-              i === index
-                ? "mc-promo-bar__dot is-active"
-                : "mc-promo-bar__dot"
-            }
-          />
-        ))}
       </div>
     </div>
   );

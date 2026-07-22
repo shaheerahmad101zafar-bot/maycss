@@ -1,8 +1,7 @@
 import Link from "next/link";
 import type { BannerBlock } from "@/lib/blocks/types";
 import type { Category } from "@/lib/utils";
-import { bannerImageUrl } from "@/lib/images/cdn-url";
-import { bgImageStyle, overlayOpacityStyle } from "@/lib/images/focus";
+import LazyBannerBackground from "@/components/cms/blocks/LazyBannerBackground";
 
 /** Curated shop links for homepage promo banners (admin can change). */
 export const BANNER_SHOP_LINK_OPTIONS: { id: string; label: string }[] = [
@@ -40,18 +39,15 @@ export default function BannerPromoView({
     .map((id) => byId.get(id))
     .filter((c): c is Category => Boolean(c));
 
-  const overlayStyle = overlayOpacityStyle(
-    block.overlayStrength ?? (block.overlay === "none" ? 0 : 55),
-  );
-
   return (
-    <section
+    <LazyBannerBackground
       className="mc-cat-promo mc-block mc-block--banner-promo"
-      aria-label={block.heading}
-      style={{
-        ...bgImageStyle(bannerImageUrl(block.image), block.imageFocus),
-        ...overlayStyle,
-      }}
+      ariaLabel={block.heading}
+      image={block.image}
+      imageFocus={block.imageFocus}
+      overlayStrength={
+        block.overlayStrength ?? (block.overlay === "none" ? 0 : 55)
+      }
     >
       <div className="mc-container mc-cat-promo__inner">
         {block.eyebrow && (
@@ -95,6 +91,6 @@ export default function BannerPromoView({
           </nav>
         )}
       </div>
-    </section>
+    </LazyBannerBackground>
   );
 }

@@ -4,7 +4,7 @@ import ProductCard from "@/components/products/ProductCard";
 import BlockRenderer from "@/components/cms/BlockRenderer";
 import MarketingBanner from "@/components/marketing/MarketingBanner";
 import HomeCategoryBanners from "@/components/marketing/HomeCategoryBanners";
-import { getBannerSlides, getCategories, getListingProducts } from "@/lib/data";
+import { getBannerSlides, getCategories, getHomeListingProducts } from "@/lib/data";
 import { heroImageUrl } from "@/lib/images/cdn-url";
 import { PageFactory } from "@/lib/pages";
 import type { Metadata } from "next";
@@ -22,23 +22,12 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function Home() {
-  const [homePage, products, slides, categories] = await Promise.all([
+  const [homePage, listingProducts, slides, categories] = await Promise.all([
     PageFactory.getBySlug("home"),
-    getListingProducts(),
+    getHomeListingProducts(6),
     getBannerSlides(),
     getCategories(),
   ]);
-  const newArrivals = products.filter((p) => p.isNew).slice(0, 16);
-  const fallback = products.slice(0, 12);
-  const seen = new Set<string>();
-  const listingProducts = [...newArrivals, ...fallback]
-    .filter((p) => {
-      const id = String(p.id);
-      if (seen.has(id)) return false;
-      seen.add(id);
-      return true;
-    })
-    .slice(0, 12);
 
   const lcpHero = slides[0]?.image ? heroImageUrl(slides[0].image) : "";
 

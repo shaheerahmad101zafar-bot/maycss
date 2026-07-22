@@ -1,8 +1,14 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import dynamic from "next/dynamic";
+import { useCallback, useEffect, useState } from "react";
 import { heroImageUrl } from "@/lib/images/cdn-url";
 import { cx, type BannerSlide } from "@/lib/utils";
+
+const MarketingCountdown = dynamic(() => import("./MarketingCountdown"), {
+  ssr: false,
+  loading: () => <div className="mc-countdown mc-countdown--skeleton" aria-hidden />,
+});
 
 interface MarketingBannerProps {
   slides: BannerSlide[];
@@ -14,43 +20,18 @@ interface MarketingBannerProps {
   countdownTo?: string;
 }
 
-type TimeLeft = { days: number; hours: number; minutes: number; seconds: number };
-
-function getTimeLeft(target: number): TimeLeft {
-  const diff = Math.max(0, target - Date.now());
-  return {
-    days: Math.floor(diff / (1000 * 60 * 60 * 24)),
-    hours: Math.floor((diff / (1000 * 60 * 60)) % 24),
-    minutes: Math.floor((diff / (1000 * 60)) % 60),
-    seconds: Math.floor((diff / 1000) % 60),
-  };
-}
-
-const pad = (n: number) => n.toString().padStart(2, "0");
-
 export default function MarketingBanner({
   slides,
   showDelay = 0,
   slideInterval = 5000,
   countdownTo,
 }: MarketingBannerProps) {
-  // SSR + first paint must show the hero when there is no delay — otherwise the
-  // homepage flashes text/products first and looks like the old order on live.
+  // SSR + first paint must show the hero when there is no delay.
   const [visible, setVisible] = useState(() => showDelay <= 0);
   const [active, setActive] = useState(0);
   const [paused, setPaused] = useState(false);
-  /** Only mount media for the first slide + slides the user has seen (saves LCP bandwidth). */
   const [mountedMedia, setMountedMedia] = useState(() => new Set<number>([0]));
-
-  const targetTs = useMemo(() => {
-    if (countdownTo) {
-      const t = new Date(countdownTo).getTime();
-      if (!Number.isNaN(t)) return t;
-    }
-    return Date.now() + 48 * 60 * 60 * 1000;
-  }, [countdownTo]);
-
-  const [timeLeft, setTimeLeft] = useState<TimeLeft>(() => getTimeLeft(targetTs));
+  const [showCountdown, setShowCountdown] = useState(false);
 
   useEffect(() => {
     if (showDelay <= 0) {
@@ -61,12 +42,25 @@ export default function MarketingBanner({
     return () => clearTimeout(t);
   }, [showDelay]);
 
+  // Mount countdown after first paint so it never blocks LCP.
   useEffect(() => {
     if (!visible) return;
-    setTimeLeft(getTimeLeft(targetTs));
-    const i = setInterval(() => setTimeLeft(getTimeLeft(targetTs)), 1000);
-    return () => clearInterval(i);
-  }, [visible, targetTs]);
+    const w = window as Window & {
+      requestIdleCallback?: (cb: () => void, opts?: { timeout: number }) => number;
+    };
+    if (typeof w.requestIdleCallback === "function") {
+      const id = w.requestIdleCallback(() => setShowCountdown(true), {
+        timeout: 2000,
+      });
+      return () => {
+        const cancel = (window as Window & { cancelIdleCallback?: (n: number) => void })
+          .cancelIdleCallback;
+        cancel?.(id);
+      };
+    }
+    const t = setTimeout(() => setShowCountdown(true), 800);
+    return () => clearTimeout(t);
+  }, [visible]);
 
   useEffect(() => {
     if (!visible || paused || slides.length <= 1) return;
@@ -137,7 +131,7 @@ export default function MarketingBanner({
                   className="mc-banner__media"
                   src={src}
                   alt=""
-                  width={1100}
+                  width={750}
                   height={420}
                   decoding={i === 0 ? "sync" : "async"}
                   loading={i === 0 ? "eager" : "lazy"}
@@ -151,24 +145,11 @@ export default function MarketingBanner({
                 <h2 className="mc-banner__title">{s.title}</h2>
                 <p className="mc-banner__subtitle">{s.subtitle}</p>
 
-                <div className="mc-countdown" aria-label="Offer ends in">
-                  <div className="mc-countdown__unit">
-                    <span className="mc-countdown__value">{pad(timeLeft.days)}</span>
-                    <span className="mc-countdown__label">Days</span>
-                  </div>
-                  <div className="mc-countdown__unit">
-                    <span className="mc-countdown__value">{pad(timeLeft.hours)}</span>
-                    <span className="mc-countdown__label">Hrs</span>
-                  </div>
-                  <div className="mc-countdown__unit">
-                    <span className="mc-countdown__value">{pad(timeLeft.minutes)}</span>
-                    <span className="mc-countdown__label">Min</span>
-                  </div>
-                  <div className="mc-countdown__unit">
-                    <span className="mc-countdown__value">{pad(timeLeft.seconds)}</span>
-                    <span className="mc-countdown__label">Sec</span>
-                  </div>
-                </div>
+                {showCountdown ? (
+                  <MarketingCountdown countdownTo={countdownTo} />
+                ) : (
+                  <div className="mc-countdown mc-countdown--skeleton" aria-hidden />
+                )}
 
                 <a href={s.ctaHref} className="mc-banner__cta">
                   {s.ctaLabel}

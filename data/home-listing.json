@@ -1,0 +1,74 @@
+[
+  {
+    "id": 8,
+    "name": "Reistor Women's Smocked Maxi Dress",
+    "brand": "Reistor",
+    "image": "https://slimages.macysassets.com/is/image/MCY/products/1/optimized/37692681_fpx.tif?op_sharpen=1&wid=1200&fmt=jpeg",
+    "price": 135,
+    "originalPrice": 375,
+    "badge": "64% OFF",
+    "isNew": true,
+    "category": "Women's Clothing",
+    "categoryId": "cat_womens_clothing"
+  },
+  {
+    "id": 15,
+    "name": "Pre-Owned Versace Women's Baroque Silk Lace Trim Camisole",
+    "brand": "Pre-Owned Versace",
+    "image": "https://slimages.macysassets.com/is/image/MCY/products/7/optimized/38457757_fpx.tif?op_sharpen=1&wid=1200&fmt=jpeg",
+    "price": 184.8,
+    "originalPrice": 924,
+    "badge": "80% OFF",
+    "isNew": true,
+    "category": "Women's Clothing",
+    "categoryId": "cat_womens_clothing"
+  },
+  {
+    "id": 17,
+    "name": "Pre-Owned Stella Mccartney Women's Lace and Georgette Jumpsuit",
+    "brand": "Pre-Owned Stella McCartney",
+    "image": "https://slimages.macysassets.com/is/image/MCY/products/7/optimized/38457827_fpx.tif?op_sharpen=1&wid=1200&fmt=jpeg",
+    "price": 119.16,
+    "originalPrice": 331,
+    "badge": "64% OFF",
+    "isNew": true,
+    "category": "Women's Clothing",
+    "categoryId": "cat_womens_clothing"
+  },
+  {
+    "id": 19,
+    "name": "Pre-Owned Dolce & Gabbana Women's Satin And Cotton Knit Tank Top",
+    "brand": "Pre-Owned Dolce & Gabbana",
+    "image": "https://slimages.macysassets.com/is/image/MCY/products/0/optimized/38457910_fpx.tif?op_sharpen=1&wid=1200&fmt=jpeg",
+    "price": 110.8,
+    "originalPrice": 554,
+    "badge": "80% OFF",
+    "isNew": true,
+    "category": "Women's Clothing",
+    "categoryId": "cat_womens_clothing"
+  },
+  {
+    "id": 27,
+    "name": "Pre-Owned Salvatore Ferragamo Women's Floral Gancini Print Denim Straight Jeans",
+    "brand": "Pre-Owned Salvatore Ferragamo",
+    "image": "https://slimages.macysassets.com/is/image/MCY/products/1/optimized/38450791_fpx.tif?op_sharpen=1&wid=1200&fmt=jpeg",
+    "price": 138.9,
+    "originalPrice": 463,
+    "badge": "70% OFF",
+    "isNew": true,
+    "category": "Women's Clothing",
+    "categoryId": "cat_womens_clothing"
+  },
+  {
+    "id": 29,
+    "name": "Pre-Owned Love Moschino Women's Cotton Knit Sequin Logo Embroidered Sweater Mini Dress",
+    "brand": "Pre-Owned Love Moschino",
+    "image": "https://slimages.macysassets.com/is/image/MCY/products/4/optimized/38426774_fpx.tif?op_sharpen=1&wid=1200&fmt=jpeg",
+    "price": 114.84,
+    "originalPrice": 319,
+    "badge": "64% OFF",
+    "isNew": true,
+    "category": "Women's Clothing",
+    "categoryId": "cat_womens_clothing"
+  }
+]

@@ -12,6 +12,8 @@ import {
 const productsFile = "data/products.json";
 /** Lean catalog for grids — no contentBlocks/SEO (much smaller Blob download). */
 const listingFile = "data/products-listing.json";
+/** Tiny homepage product set — avoids downloading the full listing on `/`. */
+const homeListingFile = "data/home-listing.json";
 const productDeletedIdsFile = "data/products/deleted-ids.json";
 const slidesFile = "data/banner-slides.json";
 const categoriesFile = "data/categories.json";
@@ -153,6 +155,33 @@ export const getListingProducts = cache(async function getListingProductsInner(o
     return loadListingRaw(true);
   }
   return getListingProductsCached();
+});
+
+/** Homepage-only product set (~6 items) — never loads the full catalog. */
+export const getHomeListingProducts = cache(async function getHomeListingProductsInner(
+  limit = 6,
+): Promise<Product[]> {
+  const [home, deleted] = await Promise.all([
+    readJson<Product[] | null>(homeListingFile, null),
+    readDeletedIds(productDeletedIdsFile),
+  ]);
+  const banned = new Set(deleted);
+  if (Array.isArray(home) && home.length > 0) {
+    return home
+      .map(toListingProduct)
+      .filter((p) => !banned.has(String(p.id)) && p.status !== "draft")
+      .slice(0, limit);
+  }
+  const all = await getListingProducts();
+  const news = all.filter((p) => p.isNew && p.status !== "draft").slice(0, limit);
+  if (news.length >= limit) return news;
+  const seen = new Set(news.map((p) => String(p.id)));
+  for (const p of all) {
+    if (news.length >= limit) break;
+    if (seen.has(String(p.id)) || p.status === "draft") continue;
+    news.push(p);
+  }
+  return news.slice(0, limit);
 });
 
 export async function getProductById(

@@ -7,13 +7,24 @@ import HomeCategoryBanners from "@/components/marketing/HomeCategoryBanners";
 import { getBannerSlides, getCategories, getHomeListingProducts } from "@/lib/data";
 import { heroImageUrl } from "@/lib/images/cdn-url";
 import { PageFactory } from "@/lib/pages";
+import { withCanonical } from "@/lib/seo/canonical";
 import type { Metadata } from "next";
 
-const FALLBACK_META: Metadata = {
-  title: "MAYCSS | Curated Luxury Fashion Online",
-  description:
-    "Shop MAYCSS for women clothes, dresses for women, jeans and denim, and fashion products — curated luxury online.",
-};
+const FALLBACK_META: Metadata = withCanonical(
+  {
+    title: "MAYCSS | Curated Luxury Fashion Online",
+    description:
+      "Shop MAYCSS for women clothes, dresses for women, jeans and denim, and fashion products — curated luxury from our online clothing store.",
+    keywords: [
+      "MAYCSS",
+      "fashion products",
+      "women clothes",
+      "clothing store",
+      "wholesale clothing",
+    ],
+  },
+  "/",
+);
 
 export async function generateMetadata(): Promise<Metadata> {
   const page = await PageFactory.getBySlug("home");
@@ -72,13 +83,17 @@ export default async function Home() {
         <div className="mc-container">
           <header className="mc-section-header">
             <p className="mc-section-subtitle">Curated for you</p>
-            <h2 className="mc-section-title">The Featured Edit</h2>
+            <h1 className="mc-section-title">MAYCSS Curated Luxury Fashion</h1>
             <p className="mc-section-header__lead">
-              Hand-selected pieces from independent ateliers and heritage
-              maisons — each chosen for craftsmanship, longevity, and quiet
-              luxury.
+              Hand-selected women clothes, dresses for women, and jeans and denim
+              from independent ateliers and heritage maisons — each chosen for
+              craftsmanship, longevity, and quiet luxury.
             </p>
           </header>
+
+          <h2 className="mc-section-title" style={{ marginTop: "1.5rem" }}>
+            The Featured Edit
+          </h2>
 
           <div className="mc-product-grid">
             {listingProducts.map((product) => (

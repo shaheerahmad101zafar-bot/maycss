@@ -14,11 +14,13 @@ export function productImageAlt(
     typeof opts?.view === "number" && opts.view > 0
       ? ` view ${opts.view}`
       : "";
-  if (color) return `${base} in ${color}${view} — MAYCSS`;
-  return `${base}${view} — MAYCSS fashion`;
+  if (color) return `${base} in ${color}${view} — MAYCSS fashion products`;
+  return `${base}${view} — MAYCSS fashion products`;
 }
 
 export function categoryImageAlt(name: string): string {
   const n = name.trim();
-  return n ? `${n} collection — MAYCSS` : "MAYCSS fashion collection";
+  return n
+    ? `${n} collection — MAYCSS clothing store`
+    : "MAYCSS fashion collection";
 }

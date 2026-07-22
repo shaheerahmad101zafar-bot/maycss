@@ -8,6 +8,7 @@ import {
   type ContentBlock,
   type BlockTemplate,
 } from "./blocks/types";
+import { withCanonical } from "./seo/canonical";
 import { readStoreJson, writeStoreJson } from "./storage/json-store";
 
 const file = "data/pages.json";
@@ -340,7 +341,8 @@ export const PageFactory = {
     const seo = page.seo ?? {};
     const title = seo.metaTitle || `${page.title} · MAYCSS`;
     const description = seo.metaDescription || page.hero || page.title;
-    return {
+    const path = page.slug === "home" ? "/" : `/${page.slug}`;
+    const base: Metadata = {
       title: { absolute: title },
       description,
       keywords: seo.keywords,
@@ -349,7 +351,7 @@ export const PageFactory = {
       openGraph: {
         title,
         description,
-        type: "article",
+        type: "website",
         images: seo.ogImage ? [seo.ogImage] : undefined,
       },
       twitter: {
@@ -359,6 +361,7 @@ export const PageFactory = {
         images: seo.ogImage ? [seo.ogImage] : undefined,
       },
     };
+    return withCanonical(base, path);
   },
 
   toJsonLd(page: Page): string {

@@ -1,5 +1,7 @@
 import Link from "next/link";
 import type { CategoryGridBlock } from "@/lib/blocks/types";
+import { tileImageUrl } from "@/lib/images/cdn-url";
+import { categoryImageAlt } from "@/lib/seo/image-alt";
 import type { Category } from "@/lib/utils";
 
 export default function CategoryGridView({
@@ -63,7 +65,14 @@ export default function CategoryGridView({
                 >
                   {cat.image ? (
                     /* eslint-disable-next-line @next/next/no-img-element */
-                    <img src={cat.image} alt="" loading="lazy" />
+                    <img
+                      src={tileImageUrl(cat.image)}
+                      alt={categoryImageAlt(cat.name)}
+                      loading="lazy"
+                      width={560}
+                      height={420}
+                      decoding="async"
+                    />
                   ) : (
                     <span className="mc-cat-block__fallback" aria-hidden />
                   )}

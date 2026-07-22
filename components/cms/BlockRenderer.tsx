@@ -49,6 +49,8 @@ interface Props {
   categories?: Category[];
   /** Storefront promo slides for slider blocks with useStoreSlides. */
   bannerSlides?: BannerSlide[];
+  /** When true, CMS hero blocks use H2 to avoid duplicate H1 with page title. */
+  hasPageH1?: boolean;
 }
 
 /**
@@ -61,6 +63,7 @@ export default function BlockRenderer({
   products,
   categories,
   bannerSlides,
+  hasPageH1 = false,
 }: Props) {
   return (
     <div className="mc-blocks">
@@ -71,6 +74,7 @@ export default function BlockRenderer({
           products={products}
           categories={categories}
           bannerSlides={bannerSlides}
+          hasPageH1={hasPageH1}
         />
       ))}
     </div>
@@ -82,11 +86,13 @@ function BlockWrapper({
   products,
   categories,
   bannerSlides,
+  hasPageH1,
 }: {
   block: ContentBlock;
   products?: Product[];
   categories?: Category[];
   bannerSlides?: BannerSlide[];
+  hasPageH1?: boolean;
 }) {
   const fullBleed =
     block.type === "hero" ||
@@ -113,6 +119,7 @@ function BlockWrapper({
           products={products}
           categories={categories}
           bannerSlides={bannerSlides}
+          hasPageH1={hasPageH1}
         />
       </div>
     </div>
@@ -124,11 +131,13 @@ function RenderBlock({
   products,
   categories,
   bannerSlides,
+  hasPageH1,
 }: {
   block: ContentBlock;
   products?: Product[];
   categories?: Category[];
   bannerSlides?: BannerSlide[];
+  hasPageH1?: boolean;
 }) {
   switch (block.type) {
     case "richtext": {
@@ -160,7 +169,11 @@ function RenderBlock({
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={block.src}
-            alt={block.alt ?? ""}
+            alt={
+              block.alt?.trim() ||
+              block.caption?.trim() ||
+              "MAYCSS fashion products"
+            }
             loading="lazy"
             style={imgFocusStyle(block.imageFocus)}
           />
@@ -173,6 +186,7 @@ function RenderBlock({
         ? bgImageStyle(block.backgroundImage, block.imageFocus)
         : undefined;
       const overlayStyle = overlayOpacityStyle(block.overlayStrength);
+      const HeroHeading = hasPageH1 ? "h2" : "h1";
       return (
         <section
           className={cx(
@@ -188,7 +202,7 @@ function RenderBlock({
             {block.eyebrow && (
               <p className="mc-hero-eyebrow">{block.eyebrow}</p>
             )}
-            <h1 className="mc-hero-title">{block.heading}</h1>
+            <HeroHeading className="mc-hero-title">{block.heading}</HeroHeading>
             {block.subheading && (
               <p className="mc-hero-subtitle">{block.subheading}</p>
             )}

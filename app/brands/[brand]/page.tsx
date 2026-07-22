@@ -4,19 +4,25 @@ import CategoryPage, {
   STOREFRONT_PAGE_SIZE,
 } from "@/components/products/CategoryPage";
 import { getProductsByBrand } from "@/lib/data";
+import { withCanonical } from "@/lib/seo/canonical";
+import type { Metadata } from "next";
 
 type PageProps = {
   params: Promise<{ brand: string }>;
   searchParams: Promise<{ page?: string }>;
 };
 
-export async function generateMetadata({ params }: PageProps) {
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { brand } = await params;
   const name = decodeURIComponent(brand);
-  return {
-    title: `${name} · MayCSS`,
-    description: `Shop ${name} at MayCSS.`,
-  };
+  return withCanonical(
+    {
+      title: `${name} Fashion Products · MAYCSS`,
+      description: `Shop ${name} at MAYCSS — curated fashion products, women clothes, and designer pieces from our online clothing store.`,
+      keywords: ["MAYCSS", name, "fashion products", "clothing store"],
+    },
+    `/brands/${encodeURIComponent(name)}`,
+  );
 }
 
 export default async function BrandPage({ params, searchParams }: PageProps) {
@@ -37,7 +43,7 @@ export default async function BrandPage({ params, searchParams }: PageProps) {
     <CategoryPage
       eyebrow="The Maker"
       title={name}
-      subtitle={`Everything from ${name}, curated for MayCSS.`}
+      subtitle={`Everything from ${name}, curated for MAYCSS.`}
       products={pageItems}
       totalCount={totalCount}
       page={safePage}

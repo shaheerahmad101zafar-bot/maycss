@@ -99,6 +99,7 @@ export default function CmsPageView({
             blocks={page.blocks}
             products={products}
             categories={categories}
+            hasPageH1={showHeader}
           />
           {page.pageKind === "contact" && page.mapEmbed && (
             <section className="mc-map-embed" aria-label="Store location map">

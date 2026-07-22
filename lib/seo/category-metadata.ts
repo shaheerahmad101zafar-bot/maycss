@@ -1,8 +1,12 @@
 import type { Metadata } from "next";
 import type { Category } from "@/lib/utils";
+import { withCanonical } from "@/lib/seo/canonical";
 
 /** Build Next.js Metadata from category.seo (admin-editable) with safe fallbacks. */
-export function categoryToMetadata(category: Category | null | undefined): Metadata {
+export function categoryToMetadata(
+  category: Category | null | undefined,
+  opts?: { path?: string },
+): Metadata {
   if (!category) {
     return {
       title: "Category not found · MAYCSS",
@@ -20,29 +24,33 @@ export function categoryToMetadata(category: Category | null | undefined): Metad
     `Shop ${category.name} at MAYCSS — curated fashion products online.`;
   const keywords = Array.from(
     new Set(
-      [seo.focusKeyword, ...(seo.keywords ?? []), "MAYCSS"].filter(
+      [seo.focusKeyword, ...(seo.keywords ?? []), "MAYCSS", "fashion products"].filter(
         (k): k is string => Boolean(k && k.trim()),
       ),
     ),
   );
 
-  return {
-    title: { absolute: titled },
-    description,
-    keywords,
-    openGraph: {
-      title: titled,
+  const path = opts?.path || `/category/${category.slug}`;
+  return withCanonical(
+    {
+      title: { absolute: titled },
       description,
-      type: "website",
-      images: seo.ogImage || category.image ? [seo.ogImage || category.image!] : undefined,
+      keywords,
+      openGraph: {
+        title: titled,
+        description,
+        type: "website",
+        images: seo.ogImage || category.image ? [seo.ogImage || category.image!] : undefined,
+      },
+      twitter: {
+        card: "summary_large_image",
+        title: titled,
+        description,
+        images: seo.ogImage || category.image ? [seo.ogImage || category.image!] : undefined,
+      },
     },
-    twitter: {
-      card: "summary_large_image",
-      title: titled,
-      description,
-      images: seo.ogImage || category.image ? [seo.ogImage || category.image!] : undefined,
-    },
-  };
+    path,
+  );
 }
 
 export function categoryBreadcrumbJsonLd(opts: {

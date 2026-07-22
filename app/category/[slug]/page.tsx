@@ -14,6 +14,7 @@ import {
   categoryBreadcrumbJsonLd,
   categoryToMetadata,
 } from "@/lib/seo/category-metadata";
+import { categoryImageAlt } from "@/lib/seo/image-alt";
 import { getSiteOrigin } from "@/lib/site-url";
 
 type Props = {
@@ -24,7 +25,7 @@ type Props = {
 export async function generateMetadata({ params }: Props) {
   const { slug } = await params;
   const category = await getCategoryBySlug(slug);
-  return categoryToMetadata(category);
+  return categoryToMetadata(category, { path: `/category/${slug}` });
 }
 
 export default async function CategoryRoute({ params, searchParams }: Props) {
@@ -109,7 +110,7 @@ export default async function CategoryRoute({ params, searchParams }: Props) {
                       /* eslint-disable-next-line @next/next/no-img-element */
                       <img
                         src={c.image}
-                        alt={`${c.name} — MAYCSS`}
+                        alt={categoryImageAlt(c.name)}
                         loading="lazy"
                       />
                     ) : (
@@ -152,6 +153,7 @@ export default async function CategoryRoute({ params, searchParams }: Props) {
         emptyLabel={`No pieces in ${category.name} right now.`}
         page={safePage}
         basePath={`/category/${category.slug}`}
+        headingAs={subs.length > 0 ? "h2" : "h1"}
       />
     </>
   );

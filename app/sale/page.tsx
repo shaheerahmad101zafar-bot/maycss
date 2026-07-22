@@ -5,6 +5,7 @@ import CategoryPage, {
 } from "@/components/products/CategoryPage";
 import { PageFactory } from "@/lib/pages";
 import { getSaleItems } from "@/lib/data";
+import { withCanonical } from "@/lib/seo/canonical";
 import type { Metadata } from "next";
 
 /** Sale page shows denser grids so shoppers can browse the full markdown edit. */
@@ -17,11 +18,22 @@ type Props = {
 export async function generateMetadata(): Promise<Metadata> {
   const page = await PageFactory.getBySlug("sale");
   if (page) return PageFactory.toMetadata(page);
-  return {
-    title: "Black Friday Sale · MayCSS",
-    description:
-      "Black Friday sale — 20% off women's clothing, dresses, and denim at MAYCSS.",
-  };
+  return withCanonical(
+    {
+      title: "Black Friday Sale · Clothes on Sale · MAYCSS",
+      description:
+        "Black Friday and friday sale at MAYCSS — 20% off women's clothing, dresses for women, jeans and denim, and fashion products. Shop clothes on sale online.",
+      keywords: [
+        "MAYCSS",
+        "friday sale",
+        "clothes on sale",
+        "womens clothes sale",
+        "cheap online clothing",
+        "fashion products",
+      ],
+    },
+    "/sale",
+  );
 }
 
 export default async function SalePage({ searchParams }: Props) {
@@ -58,7 +70,7 @@ export default async function SalePage({ searchParams }: Props) {
         page={safePage}
         basePath="/sale"
         pageSize={SALE_PAGE_SIZE}
-        sectionId="sale-grid"
+        headingAs="h2"
       />
     </>
   );

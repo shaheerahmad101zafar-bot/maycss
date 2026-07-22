@@ -1,6 +1,8 @@
 import Link from "next/link";
 import ProductCard from "@/components/products/ProductCard";
 import { getSubcategories, getTopLevelCategories } from "@/lib/data";
+import { tileImageUrl } from "@/lib/images/cdn-url";
+import { categoryImageAlt } from "@/lib/seo/image-alt";
 import type { Category, Product } from "@/lib/utils";
 import { STOREFRONT_PAGE_SIZE } from "@/components/products/CategoryPage";
 
@@ -16,10 +18,7 @@ export default async function ShopCategoryIndex() {
   if (withSubs.length === 0) return null;
 
   return (
-    <section
-      id="shop-categories"
-      className="mc-section mc-cat-index mc-cat-index--cms"
-    >
+    <section className="mc-section mc-cat-index mc-cat-index--cms">
       <div className="mc-container">
         <header className="mc-section-header">
           <p className="mc-section-subtitle">Browse</p>
@@ -41,11 +40,12 @@ export default async function ShopCategoryIndex() {
                 {cat.image ? (
                   /* eslint-disable-next-line @next/next/no-img-element */
                   <img
-                    src={cat.image}
-                    alt=""
+                    src={tileImageUrl(cat.image)}
+                    alt={categoryImageAlt(cat.name)}
                     loading="lazy"
                     width={560}
                     height={420}
+                    decoding="async"
                   />
                 ) : (
                   <span className="mc-cat-block__fallback" aria-hidden />

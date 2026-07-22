@@ -130,7 +130,11 @@ export default function MarketingBanner({
                 <img
                   className="mc-banner__media"
                   src={src}
-                  alt=""
+                  alt={
+                    [s.eyebrow, s.title, s.subtitle]
+                      .filter(Boolean)
+                      .join(" — ") || "MAYCSS fashion promotion"
+                  }
                   width={750}
                   height={420}
                   decoding={i === 0 ? "sync" : "async"}

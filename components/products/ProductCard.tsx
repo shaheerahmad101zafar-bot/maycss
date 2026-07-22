@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useCart } from "@/context/CartContext";
+import OptimizedImage from "@/components/ui/OptimizedImage";
 import { cardImageUrl } from "@/lib/images/cdn-url";
 import { productImageAlt } from "@/lib/seo/image-alt";
 import { cx, discountPercent, formatPrice, type Product } from "@/lib/utils";
@@ -69,15 +70,12 @@ export default function ProductCard({
         >
           {saved ? "♥" : "♡"}
         </button>
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
+        <OptimizedImage
           className="mc-card__img"
           src={cardImageUrl(product.image)}
           alt={productImageAlt(product)}
-          loading="lazy"
           width={400}
           height={500}
-          decoding="async"
           sizes="(max-width: 520px) 50vw, (max-width: 900px) 33vw, 25vw"
         />
       </Link>

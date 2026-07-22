@@ -9,6 +9,7 @@ import {
   paginateProducts,
   STOREFRONT_PAGE_SIZE,
 } from "@/components/products/CategoryPage";
+import { withCanonical } from "@/lib/seo/canonical";
 import type { Metadata } from "next";
 
 type Props = {
@@ -21,16 +22,32 @@ export async function generateMetadata({
   const { q } = await searchParams;
   const page = await PageFactory.getBySlug("shop");
   if (q?.trim()) {
-    return {
-      title: `Search “${q.trim()}” · MAYCSS`,
-      description: `Shop results for ${q.trim()} at MAYCSS Online Store.`,
-    };
+    return withCanonical(
+      {
+        title: `Search “${q.trim()}” · MAYCSS`,
+        description: `Shop results for ${q.trim()} at MAYCSS — curated fashion products and women clothes online.`,
+      },
+      "/shop",
+      { noindex: true },
+    );
   }
   if (page) return PageFactory.toMetadata(page);
-  return {
-    title: "Shop All · MayCSS",
-    description: "Browse the full MayCSS collection by category.",
-  };
+  return withCanonical(
+    {
+      title: "Shop All · MAYCSS Online Clothing Store",
+      description:
+        "Browse the full MAYCSS collection — women clothes, dresses for women, jeans and denim, and fashion products from our curated clothing storefront.",
+      keywords: [
+        "MAYCSS",
+        "clothing store",
+        "clothing storefront",
+        "fashion products",
+        "women clothes",
+        "wholesale clothing",
+      ],
+    },
+    "/shop",
+  );
 }
 
 export default async function ShopPage({ searchParams }: Props) {

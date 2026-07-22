@@ -22,9 +22,11 @@ type Props = {
 };
 
 export async function generateMetadata({ params }: Props) {
-  const { subslug } = await params;
+  const { slug, subslug } = await params;
   const category = await getCategoryBySlug(subslug);
-  return categoryToMetadata(category);
+  return categoryToMetadata(category, {
+    path: `/category/${slug}/${subslug}`,
+  });
 }
 
 export default async function SubcategoryRoute({ params, searchParams }: Props) {

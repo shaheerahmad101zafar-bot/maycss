@@ -4,44 +4,63 @@ import ProductDetail from "@/components/products/ProductDetail";
 import ProductCard from "@/components/products/ProductCard";
 import BlockRenderer from "@/components/cms/BlockRenderer";
 import { getProductById, getRelatedProducts } from "@/lib/data";
+import { absoluteUrl, withCanonical } from "@/lib/seo/canonical";
+import { getSiteOrigin } from "@/lib/site-url";
+import type { Metadata } from "next";
 
 type PageProps = { params: Promise<{ id: string }> };
 
-export async function generateMetadata({ params }: PageProps) {
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { id } = await params;
   const product = await getProductById(id);
-  if (!product) return { title: "Product not found · MayCSS" };
+  if (!product) return { title: "Product not found · MAYCSS" };
   const title = product.seo?.metaTitle ?? `${product.name} · MAYCSS`;
   const description =
-    product.seo?.metaDescription ?? product.description ?? product.name;
-  return {
-    title: { absolute: title },
-    description,
-    keywords: product.seo?.keywords ?? ["MAYCSS", "fashion products"],
-    openGraph: {
-      title,
+    product.seo?.metaDescription ??
+    product.description ??
+    `Shop ${product.name} at MAYCSS — curated fashion products online.`;
+  return withCanonical(
+    {
+      title: { absolute: title },
       description,
-      type: "website",
-      images: [product.seo?.ogImage ?? product.image],
+      keywords: product.seo?.keywords ?? [
+        "MAYCSS",
+        "fashion products",
+        product.brand,
+        product.category,
+      ].filter(Boolean) as string[],
+      openGraph: {
+        title,
+        description,
+        type: "website",
+        images: [product.seo?.ogImage ?? product.image],
+      },
+      twitter: {
+        card: "summary_large_image",
+        title,
+        description,
+        images: [product.seo?.ogImage ?? product.image],
+      },
     },
-    twitter: {
-      card: "summary_large_image",
-      title,
-      description,
-      images: [product.seo?.ogImage ?? product.image],
-    },
-  };
+    `/product/${id}`,
+  );
 }
 
 /**
  * Schema.org Product JSON-LD — helps Google show rich product results
  * (image, price, ratings) directly in search.
  */
-function buildProductJsonLd(product: Awaited<ReturnType<typeof getProductById>>): string {
-  if (!product) return "";
+function buildProductJsonLd(
+  product: NonNullable<Awaited<ReturnType<typeof getProductById>>>,
+): string {
   const onSale =
     typeof product.originalPrice === "number" &&
     product.originalPrice > product.price;
+  const origin = getSiteOrigin();
+  const availability =
+    product.status === "draft"
+      ? "https://schema.org/OutOfStock"
+      : "https://schema.org/InStock";
   return JSON.stringify({
     "@context": "https://schema.org",
     "@type": "Product",
@@ -53,6 +72,7 @@ function buildProductJsonLd(product: Awaited<ReturnType<typeof getProductById>>)
         : [product.image],
     brand: product.brand ? { "@type": "Brand", name: product.brand } : undefined,
     sku: String(product.id),
+    url: absoluteUrl(`/product/${product.id}`),
     aggregateRating:
       typeof product.rating === "number"
         ? {
@@ -63,9 +83,11 @@ function buildProductJsonLd(product: Awaited<ReturnType<typeof getProductById>>)
         : undefined,
     offers: {
       "@type": "Offer",
+      url: absoluteUrl(`/product/${product.id}`),
       price: product.price,
       priceCurrency: "USD",
-      availability: "https://schema.org/InStock",
+      availability,
+      seller: { "@type": "Organization", name: "MAYCSS", url: origin },
       ...(onSale && product.originalPrice
         ? {
             priceSpecification: {
@@ -80,6 +102,30 @@ function buildProductJsonLd(product: Awaited<ReturnType<typeof getProductById>>)
   });
 }
 
+function buildBreadcrumbJsonLd(
+  product: NonNullable<Awaited<ReturnType<typeof getProductById>>>,
+): string {
+  const origin = getSiteOrigin();
+  const items: { name: string; path: string }[] = [
+    { name: "Home", path: "/" },
+    { name: "Shop", path: "/shop" },
+  ];
+  if (product.category) {
+    items.push({ name: product.category, path: "/shop" });
+  }
+  items.push({ name: product.name, path: `/product/${product.id}` });
+  return JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: items.map((item, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      name: item.name,
+      item: `${origin}${item.path === "/" ? "/" : item.path}`,
+    })),
+  });
+}
+
 export default async function ProductPage({ params }: PageProps) {
   const { id } = await params;
   const product = await getProductById(id);
@@ -87,16 +133,21 @@ export default async function ProductPage({ params }: PageProps) {
   // Draft products are not visible to the public.
   if (product.status === "draft") notFound();
 
-  const related = (await getRelatedProducts(product, 8)).filter(
-    (p) => p.status !== "draft",
-  ).slice(0, 4);
+  const related = (await getRelatedProducts(product, 8))
+    .filter((p) => p.status !== "draft")
+    .slice(0, 4);
   const jsonLd = buildProductJsonLd(product);
+  const breadcrumbLd = buildBreadcrumbJsonLd(product);
 
   return (
     <>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: jsonLd }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: breadcrumbLd }}
       />
 
       <nav className="mc-crumbs mc-container" aria-label="Breadcrumb">
@@ -153,7 +204,7 @@ async function ProductContentSection({
       className="mc-section mc-container mc-product-content"
       aria-label="More about this product"
     >
-      <BlockRenderer blocks={blocks ?? []} products={[]} />
+      <BlockRenderer blocks={blocks ?? []} products={[]} hasPageH1 />
     </section>
   );
 }

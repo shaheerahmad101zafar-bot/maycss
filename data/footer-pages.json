@@ -1,0 +1,63 @@
+[
+  {
+    "id": "about",
+    "slug": "about",
+    "title": "About MayCSS",
+    "showInFooter": true,
+    "footerColumn": "company",
+    "published": true
+  },
+  {
+    "id": "faq",
+    "slug": "faq",
+    "title": "Frequently Asked Questions",
+    "showInFooter": true,
+    "footerColumn": "company",
+    "published": true
+  },
+  {
+    "id": "privacy-policy",
+    "slug": "privacy-policy",
+    "title": "Privacy Policy",
+    "showInFooter": true,
+    "footerColumn": "legal",
+    "published": true
+  },
+  {
+    "id": "refund-policy",
+    "slug": "refund-policy",
+    "title": "Refund & Returns Policy",
+    "showInFooter": true,
+    "footerColumn": "legal",
+    "published": true
+  },
+  {
+    "id": "home",
+    "slug": "home",
+    "title": "Home",
+    "showInFooter": false,
+    "published": true
+  },
+  {
+    "id": "contact",
+    "slug": "contact",
+    "title": "We're Here to Help",
+    "showInFooter": true,
+    "footerColumn": "company",
+    "published": true
+  },
+  {
+    "id": "shop",
+    "slug": "shop",
+    "title": "Shop the Collection",
+    "showInFooter": false,
+    "published": true
+  },
+  {
+    "id": "sale",
+    "slug": "sale",
+    "title": "The Sale Edit",
+    "showInFooter": false,
+    "published": true
+  }
+]

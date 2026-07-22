@@ -36,9 +36,10 @@ export async function generateMetadata(): Promise<Metadata> {
   const title = `${cfg.siteName} — ${cfg.tagline}`;
   const description =
     cfg.tagline ||
-    "MAYCSS curated luxury fashion online — women clothes, dresses, jeans and denim, and fashion products.";
+    "MAYCSS curated luxury fashion online — women clothes, dresses for women, jeans and denim, and fashion products from our clothing store.";
+  const origin = getSiteOrigin();
   return {
-    metadataBase: new URL(getSiteOrigin()),
+    metadataBase: new URL(origin),
     title: {
       default: title,
       template: `%s · ${cfg.siteName}`,
@@ -50,11 +51,16 @@ export async function generateMetadata(): Promise<Metadata> {
       description,
       siteName: cfg.siteName,
       type: "website",
+      url: origin,
     },
     twitter: {
       card: "summary_large_image",
       title,
       description,
+    },
+    robots: {
+      index: true,
+      follow: true,
     },
   };
 }

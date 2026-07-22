@@ -16,8 +16,11 @@ interface CategoryPageProps {
   page?: number;
   basePath?: string;
   pageSize?: number;
-  /** Optional anchor id for promo banner CTAs. */
-  sectionId?: string;
+  /**
+   * Heading level for the listing title.
+   * Use "h2" when the page already has an H1 (CMS hero, subcategory index, etc.).
+   */
+  headingAs?: "h1" | "h2";
 }
 
 export default function CategoryPage({
@@ -30,19 +33,20 @@ export default function CategoryPage({
   page = 1,
   basePath,
   pageSize = STOREFRONT_PAGE_SIZE,
-  sectionId,
+  headingAs = "h1",
 }: CategoryPageProps) {
   const total = totalCount;
   const totalPages = Math.max(1, Math.ceil(total / pageSize));
   const safePage = Math.min(Math.max(1, page), totalPages);
   const start = (safePage - 1) * pageSize;
+  const TitleTag = headingAs;
 
   return (
-    <section id={sectionId} className="mc-section mc-category">
+    <section className="mc-section mc-category">
       <div className="mc-container">
         <header className="mc-category__header">
           {eyebrow && <p className="mc-category__eyebrow">{eyebrow}</p>}
-          <h1 className="mc-category__title">{title}</h1>
+          <TitleTag className="mc-category__title">{title}</TitleTag>
           {subtitle && <p className="mc-category__subtitle">{subtitle}</p>}
           <p className="mc-category__count" aria-live="polite">
             {total} {total === 1 ? "product" : "products"}

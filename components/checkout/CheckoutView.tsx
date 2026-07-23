@@ -69,6 +69,8 @@ export default function CheckoutView({
   const [errors, setErrors] = useState<Partial<Record<keyof FormState, string>>>(
     {},
   );
+  const [agreedToTerms, setAgreedToTerms] = useState(false);
+  const [termsError, setTermsError] = useState<string | null>(null);
   const [banner, setBanner] = useState<string | null>(() => {
     if (searchParams.get("cancelled") === "1") {
       return "Payment was cancelled. Your order is on hold — you can try again below.";
@@ -147,11 +149,25 @@ export default function CheckoutView({
     const errs = validate();
     if (Object.keys(errs).length > 0) {
       setErrors(errs);
+      setTermsError(
+        agreedToTerms
+          ? null
+          : "Please agree to the Terms of Service, Privacy Policy, and Refund Policy to continue.",
+      );
       const firstKey = Object.keys(errs)[0];
       document.getElementById(firstKey)?.focus();
       return;
     }
+    if (!agreedToTerms) {
+      setErrors({});
+      setTermsError(
+        "Please agree to the Terms of Service, Privacy Policy, and Refund Policy to continue.",
+      );
+      document.getElementById("checkout-agree-terms")?.focus();
+      return;
+    }
     setErrors({});
+    setTermsError(null);
     setSubmitting(true);
     try {
       const result = await placeOrderAction({
@@ -486,6 +502,52 @@ export default function CheckoutView({
               </div>
             )}
           </fieldset>
+
+          <div className="mc-checkout__terms">
+            <label
+              htmlFor="checkout-agree-terms"
+              className={cx(
+                "mc-checkout__terms-label",
+                termsError && "is-invalid",
+              )}
+            >
+              <input
+                id="checkout-agree-terms"
+                type="checkbox"
+                checked={agreedToTerms}
+                onChange={(e) => {
+                  setAgreedToTerms(e.target.checked);
+                  if (e.target.checked) setTermsError(null);
+                }}
+                aria-invalid={termsError ? true : undefined}
+                aria-describedby={termsError ? "checkout-agree-terms-error" : undefined}
+                required
+              />
+              <span>
+                I agree to the{" "}
+                <Link href="/terms-of-service" target="_blank" rel="noopener noreferrer">
+                  Terms of Service
+                </Link>
+                ,{" "}
+                <Link href="/privacy-policy" target="_blank" rel="noopener noreferrer">
+                  Privacy Policy
+                </Link>
+                , and{" "}
+                <Link href="/refund-policy" target="_blank" rel="noopener noreferrer">
+                  Refund Policy
+                </Link>
+              </span>
+            </label>
+            {termsError ? (
+              <p
+                id="checkout-agree-terms-error"
+                className="mc-field__error"
+                role="alert"
+              >
+                {termsError}
+              </p>
+            ) : null}
+          </div>
 
           <button
             type="submit"

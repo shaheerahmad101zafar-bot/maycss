@@ -2426,6 +2426,42 @@
   color: var(--mc-gray-600);
 }
 
+.mc-checkout__terms {
+  margin: 4px 0 16px;
+}
+.mc-checkout__terms-label {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin: 0;
+  font-size: 0.85rem;
+  line-height: 1.45;
+  color: var(--mc-gray-700);
+  cursor: pointer;
+}
+.mc-checkout__terms-label.is-invalid {
+  color: var(--mc-red, #c41e3a);
+}
+.mc-checkout__terms-label input[type="checkbox"] {
+  flex-shrink: 0;
+  width: 1rem;
+  height: 1rem;
+  margin-top: 0.15rem;
+  accent-color: var(--mc-black);
+  cursor: pointer;
+}
+.mc-checkout__terms-label a {
+  color: var(--mc-red);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.mc-checkout__terms-label a:hover {
+  opacity: 0.85;
+}
+.mc-checkout__terms .mc-field__error {
+  margin: 8px 0 0;
+}
+
 .mc-checkout__submit {
   padding: 18px;
   font-size: 0.9rem;

@@ -10,7 +10,7 @@ const YEAR = new Date().getFullYear();
 /** Always-visible GMC trust links — independent of CMS edits. */
 const TRUST_POLICY_LINKS = [
   { href: "/contact", label: "Contact Us" },
-  { href: "/refund-policy", label: "Return & Refund Policy" },
+  { href: "/refund-policy", label: "Refund & Return Policy" },
   { href: "/shipping-policy", label: "Shipping Policy" },
   { href: "/privacy-policy", label: "Privacy Policy" },
   { href: "/terms-of-service", label: "Terms of Service" },

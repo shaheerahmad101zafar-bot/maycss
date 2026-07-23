@@ -231,10 +231,13 @@ export default function CartDrawer() {
                 <span>{freeShip ? "FREE" : "Calculated at checkout"}</span>
               </div>
               <div className="mc-drawer__totals-row is-total">
-                <span>Estimated total</span>
+                <span>Estimated total (USD)</span>
                 <span>{formatPrice(displaySubtotal)}</span>
               </div>
             </div>
+            <p className="mc-drawer__currency-note">
+              All prices are in USD ($).
+            </p>
 
             <Link
               href="/checkout"

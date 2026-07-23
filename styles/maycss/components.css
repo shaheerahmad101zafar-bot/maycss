@@ -1991,6 +1991,12 @@
   margin-top: 4px;
   border-top: 1px dashed var(--mc-gray-200);
 }
+.mc-drawer__currency-note {
+  margin: 0 0 12px;
+  font-size: 0.78rem;
+  color: var(--mc-gray-500);
+  text-align: center;
+}
 
 /* ---------- Breadcrumbs ---------- */
 .mc-crumbs {
@@ -2489,9 +2495,14 @@
 .mc-checkout__summary-title {
   font-family: var(--mc-font-serif);
   font-size: 1.15rem;
-  margin: 0 0 14px;
+  margin: 0 0 6px;
   padding-bottom: 12px;
   border-bottom: 1px solid var(--mc-gray-100);
+}
+.mc-checkout__currency-note {
+  margin: 0 0 14px;
+  font-size: 0.8rem;
+  color: var(--mc-gray-500);
 }
 
 .mc-checkout__empty {

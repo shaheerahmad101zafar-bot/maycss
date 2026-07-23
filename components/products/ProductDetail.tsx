@@ -169,6 +169,7 @@ export default function ProductDetail({ product }: Props) {
                 <span className="mc-pdp__discount">-{discount}%</span>
               </>
             )}
+            <span className="mc-pdp__currency">USD</span>
           </div>
 
           {product.description && (

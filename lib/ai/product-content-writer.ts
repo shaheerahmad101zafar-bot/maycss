@@ -165,7 +165,7 @@ function faqItems(input: ProductContentInput): FaqItem[] {
     },
     {
       q: `Do you offer returns on ${noun}?`,
-      a: `Yes. Unworn items can be returned within 30 days for a full refund. See our full refund policy for details.`,
+      a: `Yes. Unworn items can be returned within 10 days for a full refund. See our full refund policy for details.`,
     },
   ];
   return items;

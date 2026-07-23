@@ -1,4 +1,5 @@
 import type { FeatureItem } from "@/lib/blocks/types";
+import { MAYCSS_BUSINESS } from "@/lib/business";
 
 export const DEFAULT_FEATURES: FeatureItem[] = [
   {
@@ -15,7 +16,7 @@ export const DEFAULT_FEATURES: FeatureItem[] = [
   },
   {
     title: "Easy Returns",
-    body: "30-day returns on unworn items, hassle-free.",
+    body: `${MAYCSS_BUSINESS.returnWindowDays}-day returns on unworn items, hassle-free.`,
   },
 ];
 

@@ -329,7 +329,7 @@ const defaultFeatureItems: FeatureItem[] = [
   },
   {
     title: "Easy Returns",
-    body: "30-day returns on unworn items, hassle-free.",
+    body: "10-day returns on unworn items, hassle-free.",
   },
 ];
 

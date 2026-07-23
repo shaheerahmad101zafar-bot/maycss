@@ -285,7 +285,7 @@ export default function CheckoutView({
         <h1>Checkout</h1>
         <p>
           <Link href="/">Continue shopping</Link> or edit your bag from the
-          drawer.
+          drawer. All prices are in <strong>USD ($)</strong>.
         </p>
       </header>
 
@@ -571,6 +571,9 @@ export default function CheckoutView({
 
         <aside className="mc-checkout__summary" aria-label="Order summary">
           <h2 className="mc-checkout__summary-title">Order summary</h2>
+          <p className="mc-checkout__currency-note">
+            All prices are in USD ($).
+          </p>
 
           {displayItems.length === 0 ? (
             <p className="mc-checkout__empty">

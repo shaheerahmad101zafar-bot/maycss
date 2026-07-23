@@ -290,3 +290,79 @@ export async function buildGoogleShoppingFeedTsv(): Promise<{
 
   return { tsv: [header, ...rows].join("\n"), count: eligible.length };
 }
+
+/** RFC 4180 CSV cell — quotes fields that need it; doubles internal quotes. */
+function csvCell(value: string): string {
+  const raw = String(value ?? "")
+    .replace(/\r\n/g, " ")
+    .replace(/[\r\n]+/g, " ")
+    .trim();
+  if (/[",\n\r]/.test(raw)) {
+    return `"${raw.replace(/"/g, '""')}"`;
+  }
+  return raw;
+}
+
+/**
+ * Comma-separated Google Merchant Center feed (downloadable CSV).
+ * Required columns plus common optional GMC attributes.
+ */
+export async function buildGoogleShoppingFeedCsv(): Promise<{
+  csv: string;
+  count: number;
+}> {
+  const origin = getSiteOrigin();
+  const [products, categories] = await Promise.all([
+    getProducts({ fresh: true }),
+    getCategories({ fresh: true }),
+  ]);
+  const byId = new Map(categories.map((c) => [c.id, c]));
+  const eligible = products.filter(isFeedEligible);
+
+  const header = [
+    "id",
+    "title",
+    "description",
+    "link",
+    "image_link",
+    "availability",
+    "price",
+    "brand",
+    "condition",
+    "sale_price",
+    "identifier_exists",
+    "product_type",
+    "google_product_category",
+    "gender",
+    "age_group",
+  ];
+
+  const rows = eligible.map((p) => {
+    const id = String(p.id);
+    const { productType, googleCategoryId } = categoryPath(p, byId);
+    const onSale =
+      typeof p.originalPrice === "number" && p.originalPrice > p.price;
+    const cells = [
+      id,
+      truncate(p.name.trim(), 150),
+      feedDescription(p).slice(0, 5000),
+      `${origin}/product/${encodeURIComponent(id)}`,
+      absoluteUrl(origin, p.image),
+      "in_stock",
+      formatPriceUsd(onSale ? p.originalPrice! : p.price),
+      feedBrand(p),
+      "new",
+      onSale ? formatPriceUsd(p.price) : "",
+      "false",
+      productType,
+      googleCategoryId ?? "",
+      "female",
+      "adult",
+    ];
+    return cells.map(csvCell).join(",");
+  });
+
+  // UTF-8 BOM helps Excel open the file cleanly; GMC accepts it.
+  const body = [header.join(","), ...rows].join("\r\n");
+  return { csv: `\uFEFF${body}\r\n`, count: eligible.length };
+}

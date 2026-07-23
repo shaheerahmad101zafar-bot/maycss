@@ -7,7 +7,8 @@
 | **XML (recommended)** | `https://www.myacssstore.store/api/google-feed.xml` |
 | XML (canonical /feeds) | `https://www.myacssstore.store/feeds/google-shopping.xml` |
 | XML (short alias) | `https://www.myacssstore.store/feeds/google-feed.xml` |
-| CSV / TSV | `https://www.myacssstore.store/api/google-feed.csv` |
+| **CSV (downloadable)** | `https://www.myacssstore.store/api/google-feed.csv` |
+| CSV (/feeds alias) | `https://www.myacssstore.store/feeds/google-feed.csv` |
 | TSV (alternate) | `https://www.myacssstore.store/feeds/google-shopping.tsv` |
 
 All of these are **public**, **dynamic**, and regenerate from the live catalog on each fetch (draft products are excluded). Titles, descriptions, brands, prices, and image links update automatically when products change in admin / Blob storage.

@@ -5,14 +5,8 @@ export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
 /**
- * Downloadable Google Merchant Center CSV product feed.
- *
- * Live URL: https://www.myacssstore.store/api/google-feed.csv
- *
- * Columns: id, title, description, link, image_link, availability,
- * price (USD), brand (+ common optional GMC fields).
- * Regenerates from the live catalog on each request — does not alter
- * product images, layouts, or admin settings.
+ * Alias CSV feed under /feeds/ (robots-allowed path).
+ * Same payload as /api/google-feed.csv
  */
 export async function GET() {
   try {
@@ -29,7 +23,7 @@ export async function GET() {
       },
     });
   } catch (err) {
-    console.error("[api/google-feed.csv]", err);
+    console.error("[feeds/google-feed.csv]", err);
     return new NextResponse("Feed generation failed", { status: 500 });
   }
 }

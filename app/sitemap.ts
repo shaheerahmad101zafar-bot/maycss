@@ -40,6 +40,18 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: "hourly",
       priority: 0.3,
     },
+    {
+      url: `${base}/api/google-feed.csv`,
+      lastModified: now,
+      changeFrequency: "hourly",
+      priority: 0.3,
+    },
+    {
+      url: `${base}/feeds/google-feed.csv`,
+      lastModified: now,
+      changeFrequency: "hourly",
+      priority: 0.3,
+    },
   ];
 
   const [categories, products, pages] = await Promise.all([

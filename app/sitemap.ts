@@ -21,12 +21,24 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${base}/privacy-policy`, lastModified: now, changeFrequency: "monthly", priority: 0.5 },
     { url: `${base}/terms-of-service`, lastModified: now, changeFrequency: "monthly", priority: 0.5 },
     { url: `${base}/account/signin`, lastModified: now, changeFrequency: "monthly", priority: 0.3 },
-    // Product feed for Google Merchant Center (also linked from docs/).
+    // Product feeds for Google Merchant Center.
+    {
+      url: `${base}/api/google-feed.xml`,
+      lastModified: now,
+      changeFrequency: "hourly",
+      priority: 0.4,
+    },
     {
       url: `${base}/feeds/google-shopping.xml`,
       lastModified: now,
       changeFrequency: "hourly",
       priority: 0.4,
+    },
+    {
+      url: `${base}/feeds/google-feed.xml`,
+      lastModified: now,
+      changeFrequency: "hourly",
+      priority: 0.3,
     },
   ];
 

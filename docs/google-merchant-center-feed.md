@@ -4,10 +4,13 @@
 
 | Format | URL |
 |--------|-----|
-| **XML (recommended)** | `https://www.myacssstore.store/feeds/google-shopping.xml` |
+| **XML (recommended)** | `https://www.myacssstore.store/api/google-feed.xml` |
+| XML (canonical /feeds) | `https://www.myacssstore.store/feeds/google-shopping.xml` |
+| XML (short alias) | `https://www.myacssstore.store/feeds/google-feed.xml` |
+| CSV / TSV | `https://www.myacssstore.store/api/google-feed.csv` |
 | TSV (alternate) | `https://www.myacssstore.store/feeds/google-shopping.tsv` |
 
-The feed is **public**, **dynamic**, and regenerates from the live catalog on each fetch (draft products are excluded). Prices and sale prices update automatically when products change in admin.
+All of these are **public**, **dynamic**, and regenerate from the live catalog on each fetch (draft products are excluded). Titles, descriptions, brands, prices, and image links update automatically when products change in admin / Blob storage.
 
 ## How to submit in Google Merchant Center
 
@@ -17,23 +20,30 @@ The feed is **public**, **dynamic**, and regenerates from the live catalog on ea
 4. Choose your **country of sale** and **language**.
 5. Select **Scheduled fetch** (or “Fetch from URL”).
 6. Paste the XML feed URL:  
-   `https://www.myacssstore.store/feeds/google-shopping.xml`
+   `https://www.myacssstore.store/api/google-feed.xml`
 7. Set fetch frequency to **daily** (or hourly if available).
 8. Save and run an initial fetch. Review **Diagnostics** for any attribute warnings.
 
-## What the feed includes
+## Required attributes included
 
-For every **published** product with a name, image, and price:
+For every **published** product with a name, image, and price &gt; 0:
 
-- `id`, `title`, `description`, `link`, `image_link`
-- `price` / `sale_price` (USD)
-- `availability` (`in_stock`), `condition` (`new`)
-- `brand` (`MAYCSS`)
-- `product_type` + `google_product_category` (apparel taxonomy)
-- Optional: color / size when present on the product
+| Attribute | Source |
+|-----------|--------|
+| `id` | Product ID |
+| `title` | Product name |
+| `description` | Product description (generated fallback if empty) |
+| `link` | Absolute PDP URL (`/product/{id}`) |
+| `image_link` | Primary product image (unchanged; never rewritten by the feed) |
+| `availability` | `in_stock` |
+| `price` | USD with currency (`49.99 USD`) |
+| `brand` | Product brand (fallback `MAYCSS`) |
+| `condition` | `new` |
+
+Also included when available: `sale_price`, `additional_image_link`, `product_type`, `google_product_category`, `color`, `size`.
 
 ## Notes
 
-- Feed routes live under `/feeds/` (not `/api/`) so they are **not** blocked by `robots.txt`.
+- Prefer `/feeds/` URLs for crawlers; `/api/google-feed.*` is allowed for Merchant Center scheduled fetch.
 - Currency is **USD** to match the storefront checkout.
-- Do **not** use local “near me” keywords in titles — feed copy stays GMC-safe.
+- The feed only **reads** catalog data — it does not alter product images, layouts, or admin settings.

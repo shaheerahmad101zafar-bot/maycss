@@ -211,8 +211,8 @@ export async function buildGoogleShoppingFeedXml(): Promise<{
 }> {
   const origin = getSiteOrigin();
   const [products, categories] = await Promise.all([
-    getProducts(),
-    getCategories(),
+    getProducts({ fresh: true }),
+    getCategories({ fresh: true }),
   ]);
   const byId = new Map(categories.map((c) => [c.id, c]));
   const eligible = products.filter(isFeedEligible);
@@ -239,8 +239,8 @@ export async function buildGoogleShoppingFeedTsv(): Promise<{
 }> {
   const origin = getSiteOrigin();
   const [products, categories] = await Promise.all([
-    getProducts(),
-    getCategories(),
+    getProducts({ fresh: true }),
+    getCategories({ fresh: true }),
   ]);
   const byId = new Map(categories.map((c) => [c.id, c]));
   const eligible = products.filter(isFeedEligible);

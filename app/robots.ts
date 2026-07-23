@@ -7,7 +7,12 @@ export default function robots(): MetadataRoute.Robots {
     rules: [
       {
         userAgent: "*",
-        allow: ["/", "/feeds/"],
+        allow: [
+          "/",
+          "/feeds/",
+          "/api/google-feed.xml",
+          "/api/google-feed.csv",
+        ],
         disallow: ["/admin/", "/api/", "/account/orders", "/checkout", "/track/"],
       },
     ],

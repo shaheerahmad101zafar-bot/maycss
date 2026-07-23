@@ -5,18 +5,13 @@ export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
 /**
- * Public Google Merchant Center product feed (RSS 2.0 / XML).
+ * Google Merchant Center product feed (XML).
  *
- * Live URLs (identical payload):
+ * Canonical live URLs (same payload):
  *   https://www.myacssstore.store/api/google-feed.xml
  *   https://www.myacssstore.store/feeds/google-shopping.xml
- *   https://www.myacssstore.store/feeds/google-feed.xml
  *
- * How to submit in GMC:
- *   Products → Feeds → Add primary feed → Scheduled fetch
- *   → paste this URL → country/language → fetch daily or hourly.
- *
- * See docs/google-merchant-center-feed.md
+ * Pulls the latest published catalog + prices on each request.
  */
 export async function GET() {
   try {
@@ -32,7 +27,7 @@ export async function GET() {
       },
     });
   } catch (err) {
-    console.error("[google-shopping-feed]", err);
+    console.error("[api/google-feed.xml]", err);
     return new NextResponse(
       `<?xml version="1.0"?><error>Feed generation failed</error>`,
       {

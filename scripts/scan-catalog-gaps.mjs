@@ -1,5 +1,7 @@
 /**
- * Scan Blob (or local) catalog for missing descriptions, colors, invalid prices.
+ * Scan Blob (or local) catalog for GMC-critical gaps:
+ * description, brand, price, image.
+ *
  * Usage: node scripts/scan-catalog-gaps.mjs [--local]
  */
 import { readFileSync, writeFileSync } from "node:fs";
@@ -54,17 +56,26 @@ console.log(`source=${useLocal ? "local" : "blob"} count=${products.length}`);
 const report = {
   noDesc: [],
   shortDesc: [],
+  noBrand: [],
   badPrice: [],
   noColors: [],
   incompleteColorNames: [],
   missingImage: [],
 };
 
+const invalidBrandRe =
+  /^(n\/?a|na|none|null|undefined|unknown|tbd|test|brand|no brand|-|\.)$/i;
+
 for (const x of products) {
   const d = String(x.description || "").trim();
   if (!d) report.noDesc.push({ id: x.id, name: x.name });
   else if (d.length < SHORT_DESC) {
     report.shortDesc.push({ id: x.id, name: x.name, len: d.length });
+  }
+
+  const brand = String(x.brand || "").trim();
+  if (!brand || invalidBrandRe.test(brand)) {
+    report.noBrand.push({ id: x.id, name: x.name, brand: x.brand ?? null });
   }
 
   const pr = Number(x.price);

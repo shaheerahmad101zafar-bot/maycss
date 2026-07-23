@@ -115,8 +115,30 @@ function isFeedEligible(product: Product): boolean {
   if (product.status === "draft") return false;
   if (!product.name?.trim()) return false;
   if (!product.image?.trim()) return false;
-  if (typeof product.price !== "number" || !(product.price >= 0)) return false;
+  // GMC rejects missing/zero prices; keep free items out of the feed.
+  if (typeof product.price !== "number" || !(product.price > 0)) return false;
   return true;
+}
+
+function feedBrand(product: Product): string {
+  const brand = product.brand?.trim();
+  if (brand && !/^(n\/?a|na|none|null|undefined|unknown|tbd|test|brand|-|\.)$/i.test(brand)) {
+    return brand;
+  }
+  return "MAYCSS";
+}
+
+function feedDescription(product: Product): string {
+  const raw =
+    product.description?.trim() ||
+    product.seo?.metaDescription?.trim() ||
+    "";
+  if (raw) return stripHtml(raw);
+  const name = product.name?.trim() || "Fashion product";
+  const brand = feedBrand(product);
+  return stripHtml(
+    `${name} by ${brand} — curated fashion from MAYCSS. Shop women clothes, dresses, and jeans online at myacssstore.store.`,
+  );
 }
 
 function itemXml(
@@ -126,17 +148,10 @@ function itemXml(
 ): string {
   const id = String(product.id);
   const title = truncate(product.name.trim(), 150);
-  const description = truncate(
-    stripHtml(
-      product.description?.trim() ||
-        product.seo?.metaDescription?.trim() ||
-        `${product.name} — curated fashion from MAYCSS. Shop women clothes, dresses, and jeans online.`,
-    ),
-    5000,
-  );
+  const description = truncate(feedDescription(product), 5000);
   const link = `${origin}/product/${encodeURIComponent(id)}`;
   const imageLink = absoluteUrl(origin, product.image);
-  const brand = "MAYCSS";
+  const brand = feedBrand(product);
   const { productType, googleCategoryId, keywords } = categoryPath(
     product,
     byId,
@@ -256,17 +271,14 @@ export async function buildGoogleShoppingFeedTsv(): Promise<{
     const cells = [
       id,
       p.name.trim(),
-      stripHtml(
-        p.description?.trim() ||
-          `${p.name} — curated fashion from MAYCSS.`,
-      ).slice(0, 5000),
+      feedDescription(p).slice(0, 5000),
       `${origin}/product/${encodeURIComponent(id)}`,
       absoluteUrl(origin, p.image),
       "in_stock",
       "new",
       formatPriceUsd(onSale ? p.originalPrice! : p.price),
       onSale ? formatPriceUsd(p.price) : "",
-      "MAYCSS",
+      feedBrand(p),
       "false",
       productType,
       googleCategoryId ?? "",

@@ -4,6 +4,7 @@
  * Reads production Blob `data/products.json` (falls back to local), then ONLY
  * patches missing/invalid fields:
  *   - description (empty / too short → generate from title)
+ *   - brand (missing / invalid → extract from title or "MAYCSS")
  *   - colors / hex (ensure color variants + swatch hex; keep color.image)
  *   - price (missing / zero / invalid → reasonable price ≤ $100)
  *
@@ -217,9 +218,57 @@ function ensureColors(product) {
   return { colors, changed };
 }
 
+function isInvalidBrand(brand) {
+  const b = String(brand || "").trim();
+  if (!b) return true;
+  return /^(n\/?a|na|none|null|undefined|unknown|tbd|test|brand|no brand|-|\.)$/i.test(
+    b,
+  );
+}
+
+/**
+ * Prefer an existing brand; otherwise take a leading title token that looks
+ * like a brand (Title Case / ALL CAPS word), else MAYCSS.
+ */
+function ensureBrand(product) {
+  const existing = String(product.brand || "").trim();
+  if (!isInvalidBrand(existing)) {
+    return { brand: existing, changed: false };
+  }
+
+  const name = String(product.name || "").trim();
+  // "Brand Name Product …" — take 1–3 leading capitalized tokens before a
+  // common apparel word, when present.
+  const apparelStart =
+    /\b(women'?s|mens|petite|plus|maternity|dress|jean|skirt|top|pant|gown|blazer|coat|jacket|sweater|tee|shirt)\b/i;
+  const cut = name.search(apparelStart);
+  const head = (cut > 0 ? name.slice(0, cut) : name.split(/\s+/).slice(0, 3).join(" "))
+    .replace(/[-–—,|:]+$/g, "")
+    .trim();
+
+  if (
+    head &&
+    head.length >= 2 &&
+    head.length <= 40 &&
+    !/^(the|a|an)$/i.test(head) &&
+    /[A-Za-z]/.test(head)
+  ) {
+    return { brand: head, changed: true };
+  }
+
+  return { brand: "MAYCSS", changed: true };
+}
+
 function patchProduct(product) {
   const next = { ...product };
   const fixes = [];
+
+  // Brand (GMC required) — before description so generated copy can use it.
+  const { brand, changed: brandChanged } = ensureBrand(next);
+  if (brandChanged) {
+    next.brand = brand;
+    fixes.push("missing-brand");
+  }
 
   // Description
   const desc = String(next.description || "").trim();

@@ -9,7 +9,12 @@
 import type { ContentBlock } from "./blocks/types";
 
 export type ProductSpec = { label: string; value: string };
-export type ProductColor = { name: string; hex: string };
+export type ProductColor = {
+  name: string;
+  hex: string;
+  /** Optional per-color product image (used for PDP swatches when present). */
+  image?: string;
+};
 
 /** Per-color image override — used to swap the gallery when a color is picked. */
 export type ColorImageMap = Record<

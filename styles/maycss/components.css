@@ -2177,6 +2177,9 @@
   transition: transform var(--mc-dur-fast), box-shadow var(--mc-dur-fast);
   box-shadow: inset 0 0 0 2px var(--mc-white);
 }
+.mc-pdp__swatch--image {
+  background-color: var(--mc-gray-100);
+}
 .mc-pdp__swatch:hover { transform: scale(1.06); }
 .mc-pdp__swatch.is-active {
   box-shadow: inset 0 0 0 2px var(--mc-white), 0 0 0 2px var(--mc-black);

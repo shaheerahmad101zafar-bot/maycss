@@ -201,8 +201,17 @@ export default function ProductDetail({ product }: Props) {
                     className={cx(
                       "mc-pdp__swatch",
                       c.name === color && "is-active",
+                      c.image && "mc-pdp__swatch--image",
                     )}
-                    style={{ backgroundColor: c.hex }}
+                    style={
+                      c.image
+                        ? {
+                            backgroundImage: `url(${c.image})`,
+                            backgroundSize: "cover",
+                            backgroundPosition: "center",
+                          }
+                        : { backgroundColor: c.hex || "#808080" }
+                    }
                     onClick={() => setColor(c.name)}
                   />
                 ))}

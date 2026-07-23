@@ -7,6 +7,15 @@ import { PageFactory } from "@/lib/pages";
 
 const YEAR = new Date().getFullYear();
 
+/** Always-visible GMC trust links — independent of CMS edits. */
+const TRUST_POLICY_LINKS = [
+  { href: "/contact", label: "Contact Us" },
+  { href: "/refund-policy", label: "Return & Refund Policy" },
+  { href: "/shipping-policy", label: "Shipping Policy" },
+  { href: "/privacy-policy", label: "Privacy Policy" },
+  { href: "/terms-of-service", label: "Terms of Service" },
+] as const;
+
 const SOCIAL_LABELS: Array<{ key: string; label: string; icon: string }> = [
   { key: "facebook", label: "Facebook", icon: "f" },
   { key: "instagram", label: "Instagram", icon: "IG" },
@@ -22,10 +31,15 @@ export default async function Footer() {
     PageFactory.listFooterLinks(),
   ]);
 
-  const companyPages = pages.filter(
-    (p) => p.footerColumn === "company" || !p.footerColumn,
-  );
-  const legalPages = pages.filter((p) => p.footerColumn === "legal");
+  const trustHrefs = new Set<string>(TRUST_POLICY_LINKS.map((l) => l.href));
+  const companyPages = pages.filter((p) => {
+    if (!(p.footerColumn === "company" || !p.footerColumn)) return false;
+    // Avoid duplicating Contact / About already listed or covered by trust links.
+    if (p.slug === "contact" || p.slug === "about") return false;
+    if (trustHrefs.has(`/${p.slug}`)) return false;
+    return true;
+  });
+
   const activeSocials = SOCIAL_LABELS.filter(
     (s) => cfg.socials[s.key] && String(cfg.socials[s.key]).length > 0,
   );
@@ -39,19 +53,20 @@ export default async function Footer() {
   const address =
     cfg.businessAddress || MAYCSS_BUSINESS.addressMultiline;
   const phoneTel = phone.replace(/[^\d+]/g, "") || MAYCSS_BUSINESS.supportPhoneTel;
+  const storeName = cfg.siteName || MAYCSS_BUSINESS.storeName;
 
   return (
     <footer className="mc-footer">
       <div className="mc-container mc-footer__inner">
         <div className="mc-footer__col">
           <TextLogo
-            siteName={cfg.siteName || MAYCSS_BUSINESS.storeName}
+            siteName={storeName}
             tagline={tagline}
             variant="footer"
           />
           <p className="mc-footer__tagline">{tagline}</p>
           <address className="mc-footer__contact">
-            <strong>{cfg.siteName || MAYCSS_BUSINESS.storeName}</strong>
+            <strong>Contact Us — {storeName}</strong>
             <br />
             {address.split("\n").map((line) => (
               <span key={line}>
@@ -93,11 +108,15 @@ export default async function Footer() {
           </ul>
         </nav>
 
-        <nav className="mc-footer__col" aria-label="Company">
-          <h3>Company</h3>
+        <nav className="mc-footer__col" aria-label="Customer care">
+          <h3>Customer care</h3>
           <ul>
             <li><Link href="/about">About</Link></li>
-            <li><Link href="/contact">Contact</Link></li>
+            {TRUST_POLICY_LINKS.map((l) => (
+              <li key={l.href}>
+                <Link href={l.href}>{l.label}</Link>
+              </li>
+            ))}
             {companyPages.map((p) => (
               <li key={p.id}>
                 <Link href={`/${p.slug}`}>{p.title}</Link>
@@ -117,11 +136,11 @@ export default async function Footer() {
 
       <div className="mc-footer__bar">
         <div className="mc-container mc-footer__bar-inner">
-          <p>&copy; {YEAR} {cfg.siteName || MAYCSS_BUSINESS.storeName}. All rights reserved.</p>
+          <p>&copy; {YEAR} {storeName}. All rights reserved.</p>
           <div className="mc-footer__bar-links">
-            {legalPages.map((p) => (
-              <Link key={p.id} href={`/${p.slug}`}>
-                {p.title}
+            {TRUST_POLICY_LINKS.map((l) => (
+              <Link key={l.href} href={l.href}>
+                {l.label}
               </Link>
             ))}
           </div>

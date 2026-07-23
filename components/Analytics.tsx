@@ -1,13 +1,15 @@
 import Script from "next/script";
 import type { AppConfig } from "@/lib/app-config";
 
+/** Production GA4 measurement ID for MAYCSS (myacssstore.store). */
+const DEFAULT_GA_MEASUREMENT_ID = "G-KWCLDJ0NE5";
+
 /**
  * Analytics — drop-in tracking loader.
  *
  * Include as high up in the tree as possible (root layout). Individual
  * scripts render only when their id/domain is set in AppConfig →
- * Admin → Settings → General. Uses `next/script strategy="afterInteractive"`
- * so nothing blocks LCP.
+ * Admin → Settings → General. Uses `next/script` so nothing blocks LCP.
  *
  * Supported:
  *   • Google Analytics 4 (measurement id starting with "G-")
@@ -15,30 +17,26 @@ import type { AppConfig } from "@/lib/app-config";
  *   • Plausible (privacy-friendly, cookieless — pass your domain)
  */
 export default function Analytics({ config }: { config: AppConfig["analytics"] }) {
-  const ga = config.googleAnalyticsId?.trim();
+  const ga =
+    config.googleAnalyticsId?.trim() || DEFAULT_GA_MEASUREMENT_ID;
   const pixel = config.metaPixelId?.trim();
   const plausible = config.plausibleDomain?.trim();
 
-  if (!ga && !pixel && !plausible) return null;
-
   return (
     <>
-      {ga ? (
-        <>
-          <Script
-            src={`https://www.googletagmanager.com/gtag/js?id=${ga}`}
-            strategy="afterInteractive"
-          />
-          <Script id="ga4-init" strategy="afterInteractive">
-            {`
-              window.dataLayer = window.dataLayer || [];
-              function gtag(){dataLayer.push(arguments);}
-              gtag('js', new Date());
-              gtag('config', '${ga}', { anonymize_ip: true });
-            `}
-          </Script>
-        </>
-      ) : null}
+      {/* Google tag (gtag.js) — root layout; beforeInteractive injects into <head> */}
+      <Script
+        src={`https://www.googletagmanager.com/gtag/js?id=${ga}`}
+        strategy="beforeInteractive"
+      />
+      <Script id="ga4-init" strategy="beforeInteractive">
+        {`
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', '${ga}');
+        `}
+      </Script>
 
       {pixel ? (
         <>

@@ -2148,6 +2148,14 @@
   font-weight: 700;
   letter-spacing: 0.1em;
 }
+.mc-pdp__currency {
+  margin-left: auto;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  color: var(--mc-gray-500);
+  text-transform: uppercase;
+}
 
 .mc-pdp__desc {
   color: var(--mc-gray-700);

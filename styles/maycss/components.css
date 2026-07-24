@@ -2156,6 +2156,30 @@
   color: var(--mc-gray-500);
   text-transform: uppercase;
 }
+.mc-pdp__offer-meta {
+  margin: -8px 0 14px;
+  font-size: 0.8rem;
+  color: var(--mc-gray-500);
+}
+.mc-pdp__commerce {
+  margin: 18px 0 0;
+  padding: 14px 0 0;
+  border-top: 1px solid var(--mc-gray-100);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.mc-pdp__commerce p {
+  margin: 0;
+  font-size: 0.82rem;
+  line-height: 1.45;
+  color: var(--mc-gray-600);
+}
+.mc-pdp__commerce a {
+  color: var(--mc-red);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
 
 .mc-pdp__desc {
   color: var(--mc-gray-700);

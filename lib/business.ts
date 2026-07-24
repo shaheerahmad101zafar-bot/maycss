@@ -24,3 +24,8 @@ export const MAYCSS_BUSINESS = {
   /** GMC-aligned return window (calendar days from delivery). */
   returnWindowDays: 10,
 } as const;
+
+/** Human-readable returns blurb matching JSON-LD / refund policy. */
+export function productReturnsSummary(): string {
+  return `${MAYCSS_BUSINESS.returnWindowDays}-day mail-in returns on eligible unworn items. See our Refund & Return Policy for details.`;
+}

@@ -88,12 +88,12 @@ export default function ProductCard({
           <h3 className="mc-card__name">{product.name}</h3>
         </Link>
 
-        {typeof product.rating === "number" && (
+        {typeof product.rating === "number" &&
+          typeof product.reviews === "number" &&
+          product.reviews > 0 && (
           <div className="mc-card__rating">
             <Stars value={product.rating} />
-            {typeof product.reviews === "number" && (
-              <span>({product.reviews})</span>
-            )}
+            <span>({product.reviews})</span>
           </div>
         )}
 

@@ -6,9 +6,10 @@ import { useSearchParams } from "next/navigation";
 import { useCart } from "@/context/CartContext";
 import { cx, estimateTax, formatPrice } from "@/lib/utils";
 import { placeOrderAction } from "@/app/checkout/actions";
+import { STORE_SHIPPING } from "@/lib/commerce/shipping";
 
-const SHIPPING_THRESHOLD = 75;
-const SHIPPING_COST = 8.95;
+const SHIPPING_THRESHOLD = STORE_SHIPPING.freeThresholdUsd;
+const SHIPPING_COST = STORE_SHIPPING.standardRateUsd;
 
 /** Sanitised manual method — no admin-only fields. */
 export type PublicManualMethod = {

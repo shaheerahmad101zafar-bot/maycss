@@ -3,9 +3,9 @@ import Link from "next/link";
 import ProductDetail from "@/components/products/ProductDetail";
 import ProductCard from "@/components/products/ProductCard";
 import BlockRenderer from "@/components/cms/BlockRenderer";
+import ProductJsonLd from "@/components/seo/ProductJsonLd";
 import { getProductById, getRelatedProducts } from "@/lib/data";
-import { absoluteUrl, withCanonical } from "@/lib/seo/canonical";
-import { getSiteOrigin } from "@/lib/site-url";
+import { withCanonical } from "@/lib/seo/canonical";
 import type { Metadata } from "next";
 
 type PageProps = { params: Promise<{ id: string }> };
@@ -46,86 +46,6 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   );
 }
 
-/**
- * Schema.org Product JSON-LD — helps Google show rich product results
- * (image, price, ratings) directly in search.
- */
-function buildProductJsonLd(
-  product: NonNullable<Awaited<ReturnType<typeof getProductById>>>,
-): string {
-  const onSale =
-    typeof product.originalPrice === "number" &&
-    product.originalPrice > product.price;
-  const origin = getSiteOrigin();
-  const availability =
-    product.status === "draft"
-      ? "https://schema.org/OutOfStock"
-      : "https://schema.org/InStock";
-  return JSON.stringify({
-    "@context": "https://schema.org",
-    "@type": "Product",
-    name: product.name,
-    description: product.description,
-    image:
-      product.gallery && product.gallery.length > 0
-        ? product.gallery
-        : [product.image],
-    brand: product.brand ? { "@type": "Brand", name: product.brand } : undefined,
-    sku: String(product.id),
-    url: absoluteUrl(`/product/${product.id}`),
-    aggregateRating:
-      typeof product.rating === "number"
-        ? {
-            "@type": "AggregateRating",
-            ratingValue: product.rating,
-            reviewCount: product.reviews ?? 0,
-          }
-        : undefined,
-    offers: {
-      "@type": "Offer",
-      url: absoluteUrl(`/product/${product.id}`),
-      price: product.price,
-      priceCurrency: "USD",
-      availability,
-      seller: { "@type": "Organization", name: "MAYCSS", url: origin },
-      ...(onSale && product.originalPrice
-        ? {
-            priceSpecification: {
-              "@type": "UnitPriceSpecification",
-              price: product.price,
-              priceCurrency: "USD",
-              referencePrice: product.originalPrice,
-            },
-          }
-        : {}),
-    },
-  });
-}
-
-function buildBreadcrumbJsonLd(
-  product: NonNullable<Awaited<ReturnType<typeof getProductById>>>,
-): string {
-  const origin = getSiteOrigin();
-  const items: { name: string; path: string }[] = [
-    { name: "Home", path: "/" },
-    { name: "Shop", path: "/shop" },
-  ];
-  if (product.category) {
-    items.push({ name: product.category, path: "/shop" });
-  }
-  items.push({ name: product.name, path: `/product/${product.id}` });
-  return JSON.stringify({
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    itemListElement: items.map((item, i) => ({
-      "@type": "ListItem",
-      position: i + 1,
-      name: item.name,
-      item: `${origin}${item.path === "/" ? "/" : item.path}`,
-    })),
-  });
-}
-
 export default async function ProductPage({ params }: PageProps) {
   const { id } = await params;
   const product = await getProductById(id);
@@ -136,19 +56,10 @@ export default async function ProductPage({ params }: PageProps) {
   const related = (await getRelatedProducts(product, 8))
     .filter((p) => p.status !== "draft")
     .slice(0, 4);
-  const jsonLd = buildProductJsonLd(product);
-  const breadcrumbLd = buildBreadcrumbJsonLd(product);
 
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: jsonLd }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: breadcrumbLd }}
-      />
+      <ProductJsonLd product={product} />
 
       <nav className="mc-crumbs mc-container" aria-label="Breadcrumb">
         <Link href="/">Home</Link>
@@ -190,15 +101,13 @@ export default async function ProductPage({ params }: PageProps) {
 }
 
 /**
- * Server-scoped sub-component that fetches the product catalog once so the
- * BlockRenderer stays pure (no server-only imports leak into the client).
+ * Server-scoped sub-component — BlockRenderer stays pure (no full-catalog load).
  */
 async function ProductContentSection({
   blocks,
 }: {
   blocks: NonNullable<Awaited<ReturnType<typeof getProductById>>>["contentBlocks"];
 }) {
-  // Avoid loading the full catalog just to render product content blocks.
   return (
     <section
       className="mc-section mc-container mc-product-content"

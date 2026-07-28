@@ -107,6 +107,15 @@ export default function SignInButtons({
 
   return (
     <div className="mc-auth__methods">
+      <header className="mc-auth__header">
+        <h1>{isSignup ? "Create account" : "Sign in"}</h1>
+        <p>
+          {isSignup
+            ? "Join to track orders and check out faster."
+            : "Access orders, favorites, and saved details."}
+        </p>
+      </header>
+
       <div className="mc-auth__tabs" role="tablist" aria-label="Account access">
         <button
           type="button"
@@ -133,15 +142,6 @@ export default function SignInButtons({
           Create account
         </button>
       </div>
-
-      <header className="mc-auth__header">
-        <h1>{isSignup ? "Create your account" : "Welcome back"}</h1>
-        <p>
-          {isSignup
-            ? "Join MAYCSS to track orders and unlock faster checkout."
-            : "Sign in to view orders, favorites, and your details."}
-        </p>
-      </header>
 
       {providers.google && (
         <button
@@ -180,14 +180,14 @@ export default function SignInButtons({
 
       {providers.email && anySocial && (
         <div className="mc-auth__divider">
-          <span>or continue with email</span>
+          <span>or</span>
         </div>
       )}
 
       {providers.email && (
         <form onSubmit={doEmail} className="mc-auth__email">
           {isSignup && (
-            <div className="mc-field">
+            <div className="mc-field mc-auth__field">
               <label htmlFor="signinName">Full name</label>
               <input
                 id="signinName"
@@ -200,7 +200,7 @@ export default function SignInButtons({
               />
             </div>
           )}
-          <div className="mc-field">
+          <div className="mc-field mc-auth__field">
             <label htmlFor="signinEmail">Email address</label>
             <input
               id="signinEmail"
@@ -225,30 +225,6 @@ export default function SignInButtons({
                 ? "Create account"
                 : "Sign in"}
           </button>
-          {!isSignup && (
-            <p className="mc-auth__hint">
-              New here?{" "}
-              <button
-                type="button"
-                className="mc-auth__text-btn"
-                onClick={() => setMode("signup")}
-              >
-                Create an account
-              </button>
-            </p>
-          )}
-          {isSignup && (
-            <p className="mc-auth__hint">
-              Already have an account?{" "}
-              <button
-                type="button"
-                className="mc-auth__text-btn"
-                onClick={() => setMode("signin")}
-              >
-                Sign in
-              </button>
-            </p>
-          )}
         </form>
       )}
 

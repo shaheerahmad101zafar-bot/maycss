@@ -5,6 +5,7 @@ import "@/styles/maycss/globals.css";
 import "@/styles/maycss/components.css";
 import "@/styles/maycss/responsive.css";
 import "@/styles/maycss/storefront.css";
+import "@/styles/maycss/auth.css";
 import { CartProvider } from "@/context/CartContext";
 import Navbar from "@/components/layout/Navbar";
 import PromoBar from "@/components/layout/PromoBar";
@@ -46,6 +47,9 @@ export async function generateMetadata(): Promise<Metadata> {
     },
     description,
     keywords: [...MAYCSS_PRIMARY_KEYWORDS],
+    alternates: {
+      canonical: `${origin}/`,
+    },
     openGraph: {
       title,
       description,

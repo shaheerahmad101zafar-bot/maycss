@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { getOrderById, ORDER_STATUS_LABELS } from "@/lib/orders";
 import { cx, formatPrice } from "@/lib/utils";
 import OrderTimeline from "@/components/orders/OrderTimeline";
+import { withCanonical } from "@/lib/seo/canonical";
 
 type Props = {
   params: Promise<{ orderId: string }>;
@@ -11,10 +12,14 @@ type Props = {
 
 export async function generateMetadata({ params }: Props) {
   const { orderId } = await params;
-  return {
-    title: `Track ${orderId} · MayCSS`,
-    robots: { index: false, follow: false },
-  };
+  return withCanonical(
+    {
+      title: `Track ${orderId} · MayCSS`,
+      robots: { index: false, follow: false },
+    },
+    `/track/${orderId}`,
+    { noindex: true },
+  );
 }
 
 /**

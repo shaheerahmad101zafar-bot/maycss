@@ -1,12 +1,18 @@
 import { Suspense } from "react";
+import type { Metadata } from "next";
 import CheckoutView from "@/components/checkout/CheckoutView";
 import { customerPaymentLabel } from "@/lib/payments/branding";
 import { getEnabledManualMethods, getSettings } from "@/lib/settings";
+import { withCanonical } from "@/lib/seo/canonical";
 
-export const metadata = {
-  title: "Checkout · MayCSS",
-  description: "Complete your MayCSS order.",
-};
+export const metadata: Metadata = withCanonical(
+  {
+    title: "Checkout · MayCSS",
+    description: "Complete your MayCSS order.",
+  },
+  "/checkout",
+  { noindex: true },
+);
 
 export default async function CheckoutPage() {
   const [manualMethods, settings] = await Promise.all([

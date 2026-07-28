@@ -4,13 +4,13 @@
 
 | Format | URL |
 |--------|-----|
-| **XML (recommended)** | `https://www.myacssstore.store/api/google-feed.xml` |
-| XML (canonical /feeds) | `https://www.myacssstore.store/feeds/google-shopping.xml` |
-| XML (short alias) | `https://www.myacssstore.store/feeds/google-feed.xml` |
-| **CSV (static file)** | `https://www.myacssstore.store/google-feed.csv` |
-| CSV (dynamic API) | `https://www.myacssstore.store/api/google-feed.csv` |
-| CSV (/feeds alias) | `https://www.myacssstore.store/feeds/google-feed.csv` |
-| TSV (alternate) | `https://www.myacssstore.store/feeds/google-shopping.tsv` |
+| **XML (recommended)** | `https://myacssstore.store/api/google-feed.xml` |
+| XML (canonical /feeds) | `https://myacssstore.store/feeds/google-shopping.xml` |
+| XML (short alias) | `https://myacssstore.store/feeds/google-feed.xml` |
+| **CSV (static file)** | `https://myacssstore.store/google-feed.csv` |
+| CSV (dynamic API) | `https://myacssstore.store/api/google-feed.csv` |
+| CSV (/feeds alias) | `https://myacssstore.store/feeds/google-feed.csv` |
+| TSV (alternate) | `https://myacssstore.store/feeds/google-shopping.tsv` |
 
 All of these are **public**. The static file at `/google-feed.csv` is generated into `public/google-feed.csv` via `npm run generate:google-feed` and deployed with the site. Dynamic routes regenerate from the live catalog on each fetch. Draft products are excluded. Titles, descriptions, brands, prices, and image links update when the catalog changes and the static file is regenerated — the generator never alters product images, layouts, or admin settings.
 
@@ -22,7 +22,7 @@ All of these are **public**. The static file at `/google-feed.csv` is generated 
 4. Choose your **country of sale** and **language**.
 5. Select **Scheduled fetch** (or “Fetch from URL”).
 6. Paste the XML feed URL:  
-   `https://www.myacssstore.store/api/google-feed.xml`
+   `https://myacssstore.store/api/google-feed.xml`
 7. Set fetch frequency to **daily** (or hourly if available).
 8. Save and run an initial fetch. Review **Diagnostics** for any attribute warnings.
 

@@ -13,10 +13,18 @@ export default function robots(): MetadataRoute.Robots {
           "/api/google-feed.xml",
           "/api/google-feed.csv",
           "/feeds/google-feed.csv",
+          "/google-feed.csv",
         ],
-        disallow: ["/admin/", "/api/", "/account/orders", "/checkout", "/track/"],
+        disallow: [
+          "/admin/",
+          "/api/",
+          "/account/",
+          "/checkout",
+          "/track/",
+        ],
       },
     ],
+    host: base,
     sitemap: `${base}/sitemap.xml`,
   };
 }

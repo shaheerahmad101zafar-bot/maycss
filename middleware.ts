@@ -1,20 +1,23 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { getSessionToken } from "@/lib/auth-config";
+import {
+  getPreferredHostname,
+  isStoreHost,
+} from "@/lib/site-url";
 
 /**
- * Two guards in one middleware:
- *   - `/admin/*` (except `/admin/login`) requires the admin cookie.
- *   - `/account/*` (except `/account/signin`) requires an Auth.js session.
+ * Middleware responsibilities:
+ *   1. Host canonicalization — www ↔ apex 301 onto the preferred public host
+ *      (fixes GSC duplicate / "crawled – not indexed" noise from dual hosts).
+ *   2. `/admin/*` (except `/admin/login`) requires the admin cookie.
+ *   3. `/account/*` (except `/account/signin`) requires an Auth.js session.
  *
- * We deliberately keep the admin gate as a plain cookie check (matches the
- * lightweight admin password model) and delegate the account check to the
- * session-token cookie that Auth.js sets. This keeps the middleware in the
- * Edge runtime without pulling in the full NextAuth handler.
+ * Admin gate stays a plain cookie check; account check uses Auth.js session
+ * cookies so this can stay on the Edge runtime.
  */
 
 const ADMIN_COOKIE = "mc-admin";
 
-// Auth.js session-cookie names (secure prefix used in production).
 const AUTH_COOKIES = [
   "authjs.session-token",
   "__Secure-authjs.session-token",
@@ -26,7 +29,33 @@ function hasAuthSession(request: NextRequest): boolean {
   return AUTH_COOKIES.some((name) => Boolean(request.cookies.get(name)?.value));
 }
 
+function requestHostname(request: NextRequest): string {
+  const raw =
+    request.headers.get("x-forwarded-host") ||
+    request.headers.get("host") ||
+    request.nextUrl.hostname;
+  return raw.split(",")[0]?.trim().split(":")[0]?.toLowerCase() || "";
+}
+
+/** 301 onto preferred host when request hits the other store host. */
+function hostCanonicalRedirect(request: NextRequest): NextResponse | null {
+  const host = requestHostname(request);
+  if (!host || !isStoreHost(host)) return null;
+
+  const preferred = getPreferredHostname();
+  if (host === preferred) return null;
+
+  const url = request.nextUrl.clone();
+  url.protocol = "https:";
+  url.hostname = preferred;
+  url.port = "";
+  return NextResponse.redirect(url, 301);
+}
+
 export function middleware(request: NextRequest) {
+  const hostRedirect = hostCanonicalRedirect(request);
+  if (hostRedirect) return hostRedirect;
+
   const { pathname } = request.nextUrl;
 
   // Admin gate
@@ -56,5 +85,11 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/admin/:path*", "/account/:path*"],
+  matcher: [
+    /*
+     * Run on all app routes (incl. products/categories) for host redirects,
+     * but skip hashed static assets and common file extensions.
+     */
+    "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:ico|png|jpg|jpeg|gif|webp|svg|woff2?|txt|xml|csv|map)$).*)",
+  ],
 };

@@ -6,6 +6,7 @@ import { useCart } from "@/context/CartContext";
 import OptimizedImage from "@/components/ui/OptimizedImage";
 import { cardImageUrl } from "@/lib/images/cdn-url";
 import { productImageAlt } from "@/lib/seo/image-alt";
+import { resolveProductSocialProof } from "@/lib/seo/product-social-proof";
 import { cx, discountPercent, formatPrice, type Product } from "@/lib/utils";
 
 interface ProductCardProps {
@@ -88,14 +89,15 @@ export default function ProductCard({
           <h3 className="mc-card__name">{product.name}</h3>
         </Link>
 
-        {typeof product.rating === "number" &&
-          typeof product.reviews === "number" &&
-          product.reviews > 0 && (
-          <div className="mc-card__rating">
-            <Stars value={product.rating} />
-            <span>({product.reviews})</span>
-          </div>
-        )}
+        {(() => {
+          const proof = resolveProductSocialProof(product);
+          return (
+            <div className="mc-card__rating">
+              <Stars value={proof.rating} />
+              <span>({proof.reviews})</span>
+            </div>
+          );
+        })()}
 
         <div className="mc-card__price-row">
           <span

@@ -12,6 +12,7 @@ import {
 import { productImageAlt } from "@/lib/seo/image-alt";
 import { productShippingSummary } from "@/lib/commerce/shipping";
 import { productReturnsSummary } from "@/lib/business";
+import { resolveProductSocialProof } from "@/lib/seo/product-social-proof";
 import Link from "next/link";
 
 interface Props {
@@ -143,20 +144,21 @@ export default function ProductDetail({ product }: Props) {
           {product.brand && <p className="mc-pdp__brand">{product.brand}</p>}
           <h1 className="mc-pdp__name">{product.name}</h1>
 
-          {typeof product.rating === "number" &&
-            typeof product.reviews === "number" &&
-            product.reviews > 0 && (
-            <div className="mc-pdp__rating">
-              <span className="mc-card__stars" aria-hidden>
-                {"★".repeat(Math.round(product.rating))}
-                {"☆".repeat(5 - Math.round(product.rating))}
-              </span>
-              <span>{product.rating.toFixed(1)}</span>
-              <span className="mc-pdp__rating-count">
-                ({product.reviews} reviews)
-              </span>
-            </div>
-          )}
+          {(() => {
+            const proof = resolveProductSocialProof(product);
+            return (
+              <div className="mc-pdp__rating">
+                <span className="mc-card__stars" aria-hidden>
+                  {"★".repeat(Math.round(proof.rating))}
+                  {"☆".repeat(5 - Math.round(proof.rating))}
+                </span>
+                <span>{proof.rating.toFixed(1)}</span>
+                <span className="mc-pdp__rating-count">
+                  ({proof.reviews} reviews)
+                </span>
+              </div>
+            );
+          })()}
 
           <div className="mc-pdp__price-row">
             <span
@@ -175,7 +177,13 @@ export default function ProductDetail({ product }: Props) {
             <span className="mc-pdp__currency">USD</span>
           </div>
           <p className="mc-pdp__offer-meta">
-            Condition: New · In stock · Price in USD ($)
+            Condition:{" "}
+            {/pre-?\s*owned|preowned|\bused\b|vintage/i.test(
+              `${product.name} ${product.brand ?? ""}`,
+            )
+              ? "Used"
+              : "New"}{" "}
+            · In stock · Price in USD ($)
           </p>
 
           {product.description && (

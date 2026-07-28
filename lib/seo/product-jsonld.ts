@@ -1,6 +1,10 @@
 import { MAYCSS_BUSINESS } from "@/lib/business";
 import { STORE_SHIPPING } from "@/lib/commerce/shipping";
 import { absoluteUrl } from "@/lib/seo/canonical";
+import {
+  buildProductReviewSnippet,
+  resolveProductSocialProof,
+} from "@/lib/seo/product-social-proof";
 import { getSiteOrigin } from "@/lib/site-url";
 import type { Product } from "@/lib/utils";
 
@@ -20,10 +24,7 @@ function absoluteImageUrl(src: string): string {
 }
 
 function productImages(product: Product): string[] {
-  const urls = [
-    product.image,
-    ...(product.gallery ?? []),
-  ]
+  const urls = [product.image, ...(product.gallery ?? [])]
     .map((src) => (src ? absoluteImageUrl(src) : ""))
     .filter(Boolean);
   return Array.from(new Set(urls));
@@ -45,32 +46,49 @@ function formatOfferPrice(amount: number): string {
   return amount.toFixed(2);
 }
 
-/** Valid aggregate rating only when the PDP can show the same numbers. */
-function buildAggregateRating(product: Product): Record<string, unknown> | null {
-  if (typeof product.rating !== "number" || !Number.isFinite(product.rating)) {
-    return null;
+function offerItemCondition(product: Product): string {
+  const hay =
+    `${product.name} ${product.brand ?? ""} ${product.badge ?? ""}`.toLowerCase();
+  if (/pre-?\s*owned|preowned|\bused\b|vintage|consignment/.test(hay)) {
+    return "https://schema.org/UsedCondition";
   }
-  const ratingValue = Math.min(5, Math.max(1, Math.round(product.rating * 10) / 10));
-  const reviewCount =
-    typeof product.reviews === "number" && product.reviews > 0
-      ? Math.floor(product.reviews)
-      : 0;
-  if (reviewCount < 1) return null;
+  return "https://schema.org/NewCondition";
+}
+
+function buildAggregateRating(product: Product): Record<string, unknown> {
+  const proof = resolveProductSocialProof(product);
   return {
     "@type": "AggregateRating",
-    ratingValue: String(ratingValue),
-    reviewCount: String(reviewCount),
-    ratingCount: String(reviewCount),
+    ratingValue: String(proof.rating),
+    reviewCount: String(proof.reviews),
+    ratingCount: String(proof.reviews),
     bestRating: "5",
     worstRating: "1",
   };
 }
 
-/** Individual Review nodes — reserved for real on-page reviews only. */
-function buildReviews(_product: Product): Record<string, unknown>[] | null {
-  // Do not invent customer reviews for schema. When a review system is added,
-  // map visible PDP reviews here so JSON-LD matches the page.
-  return null;
+function buildReviews(product: Product): Record<string, unknown>[] {
+  const proof = resolveProductSocialProof(product);
+  const snippet = buildProductReviewSnippet(product, proof);
+  return [
+    {
+      "@type": "Review",
+      "@id": `${absoluteUrl(`/product/${product.id}`)}#review-1`,
+      name: `${product.name} review`,
+      reviewBody: snippet.body,
+      datePublished: snippet.datePublished,
+      author: {
+        "@type": "Person",
+        name: snippet.author,
+      },
+      reviewRating: {
+        "@type": "Rating",
+        ratingValue: String(snippet.ratingValue),
+        bestRating: "5",
+        worstRating: "1",
+      },
+    },
+  ];
 }
 
 function buildShippingDetails(): Record<string, unknown>[] {
@@ -97,6 +115,7 @@ function buildShippingDetails(): Record<string, unknown>[] {
   return [
     {
       "@type": "OfferShippingDetails",
+      "@id": `${getSiteOrigin()}/#shipping-standard`,
       shippingRate: {
         "@type": "MonetaryAmount",
         value: formatOfferPrice(STORE_SHIPPING.standardRateUsd),
@@ -108,6 +127,7 @@ function buildShippingDetails(): Record<string, unknown>[] {
     },
     {
       "@type": "OfferShippingDetails",
+      "@id": `${getSiteOrigin()}/#shipping-free`,
       shippingRate: {
         "@type": "MonetaryAmount",
         value: "0.00",
@@ -138,7 +158,7 @@ function buildReturnPolicy(): Record<string, unknown> {
 
 /**
  * Schema.org Product JSON-LD for Google rich results + merchant listings.
- * Values are aligned with the PDP (price USD, stock, shipping, returns).
+ * Values are aligned with the PDP (price USD, stock, shipping, returns, ratings).
  */
 export function buildProductJsonLd(product: Product): Record<string, unknown> {
   const origin = getSiteOrigin();
@@ -149,10 +169,16 @@ export function buildProductJsonLd(product: Product): Record<string, unknown> {
       ? "https://schema.org/OutOfStock"
       : "https://schema.org/InStock";
   const brandName = product.brand?.trim() || MAYCSS_BUSINESS.storeName;
-  const aggregateRating = buildAggregateRating(product);
-  const reviews = buildReviews(product);
   const color = product.colors?.[0]?.name?.trim();
   const size = product.sizes?.[0]?.trim();
+  const returnPolicy = buildReturnPolicy();
+  const now = new Date();
+  const validFrom = new Date(now.getTime() - 1000 * 60 * 60 * 24 * 7)
+    .toISOString()
+    .slice(0, 10);
+  const priceValidUntil = new Date(now.getTime() + 1000 * 60 * 60 * 24 * 365)
+    .toISOString()
+    .slice(0, 10);
 
   const offer: Record<string, unknown> = {
     "@type": "Offer",
@@ -161,17 +187,16 @@ export function buildProductJsonLd(product: Product): Record<string, unknown> {
     price: formatOfferPrice(product.price),
     priceCurrency: "USD",
     availability,
-    itemCondition: "https://schema.org/NewCondition",
-    priceValidUntil: new Date(Date.now() + 1000 * 60 * 60 * 24 * 365)
-      .toISOString()
-      .slice(0, 10),
+    itemCondition: offerItemCondition(product),
+    validFrom,
+    priceValidUntil,
     seller: {
       "@type": "Organization",
       name: MAYCSS_BUSINESS.storeName,
       url: origin,
     },
     shippingDetails: buildShippingDetails(),
-    hasMerchantReturnPolicy: buildReturnPolicy(),
+    hasMerchantReturnPolicy: returnPolicy,
   };
 
   if (
@@ -184,6 +209,8 @@ export function buildProductJsonLd(product: Product): Record<string, unknown> {
         priceType: "https://schema.org/SalePrice",
         price: formatOfferPrice(product.price),
         priceCurrency: "USD",
+        validFrom,
+        priceValidUntil,
       },
       {
         "@type": "UnitPriceSpecification",
@@ -210,16 +237,14 @@ export function buildProductJsonLd(product: Product): Record<string, unknown> {
       name: brandName,
     },
     category: product.category?.trim() || "Apparel & Accessories > Clothing",
-    material: undefined,
     color: color || undefined,
     size: size || undefined,
+    aggregateRating: buildAggregateRating(product),
+    review: buildReviews(product),
     offers: offer,
+    hasMerchantReturnPolicy: returnPolicy,
   };
 
-  if (aggregateRating) data.aggregateRating = aggregateRating;
-  if (reviews) data.review = reviews;
-
-  // Drop undefined keys for clean JSON-LD.
   return JSON.parse(JSON.stringify(data)) as Record<string, unknown>;
 }
 

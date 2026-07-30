@@ -17,13 +17,13 @@
     "footerColumn": "company",
     "lastUpdated": "2026-07-21",
     "seo": {
-      "metaTitle": "Shop MayCSS Online Store | About Us",
-      "metaDescription": "Shop MayCSS Online Store and discover our story — curated premium fashion, uncompromising quality, and a vision built on craft, integrity, and quiet luxury.",
+      "metaTitle": "About MAYCSS | Curated Fashion Online",
+      "metaDescription": "Learn about MAYCSS — an online fashion store based in Independence, MO. Contact myacssstore@gmail.com or +1 (501) 436-9308.",
       "keywords": [
-        "Shop MayCSS Online Store",
-        "about MayCSS",
-        "curated fashion",
-        "luxury boutique"
+        "MAYCSS",
+        "about MAYCSS",
+        "online fashion store",
+        "Independence MO"
       ],
       "ogImage": "https://images.unsplash.com/photo-1469334031218-e382a71b716b?auto=format&fit=crop&w=1200&q=80"
     },
@@ -39,7 +39,7 @@
         },
         "heading": "Our Story",
         "headingLevel": 2,
-        "body": "MayCSS began with a simple belief: fashion should feel considered, lasting, and true. When you Shop MayCSS Online Store, you enter a curated world of premium pieces chosen for craft, fit, and quiet confidence — never noise, never excess.\n\nOur story is rooted in partnership with independent ateliers and heritage houses that share our standards. We ask three questions of every piece: Is it made to last? Does it honour the people who make it? Would we wear it ourselves? If the answer is not yes to all three, it does not belong in our edit. That discipline is how we protect quality — and how we earn your trust.\n\nWe envision a wardrobe that moves with real life: refined silhouettes, exceptional textiles, and essentials that feel as relevant tomorrow as they do today. Shop MayCSS Online Store to experience fashion that values provenance as much as presence, and substance as much as style.\n\nTransparency, authenticity, and personal care guide everything we do. From the first browse to the final fit, our commitment is clear: elevate dressing without compromising integrity. Discover the MayCSS difference — then Shop MayCSS Online Store with confidence, knowing every piece reflects a vision of luxury that is calm, enduring, and entirely intentional.\n\nThis is our promise. This is MayCSS. Shop MayCSS Online Store for fashion that lasts beyond the season.",
+        "body": "MAYCSS is an online fashion store offering curated women's clothing, dresses, denim, and everyday essentials. We operate from Independence, Missouri, and ship orders across the United States.\n\nOur goal is simple: offer well-chosen pieces with clear pricing, honest product information, and responsive customer support. From browsing to delivery and returns, we aim to make shopping transparent and straightforward.\n\nBusiness details: MAYCSS, 1707 S Lee's Summit Rd, Independence, MO 64050, USA. Email: myacssstore@gmail.com. Phone: +1 (501) 436-9308.",
         "alignment": "left"
       },
       {
@@ -53,7 +53,7 @@
         },
         "heading": "How we choose what to sell",
         "headingLevel": 2,
-        "body": "Every piece you find when you Shop MayCSS Online Store is vetted against three questions: Is it made to last? Does it improve the lives of the people who make it? Would we buy it ourselves? If we cannot answer yes to all three, it does not make it onto our floor. That quality assurance process protects your wardrobe and our reputation.",
+        "body": "Every piece we list is reviewed for quality, fit description accuracy, and value. If an item does not meet our standards for presentation and customer expectations, it does not stay in the catalog. That process protects your wardrobe and our reputation.",
         "alignment": "left"
       },
       {
@@ -67,7 +67,7 @@
         },
         "heading": "Our Promise to You",
         "headingLevel": 2,
-        "body": "Transparent sourcing. Authenticity on every order. Personal styling when you want it. Customers trust MayCSS because we built Shop MayCSS Online Store for people who value craft over hype — and we intend to keep it that way with every collection we release.",
+        "body": "Clear policies. Real contact details. Honest product information. Customers trust MAYCSS because we publish our business address, support channels, shipping terms, and return rules openly — and we stand behind every order.",
         "alignment": "center"
       },
       {
@@ -80,12 +80,12 @@
           "padding": "lg"
         },
         "eyebrow": "The Edit",
-        "heading": "Quiet Luxury, Loud Standards",
-        "body": "We do not chase trends. We chase integrity — in fabric, in fit, in the story behind every seam. That is the MayCSS difference you feel when you Shop MayCSS Online Store: quiet luxury, loud standards, and a commitment to pieces worthy of a lasting wardrobe.",
+        "heading": "Fashion with Clear Standards",
+        "body": "We focus on wearable styles, accurate sizing guidance, and dependable fulfillment. Explore the collection, read our policies, and contact support anytime you need help.",
         "ctaLabel": "Shop the collection",
         "ctaHref": "/shop",
         "image": "/uploads/cms/mrjjyhqn-87cb93f5c5686601.webp",
-        "imageAlt": "MayCSS curated fashion"
+        "imageAlt": "MAYCSS curated fashion"
       },
       {
         "id": "blk_about_cta",
@@ -219,21 +219,20 @@
     "slug": "privacy-policy",
     "title": "Privacy Policy",
     "eyebrow": "Legal",
-    "hero": "Your privacy matters when you Shop MayCSS Online Store — clear policies for trust and transparency.",
+    "hero": "How MAYCSS collects, uses, and protects your personal information.",
     "pageKind": "standard",
     "published": true,
     "showInFooter": true,
     "footerColumn": "legal",
-    "lastUpdated": "2026-07-19",
+    "lastUpdated": "2026-07-30",
     "seo": {
-      "metaTitle": "Shop MayCSS Online Store | Privacy",
-      "metaDescription": "Shop MayCSS Online Store with peace of mind. Learn how we collect, use, and protect your personal data with clear, trustworthy privacy practices.",
+      "metaTitle": "Privacy Policy | MAYCSS",
+      "metaDescription": "MAYCSS Privacy Policy — how we collect, use, and protect your personal information when you shop at myacssstore.store.",
       "ogImage": "",
       "keywords": [
-        "Shop MayCSS Online Store",
+        "MAYCSS",
         "privacy policy",
-        "data protection",
-        "MayCSS privacy"
+        "data protection"
       ]
     },
     "blocks": [
@@ -654,14 +653,10 @@
     "title": "We're Here to Help",
     "eyebrow": "Contact Us",
     "hero": "Contact MAYCSS support by email or phone. Mail-in returns are accepted at our Independence, MO business address.",
-    "bannerImage": "https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&w=1600&q=80",
-    "showHeroBanner": true,
-    "heroCtaLabel": "Send a Message",
-    "heroCtaHref": "#contact-form",
-    "heroSecondaryCtaLabel": "Shop the Collection",
-    "heroSecondaryCtaHref": "/shop",
+    "bannerImage": "",
+    "showHeroBanner": false,
     "pageKind": "contact",
-    "mapEmbed": "<iframe src=\"https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3022.215!2d-73.974!3d40.761!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNDDCsDQ1JzM5LjYiTiA3M8KwNTgnMjAuNCJX!5e0!3m2!1sen!2sus!4v1\" width=\"600\" height=\"450\" style=\"border:0;\" allowfullscreen=\"\" loading=\"lazy\" referrerpolicy=\"no-referrer-when-downgrade\"></iframe>",
+    "mapEmbed": "",
     "contactDetails": {
       "heading": "MAYCSS Customer Support",
       "lead": "Official contact details for MAYCSS — matching our Google Merchant Center business profile.",
@@ -696,17 +691,16 @@
     "published": true,
     "showInFooter": true,
     "footerColumn": "company",
-    "lastUpdated": "2026-07-21",
+    "lastUpdated": "2026-07-30",
     "seo": {
-      "metaTitle": "Shop MayCSS Online Store | Support",
-      "metaDescription": "Shop MayCSS Online Store with dedicated customer care. Our concierge helps with orders, sizing, styling, and satisfaction — usually within one business day.",
+      "metaTitle": "Contact Us | MAYCSS",
+      "metaDescription": "Contact MAYCSS customer support by email or phone. Business address: 1707 S Lee's Summit Rd, Independence, MO 64050, USA.",
       "keywords": [
-        "Shop MayCSS Online Store",
+        "MAYCSS",
         "customer support",
-        "contact",
-        "concierge"
+        "contact"
       ],
-      "ogImage": "https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&w=1200&q=80"
+      "ogImage": ""
     },
     "blocks": [
       {
@@ -724,20 +718,6 @@
         "alignment": "left"
       },
       {
-        "id": "blk_contact_image_slot",
-        "type": "image",
-        "layout": {
-          "alignment": "center",
-          "width": "full",
-          "columnCount": 1,
-          "padding": "md"
-        },
-        "src": "",
-        "alt": "MayCSS concierge support",
-        "caption": "Upload a support or studio image in admin — Edit or Replace anytime.",
-        "width": "wide"
-      },
-      {
         "id": "blk_contact_form",
         "type": "contactform",
         "layout": {
@@ -747,7 +727,7 @@
           "padding": "md"
         },
         "heading": "Send a Message",
-        "subheading": "Share your enquiry and a member of our team will follow up personally. We are here to help you Shop MayCSS Online Store with confidence."
+        "subheading": "Share your order number and how we can help. We typically respond within one business day."
       }
     ]
   },

@@ -18,7 +18,7 @@ export default async function SiteJsonLd() {
         "@type": "Organization",
         "@id": `${origin}/#organization`,
         name,
-        alternateName: ["myacss", "MayCSS", "Shop MayCSS Online Store"],
+        alternateName: ["MayCSS", "myacssstore"],
         url: origin,
         email,
         telephone: phone,
